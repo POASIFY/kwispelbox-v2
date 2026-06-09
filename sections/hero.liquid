@@ -107,6 +107,15 @@
 
   </div>
 
+  <!-- Wave divider onderaan hero -->
+  <div class="hero__wave" aria-hidden="true">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none"
+         xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z"
+            fill="#F8EFDD"/>
+    </svg>
+  </div>
+
 </div>
 
 {% stylesheet %}
@@ -131,7 +140,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: right center;
 }
 
 .hero__img--desktop { display: none; }
@@ -318,6 +327,20 @@
   flex-shrink: 0;
 }
 
+.hero__wave {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  line-height: 0;
+  pointer-events: none;
+}
+.hero__wave svg {
+  width: 100%;
+  height: 60px;
+  display: block;
+}
+
 /* ── Reduced motion ───────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .hero__btn { transition: none; }
@@ -383,7 +406,7 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
-      "default": "Verrassingsboxen voor honden"
+      "default": ""
     },
     {
       "type": "textarea",
