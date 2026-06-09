@@ -2,169 +2,110 @@
 
   <!-- ═══ RIJ 1: Logo + Zoek + Acties ════════════════════════════ -->
   <div class="kw-header__top">
-    <div class="kw-header__container">
+    <div class="kw-header__inner">
 
       <!-- Logo -->
       <a href="{{ routes.root_url }}" class="kw-logo" aria-label="{{ shop.name }}">
         {%- if settings.logo != blank -%}
-          <img
-            src="{{ settings.logo | image_url: width: 220 }}"
-            alt="{{ shop.name }}"
-            width="160" height="52"
-            loading="eager"
-            fetchpriority="high"
-          >
+          <img src="{{ settings.logo | image_url: width: 220 }}"
+               alt="{{ shop.name }}" width="160" height="52"
+               loading="eager" fetchpriority="high">
         {%- else -%}
           <span class="kw-logo__text">{{ shop.name }}</span>
         {%- endif -%}
       </a>
 
-      <!-- Zoekbalk — verborgen op mobiel -->
-      <form
-        action="{{ routes.search_url }}"
-        method="get"
-        class="kw-search"
-        role="search"
-        aria-label="Zoeken in de winkel"
-      >
+      <!-- Zoekbalk (desktop) -->
+      <form action="{{ routes.search_url }}" method="get"
+            class="kw-search" role="search"
+            aria-label="{{ 'header.search_submit' | t }}">
         <input type="hidden" name="type" value="product">
         <div class="kw-search__field">
-          <span class="kw-search__icon" aria-hidden="true">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2.5"
-                 stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"/>
-              <path d="m21 21-4.3-4.3"/>
-            </svg>
+          <span class="kw-search__ico" aria-hidden="true">
+            {{- 'icon-search.svg' | inline_asset_content -}}
           </span>
-          <label for="KwSearchInput" class="sr-only">Zoekterm</label>
-          <input
-            type="search"
-            id="KwSearchInput"
-            name="q"
-            class="kw-search__input"
-            placeholder="{{ section.settings.search_placeholder | default: 'Zoek speeltjes, boxen...' }}"
-            autocomplete="off"
-            value="{{ search.terms | escape }}"
-          >
+          <label for="KwSearchInput" class="kw-sr-only">
+            {{ 'header.search_placeholder' | t }}
+          </label>
+          <input type="search" id="KwSearchInput" name="q"
+                 class="kw-search__input"
+                 placeholder="{{ 'header.search_placeholder' | t }}"
+                 autocomplete="off"
+                 value="{{ search.terms | escape }}">
         </div>
-        <button type="submit" class="kw-search__btn">Zoeken</button>
+        <button type="submit" class="kw-search__submit">
+          {{ 'header.search_submit' | t }}
+        </button>
       </form>
 
       <!-- Acties -->
       <div class="kw-actions">
 
-        <!-- Account -->
         {%- if shop.customer_accounts_enabled -%}
-          
-            href="{{ routes.account_url }}"
-            class="kw-action-btn"
-            aria-label="Mijn account"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round">
-              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
+          <a href="{{ routes.account_url }}" class="kw-icon-btn"
+             aria-label="{{ 'header.account_label' | t }}">
+            {{- 'icon-account.svg' | inline_asset_content -}}
           </a>
         {%- endif -%}
 
-        <!-- Winkelwagen — groen pill -->
-        
-          href="{{ routes.cart_url }}"
-          class="kw-cart-btn"
-          aria-label="Winkelwagen, {{ cart.item_count }} items"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-            <line x1="3" x2="21" y1="6" y2="6"/>
-            <path d="M16 10a4 4 0 0 1-8 0"/>
-          </svg>
-          <span
-            class="kw-cart-btn__count"
-            data-cart-count
-            {%- if cart.item_count == 0 %} hidden{%- endif -%}
-          >
-            {{- cart.item_count -}}
-          </span>
+        <a href="{{ routes.cart_url }}" class="kw-cart-btn"
+           aria-label="{{ 'header.cart_label' | t }}, {{ cart.item_count }}">
+          {{- 'icon-cart.svg' | inline_asset_content -}}
+          {%- if cart.item_count > 0 -%}
+            <span class="kw-cart-btn__badge" data-cart-count>
+              {{- cart.item_count -}}
+            </span>
+          {%- endif -%}
         </a>
 
-        <!-- Hamburger — alleen mobiel -->
-        <button
-          type="button"
-          class="kw-menu-btn"
-          aria-expanded="false"
-          aria-controls="KwDrawer"
-          aria-label="Menu openen"
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2.5"
-               stroke-linecap="round">
-            <line x1="4" x2="20" y1="6"  y2="6"/>
-            <line x1="4" x2="20" y1="12" y2="12"/>
-            <line x1="4" x2="20" y1="18" y2="18"/>
-          </svg>
+        <button type="button" class="kw-icon-btn kw-menu-btn"
+                aria-expanded="false"
+                aria-controls="KwDrawer"
+                aria-label="{{ 'header.menu_open' | t }}">
+          {{- 'icon-menu.svg' | inline_asset_content -}}
         </button>
 
       </div>
     </div>
   </div>
 
-  <!-- ═══ RIJ 2: Zoekbalk op mobiel ══════════════════════════════ -->
-  <div class="kw-search-mobile full-width">
-    <form
-      action="{{ routes.search_url }}"
-      method="get"
-      role="search"
-      aria-label="Zoeken"
-      class="kw-search-mobile__form"
-    >
+  <!-- ═══ RIJ 2: Zoekbalk mobiel ══════════════════════════════════ -->
+  <div class="kw-search-mob full-width">
+    <form action="{{ routes.search_url }}" method="get"
+          role="search" aria-label="{{ 'header.search_submit' | t }}">
       <input type="hidden" name="type" value="product">
-      <span class="kw-search__icon" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-          <circle cx="11" cy="11" r="8"/>
-          <path d="m21 21-4.3-4.3"/>
-        </svg>
+      <span class="kw-search__ico" aria-hidden="true">
+        {{- 'icon-search.svg' | inline_asset_content -}}
       </span>
-      <label for="KwSearchMobile" class="sr-only">Zoekterm</label>
-      <input
-        type="search"
-        id="KwSearchMobile"
-        name="q"
-        class="kw-search__input"
-        placeholder="{{ section.settings.search_placeholder | default: 'Zoek speeltjes, boxen...' }}"
-        autocomplete="off"
-        value="{{ search.terms | escape }}"
-      >
+      <label for="KwSearchMob" class="kw-sr-only">
+        {{ 'header.search_placeholder' | t }}
+      </label>
+      <input type="search" id="KwSearchMob" name="q"
+             class="kw-search__input"
+             placeholder="{{ 'header.search_placeholder' | t }}"
+             autocomplete="off"
+             value="{{ search.terms | escape }}">
     </form>
   </div>
 
-  <!-- ═══ RIJ 3: Navigatie — verborgen op mobiel ══════════════════ -->
-  <nav class="kw-nav full-width" aria-label="Hoofdmenu">
-    <div class="kw-nav__container">
+  <!-- ═══ RIJ 3: Navigatie (desktop) ══════════════════════════════ -->
+  <nav class="kw-nav full-width" aria-label="{{ 'general.header' | t }}">
+    <div class="kw-nav__inner">
       <ul class="kw-nav__list" role="list">
         {%- for link in section.settings.menu.links -%}
           <li class="kw-nav__item{% if link.child_links.size > 0 %} has-sub{% endif %}">
 
-            
-              href="{{ link.url }}"
-              class="kw-nav__link{% if link.active or link.child_links contains page %} is-active{% endif %}"
-              {%- if link.child_links.size > 0 %}
-                aria-haspopup="true"
-                aria-expanded="false"
-              {%- endif %}
-            >
+            <a href="{{ link.url }}"
+               class="kw-nav__link{% if link.active %} is-active{% endif %}"
+               {%- if link.child_links.size > 0 %}
+                 aria-haspopup="true"
+                 aria-expanded="false"
+               {%- endif %}>
               {{- link.title -}}
               {%- if link.child_links.size > 0 -%}
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2.5"
-                     stroke-linecap="round" aria-hidden="true">
-                  <path d="m6 9 6 6 6-6"/>
-                </svg>
+                <span class="kw-nav__chevron" aria-hidden="true">
+                  {{- 'icon-chevron-down.svg' | inline_asset_content -}}
+                </span>
               {%- endif -%}
             </a>
 
@@ -172,10 +113,8 @@
               <ul class="kw-dropdown" role="list">
                 {%- for child in link.child_links -%}
                   <li>
-                    
-                      href="{{ child.url }}"
-                      class="kw-dropdown__link{% if child.active %} is-active{% endif %}"
-                    >
+                    <a href="{{ child.url }}"
+                       class="kw-dropdown__link{% if child.active %} is-active{% endif %}">
                       {{- child.title -}}
                     </a>
                   </li>
@@ -192,531 +131,306 @@
 </header>
 
 <!-- ═══ Mobiel menu drawer ════════════════════════════════════════ -->
-<dialog
-  class="kw-drawer"
-  id="KwDrawer"
-  aria-label="Navigatiemenu"
->
-  <div class="kw-drawer__panel-inner">
-  <div class="kw-drawer__header">
-    <a href="{{ routes.root_url }}" class="kw-logo">
-      {%- if settings.logo != blank -%}
-        <img src="{{ settings.logo | image_url: width: 160 }}"
-             alt="{{ shop.name }}" width="120" height="40" loading="lazy">
-      {%- else -%}
-        <span class="kw-logo__text">{{ shop.name }}</span>
-      {%- endif -%}
-    </a>
-    <button
-      type="button"
-      class="kw-drawer__close"
-      aria-label="Menu sluiten"
-      autofocus
-    >
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-        <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
-      </svg>
-    </button>
-  </div>
+<dialog class="kw-drawer" id="KwDrawer"
+        aria-label="{{ 'general.header' | t }}">
+  <div class="kw-drawer__panel">
 
-  <nav class="kw-drawer__nav" aria-label="Mobiel menu">
-    <ul role="list">
-      {%- for link in section.settings.menu.links -%}
-        <li>
-          
-            href="{{ link.url }}"
-            class="kw-drawer__link{% if link.active %} is-active{% endif %}"
-          >
-            {{- link.title -}}
-          </a>
-          {%- if link.child_links.size > 0 -%}
-            <ul class="kw-drawer__sub" role="list">
-              {%- for child in link.child_links -%}
-                <li>
-                  <a href="{{ child.url }}" class="kw-drawer__sub-link">
-                    {{- child.title -}}
-                  </a>
-                </li>
-              {%- endfor -%}
-            </ul>
-          {%- endif -%}
-        </li>
-      {%- endfor -%}
-    </ul>
-  </nav>
+    <div class="kw-drawer__head">
+      <a href="{{ routes.root_url }}" class="kw-logo">
+        {%- if settings.logo != blank -%}
+          <img src="{{ settings.logo | image_url: width: 160 }}"
+               alt="{{ shop.name }}" width="120" height="40" loading="lazy">
+        {%- else -%}
+          <span class="kw-logo__text">{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+      <button type="button" class="kw-icon-btn kw-drawer__close"
+              aria-label="{{ 'header.menu_close' | t }}"
+              autofocus>
+        {{- 'icon-close.svg' | inline_asset_content -}}
+      </button>
+    </div>
 
-  <div class="kw-drawer__footer">
-    <a href="{{ routes.cart_url }}" class="kw-cart-btn kw-cart-btn--full">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-        <line x1="3" x2="21" y1="6" y2="6"/>
-        <path d="M16 10a4 4 0 0 1-8 0"/>
-      </svg>
-      Winkelwagen
-      {%- if cart.item_count > 0 -%}
-        <span class="kw-cart-btn__count">{{ cart.item_count }}</span>
-      {%- endif -%}
-    </a>
+    <nav class="kw-drawer__nav" aria-label="{{ 'general.header' | t }}">
+      <ul role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            <a href="{{ link.url }}"
+               class="kw-drawer__link{% if link.active %} is-active{% endif %}">
+              {{- link.title -}}
+            </a>
+            {%- if link.child_links.size > 0 -%}
+              <ul class="kw-drawer__sub" role="list">
+                {%- for child in link.child_links -%}
+                  <li>
+                    <a href="{{ child.url }}" class="kw-drawer__sub-link">
+                      {{- child.title -}}
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="kw-drawer__foot">
+      <a href="{{ routes.cart_url }}" class="kw-cart-btn kw-cart-btn--full">
+        {{- 'icon-cart.svg' | inline_asset_content -}}
+        {{ 'header.cart_label' | t }}
+        {%- if cart.item_count > 0 -%}
+          <span class="kw-cart-btn__badge">{{ cart.item_count }}</span>
+        {%- endif -%}
+      </a>
+    </div>
+
   </div>
-</div>
 </dialog>
 
 {% stylesheet %}
 
-/* ── Utility ──────────────────────────────────────────────────── */
-.sr-only {
+.kw-sr-only {
   position: absolute; width: 1px; height: 1px;
   padding: 0; margin: -1px; overflow: hidden;
   clip: rect(0,0,0,0); white-space: nowrap; border: 0;
 }
 
-/* ── Header wrapper ───────────────────────────────────────────── */
 .kw-header {
-  background: var(--kw-white);
+  background: #ffffff;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: var(--kw-sh-sm);
-  transition: box-shadow 240ms var(--kw-ease);
+  box-shadow: 0 1px 0 #EDE2C9;
+  transition: box-shadow 240ms ease;
 }
-.kw-header.scrolled {
-  box-shadow: var(--kw-sh-md);
-}
+.kw-header.scrolled { box-shadow: 0 4px 20px rgba(96,58,21,.12); }
 
-/* ── Rij 1: hoofd balk ────────────────────────────────────────── */
-.kw-header__top {
-  width: 100%;
-  border-bottom: 1px solid var(--kw-n200);
+.kw-header__top { border-bottom: 1px solid #EDE2C9; }
+.kw-header__inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 14px 20px;
+  display: flex; align-items: center; gap: 16px;
 }
-.kw-header__container {
-  max-width: var(--page-width, 1280px);
-  margin: 0 auto;
-  padding: 14px var(--page-margin, 20px);
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
+@media (min-width: 1200px) { .kw-header__inner { padding: 14px 60px; } }
 
-/* ── Logo ─────────────────────────────────────────────────────── */
-.kw-logo {
-  text-decoration: none;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-}
-.kw-logo img {
-  height: 44px;
-  width: auto;
-}
+.kw-logo { text-decoration: none; flex-shrink: 0; display: flex; align-items: center; }
+.kw-logo img { height: 44px; width: auto; }
 .kw-logo__text {
-  font-family: var(--kw-ff-head);
-  font-size: 1.75rem;
-  color: var(--kw-orange);
-  white-space: nowrap;
-  line-height: 1;
+  font-family: 'Lilita One', cursive;
+  font-size: 1.75rem; color: #F7A048; line-height: 1; white-space: nowrap;
 }
 
-/* ── Zoekbalk (desktop) ───────────────────────────────────────── */
-.kw-search {
-  display: none;
-  flex: 1;
-  max-width: 600px;
-  align-items: center;
-}
+.kw-search { display: none; flex: 1; max-width: 580px; }
 .kw-search__field {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  background: var(--kw-n100);
-  border: 2px solid var(--kw-n400);
-  border-radius: 999px 0 0 999px;
-  height: 48px;
-  padding: 0 16px;
-  transition: border-color 200ms var(--kw-ease),
-              box-shadow 200ms var(--kw-ease);
+  display: flex; align-items: center;
+  background: #F8EFDD; border: 2px solid #DAC9A1;
+  border-radius: 999px 0 0 999px; height: 48px;
+  padding: 0 16px; flex: 1;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 .kw-search__field:focus-within {
-  border-color: var(--kw-orange);
-  box-shadow: 0 0 0 3px var(--kw-orange-lt);
+  border-color: #F7A048;
+  box-shadow: 0 0 0 3px rgba(247,160,72,.15);
 }
-.kw-search__icon {
-  color: var(--kw-n700);
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  margin-right: 10px;
+.kw-search__ico {
+  color: #A88259; flex-shrink: 0; display: flex;
+  align-items: center; margin-right: 10px;
 }
+.kw-search__ico svg { width: 18px; height: 18px; }
 .kw-search__input {
-  flex: 1;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-family: var(--kw-ff-body);
-  font-size: 0.95rem;
-  color: var(--kw-n800);
-  min-width: 0;
+  flex: 1; border: none; outline: none; background: transparent;
+  font-family: 'Karla', sans-serif; font-size: 0.95rem;
+  color: #603A15; min-width: 0;
 }
-.kw-search__input::placeholder { color: var(--kw-n700); }
+.kw-search__input::placeholder { color: #A88259; }
 .kw-search__input::-webkit-search-cancel-button { display: none; }
-.kw-search__btn {
-  height: 48px;
-  padding: 0 24px;
-  background: var(--kw-orange);
-  color: #fff;
-  font-family: var(--kw-ff-head);
-  font-size: 0.95rem;
-  border: none;
-  border-radius: 0 999px 999px 0;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 160ms var(--kw-ease);
-  flex-shrink: 0;
+.kw-search__submit {
+  height: 48px; padding: 0 24px;
+  background: #F7A048; color: #fff;
+  font-family: 'Lilita One', cursive; font-size: 0.95rem;
+  border: none; border-radius: 0 999px 999px 0;
+  cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  transition: background 160ms ease;
 }
-.kw-search__btn:hover { background: var(--kw-orange-dk); }
+.kw-search__submit:hover { background: #d9823a; }
 
-/* ── Actie knoppen ────────────────────────────────────────────── */
-.kw-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: auto;
-  flex-shrink: 0;
+.kw-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; flex-shrink: 0; }
+
+.kw-icon-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: transparent; border: none; cursor: pointer;
+  color: #603A15; text-decoration: none;
+  transition: background 160ms ease, color 160ms ease;
 }
-.kw-action-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  color: var(--kw-n800);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background 160ms var(--kw-ease), color 160ms var(--kw-ease);
-}
-.kw-action-btn:hover {
-  background: var(--kw-n200);
-  color: var(--kw-orange);
-}
-/* Winkelwagen: groen pill */
+.kw-icon-btn:hover { background: #EDE2C9; color: #F7A048; }
+.kw-icon-btn svg { width: 22px; height: 22px; }
+
 .kw-cart-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 44px;
-  padding: 0 18px;
-  background: var(--kw-green);
-  color: #fff;
-  border-radius: 999px;
-  text-decoration: none;
-  font-family: var(--kw-ff-head);
-  font-size: 0.9rem;
-  position: relative;
-  transition: background 160ms var(--kw-ease),
-              transform 200ms var(--kw-bounce);
-  flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; height: 44px; padding: 0 18px;
+  background: #66AA44; color: #fff; border-radius: 999px;
+  text-decoration: none; font-family: 'Lilita One', cursive;
+  font-size: 0.9rem; position: relative; flex-shrink: 0;
+  transition: background 160ms ease, transform 200ms cubic-bezier(.34,1.56,.64,1);
 }
-.kw-cart-btn:hover {
-  background: var(--kw-green-dk);
-  transform: translateY(-2px);
+.kw-cart-btn:hover { background: #4d8833; transform: translateY(-2px); }
+.kw-cart-btn svg { width: 20px; height: 20px; }
+.kw-cart-btn--full { width: 100%; border-radius: 999px; }
+.kw-cart-btn__badge {
+  background: #F7A048; color: #fff;
+  font-family: 'Lilita One', cursive; font-size: 0.7rem;
+  min-width: 20px; height: 20px; border-radius: 999px;
+  display: inline-flex; align-items: center;
+  justify-content: center; padding: 0 5px;
 }
-.kw-cart-btn--full { width: 100%; justify-content: center; }
-.kw-cart-btn__count {
-  background: var(--kw-orange);
-  color: #fff;
-  font-family: var(--kw-ff-head);
-  font-size: 0.7rem;
-  min-width: 20px;
-  height: 20px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 5px;
-  line-height: 1;
-}
-/* Hamburger */
-.kw-menu-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: var(--kw-n800);
-  transition: background 160ms var(--kw-ease);
-}
-.kw-menu-btn:hover { background: var(--kw-n200); }
 
-/* ── Mobiele zoekbalk (rij 2) ─────────────────────────────────── */
-.kw-search-mobile {
-  display: flex;
-  background: var(--kw-n100);
-  border-top: 1px solid var(--kw-n200);
-  padding: 10px var(--page-margin, 20px);
-}
-.kw-search-mobile__form {
-  display: flex;
-  align-items: center;
-  background: var(--kw-white);
-  border: 2px solid var(--kw-n400);
-  border-radius: 999px;
-  height: 42px;
-  padding: 0 16px;
-  width: 100%;
-  gap: 8px;
-  transition: border-color 200ms var(--kw-ease);
-}
-.kw-search-mobile__form:focus-within {
-  border-color: var(--kw-orange);
-}
-.kw-search-mobile .kw-search__input { flex: 1; border: none; outline: none; background: transparent; font-family: var(--kw-ff-body); font-size: 0.9rem; color: var(--kw-n800); min-width: 0; }
-.kw-search-mobile .kw-search__icon { color: var(--kw-n700); display: flex; flex-shrink: 0; }
+.kw-menu-btn { display: flex; }
 
-/* ── Navigatie balk (rij 3) ───────────────────────────────────── */
-.kw-nav {
-  background: var(--kw-n100);
-  border-top: 1px solid var(--kw-n200);
-  display: none;
+.kw-search-mob {
+  background: #F8EFDD;
+  border-top: 1px solid #EDE2C9;
+  padding: 10px 20px;
 }
-.kw-nav__container {
-  max-width: var(--page-width, 1280px);
-  margin: 0 auto;
-  padding: 0 var(--page-margin, 20px);
+.kw-search-mob form {
+  display: flex; align-items: center; gap: 8px;
+  background: #fff; border: 2px solid #DAC9A1;
+  border-radius: 999px; height: 42px; padding: 0 16px; width: 100%;
+  transition: border-color 200ms ease;
 }
-.kw-nav__list {
-  display: flex;
-  align-items: center;
-  list-style: none;
-  gap: 0;
-  height: 48px;
+.kw-search-mob form:focus-within { border-color: #F7A048; }
+.kw-search-mob .kw-search__input {
+  flex: 1; border: none; outline: none; background: transparent;
+  font-family: 'Karla', sans-serif; font-size: 0.9rem; color: #603A15; min-width: 0;
 }
+.kw-search-mob .kw-search__ico { color: #A88259; display: flex; flex-shrink: 0; }
+.kw-search-mob .kw-search__ico svg { width: 16px; height: 16px; }
+
+.kw-nav { background: #F8EFDD; border-top: 1px solid #EDE2C9; display: none; }
+.kw-nav__inner { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+@media (min-width: 1200px) { .kw-nav__inner { padding: 0 60px; } }
+.kw-nav__list { display: flex; align-items: center; list-style: none; height: 48px; }
 .kw-nav__item { position: relative; }
 .kw-nav__link {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 0 18px;
-  height: 48px;
-  font-family: var(--kw-ff-head);
-  font-size: 0.95rem;
-  color: var(--kw-n700);
-  text-decoration: none;
-  position: relative;
-  white-space: nowrap;
-  transition: color 160ms var(--kw-ease);
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 0 18px; height: 48px;
+  font-family: 'Lilita One', cursive; font-size: 0.95rem;
+  color: #A88259; text-decoration: none; white-space: nowrap;
+  position: relative; transition: color 160ms ease;
 }
 .kw-nav__link::after {
-  content: '';
-  position: absolute;
+  content: ''; position: absolute;
   bottom: 0; left: 18px; right: 18px;
-  height: 3px;
-  background: var(--kw-orange);
-  border-radius: 3px 3px 0 0;
-  transform: scaleX(0);
-  transition: transform 220ms var(--kw-bounce);
+  height: 3px; background: #F7A048;
+  border-radius: 3px 3px 0 0; transform: scaleX(0);
+  transition: transform 220ms cubic-bezier(.34,1.56,.64,1);
 }
-.kw-nav__link:hover { color: var(--kw-n800); }
+.kw-nav__link:hover { color: #603A15; }
 .kw-nav__link:hover::after,
 .kw-nav__link.is-active::after { transform: scaleX(1); }
-.kw-nav__link.is-active { color: var(--kw-orange); }
+.kw-nav__link.is-active { color: #F7A048; }
+.kw-nav__chevron { display: flex; align-items: center; }
+.kw-nav__chevron svg { width: 11px; height: 11px; }
 
-/* Dropdown */
 .kw-dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  min-width: 200px;
-  background: var(--kw-white);
-  border: 1.5px solid var(--kw-n300);
-  border-radius: 16px;
-  box-shadow: var(--kw-sh-md);
-  padding: 8px;
-  list-style: none;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(8px);
-  transition: opacity 200ms var(--kw-ease),
-              visibility 200ms,
-              transform 200ms var(--kw-ease);
-  z-index: 10;
+  position: absolute; top: calc(100% + 4px); left: 0;
+  min-width: 200px; background: #fff;
+  border: 1.5px solid #DAC9A1; border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(96,58,21,.12);
+  padding: 8px; list-style: none; z-index: 10;
+  opacity: 0; visibility: hidden; transform: translateY(8px);
+  transition: opacity 200ms ease, visibility 200ms, transform 200ms ease;
 }
 .kw-nav__item.has-sub:hover .kw-dropdown,
 .kw-nav__item.has-sub:focus-within .kw-dropdown {
   opacity: 1; visibility: visible; transform: translateY(0);
 }
 .kw-dropdown__link {
-  display: block;
-  padding: 10px 16px;
-  font-family: var(--kw-ff-body);
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--kw-n800);
-  text-decoration: none;
-  border-radius: 10px;
+  display: block; padding: 10px 16px;
+  font-family: 'Karla', sans-serif; font-size: 0.9rem; font-weight: 600;
+  color: #603A15; text-decoration: none; border-radius: 10px;
   transition: background 140ms, color 140ms;
 }
 .kw-dropdown__link:hover,
-.kw-dropdown__link.is-active {
-  background: var(--kw-orange-lt);
-  color: var(--kw-orange-dk);
-}
+.kw-dropdown__link.is-active { background: #fff0e4; color: #d9823a; }
 
-/* ── Desktop breakpoint ───────────────────────────────────────── */
 @media (min-width: 768px) {
   .kw-search { display: flex; }
-  .kw-search-mobile { display: none; }
+  .kw-search-mob { display: none; }
   .kw-nav { display: block; }
-  .kw-menu-btn { display: none; }
+  .kw-menu-btn { display: none !important; }
   .kw-actions { margin-left: 0; }
 }
 
-/* ── Mobiel menu drawer ───────────────────────────────────────── */
 .kw-drawer {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  padding: 0;
-  border: none;
-  background: transparent;
-  max-width: 100%;
-  max-height: 100%;
-  width: 100%;
-  height: 100%;
+  position: fixed; inset: 0; z-index: 200;
+  padding: 0; border: none; background: transparent;
+  max-width: 100%; max-height: 100%; width: 100%; height: 100%;
 }
-.kw-drawer::backdrop {
-  background: rgba(61,34,9,.5);
-}
-.kw-drawer[open] {
-  display: flex;
-  justify-content: flex-end;
-  animation: drawer-in 300ms var(--kw-ease) forwards;
-}
-@keyframes drawer-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-.kw-drawer__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--kw-n200);
-}
-.kw-drawer__close {
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  background: var(--kw-n200);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--kw-n800);
-  transition: background 140ms;
-}
-.kw-drawer__close:hover { background: var(--kw-n400); }
-/* Drawer panel */
+.kw-drawer::backdrop { background: rgba(61,34,9,.5); }
 .kw-drawer:not([open]) { display: none; }
-.kw-drawer > * { pointer-events: none; }
-
-/* Inner panel — slides in from right */
-.kw-drawer__panel-inner {
-  background: var(--kw-white);
-  width: 300px;
-  max-width: 88vw;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  pointer-events: all;
-  animation: panel-in 300ms var(--kw-ease) forwards;
+.kw-drawer[open] { display: flex; justify-content: flex-end; }
+.kw-drawer__panel {
+  background: #fff; width: 300px; max-width: 88vw;
+  height: 100%; display: flex; flex-direction: column; overflow-y: auto;
+  animation: kw-panel-in 300ms ease forwards;
 }
-@keyframes panel-in {
+@keyframes kw-panel-in {
   from { transform: translateX(100%); }
   to   { transform: translateX(0); }
 }
-.kw-drawer__nav {
-  flex: 1;
-  padding: 12px;
-  overflow-y: auto;
+.kw-drawer__head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid #EDE2C9; flex-shrink: 0;
 }
+.kw-drawer__close { background: #EDE2C9; }
+.kw-drawer__close:hover { background: #DAC9A1; }
+.kw-drawer__nav { flex: 1; padding: 12px; overflow-y: auto; }
 .kw-drawer__nav ul { list-style: none; }
 .kw-drawer__link {
-  display: block;
-  padding: 13px 16px;
-  font-family: var(--kw-ff-head);
-  font-size: 1.1rem;
-  color: var(--kw-n800);
-  text-decoration: none;
-  border-radius: 14px;
-  transition: background 140ms, color 140ms;
-  margin-bottom: 2px;
+  display: block; padding: 13px 16px;
+  font-family: 'Lilita One', cursive; font-size: 1.1rem;
+  color: #603A15; text-decoration: none; border-radius: 14px;
+  margin-bottom: 2px; transition: background 140ms, color 140ms;
 }
 .kw-drawer__link:hover,
-.kw-drawer__link.is-active {
-  background: var(--kw-orange-lt);
-  color: var(--kw-orange-dk);
-}
-.kw-drawer__sub {
-  padding-left: 16px;
-  margin-bottom: 6px;
-}
+.kw-drawer__link.is-active { background: #fff0e4; color: #d9823a; }
+.kw-drawer__sub { padding-left: 16px; margin-bottom: 6px; list-style: none; }
 .kw-drawer__sub-link {
-  display: block;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--kw-n700);
-  text-decoration: none;
-  border-radius: 10px;
-  transition: color 140ms;
+  display: block; padding: 8px 16px;
+  font-size: 0.9rem; font-weight: 600; color: #A88259;
+  text-decoration: none; border-radius: 10px; transition: color 140ms;
 }
-.kw-drawer__sub-link:hover { color: var(--kw-orange); }
-.kw-drawer__footer {
-  padding: 16px 20px;
-  border-top: 1px solid var(--kw-n200);
-}
+.kw-drawer__sub-link:hover { color: #F7A048; }
+.kw-drawer__foot { padding: 16px 20px; border-top: 1px solid #EDE2C9; flex-shrink: 0; }
 
-/* ── Reduced motion ───────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .kw-header, .kw-cart-btn,
-  .kw-nav__link::after,
-  .kw-dropdown,
-  .kw-drawer, .kw-drawer__panel-inner { transition: none; animation: none; }
+  .kw-nav__link::after, .kw-dropdown,
+  .kw-drawer__panel { transition: none; animation: none; }
 }
 
 {% endstylesheet %}
 
 {% javascript %}
 (function () {
-  // ── Scroll schaduw ────────────────────────────────────────────
-  var header = document.getElementById('KwHeader');
+  var header  = document.getElementById('KwHeader');
+  var drawer  = document.getElementById('KwDrawer');
+  var menuBtn = document.querySelector('.kw-menu-btn');
+  var closeBtn = document.querySelector('.kw-drawer__close');
+
   if (header) {
     window.addEventListener('scroll', function () {
       header.classList.toggle('scrolled', window.scrollY > 40);
     }, { passive: true });
   }
 
-  // ── Mobiel menu (native <dialog>) ────────────────────────────
-  var drawer    = document.getElementById('KwDrawer');
-  var menuBtn   = document.querySelector('.kw-menu-btn');
-  var closeBtn  = document.querySelector('.kw-drawer__close');
-
-  if (drawer && menuBtn) {
-    menuBtn.addEventListener('click', function () {
-      drawer.showModal();
-      menuBtn.setAttribute('aria-expanded', 'true');
-      document.body.style.overflow = 'hidden';
-    });
+  function openDrawer() {
+    if (!drawer) return;
+    drawer.showModal();
+    if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
   }
 
   function closeDrawer() {
@@ -726,13 +440,10 @@
     document.body.style.overflow = '';
   }
 
+  if (menuBtn)  menuBtn.addEventListener('click', openDrawer);
   if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
-
-  // Klik op backdrop sluit drawer
   if (drawer) {
-    drawer.addEventListener('click', function (e) {
-      if (e.target === drawer) closeDrawer();
-    });
+    drawer.addEventListener('click', function (e) { if (e.target === drawer) closeDrawer(); });
     drawer.addEventListener('cancel', function () {
       if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
@@ -744,7 +455,6 @@
 {% schema %}
 {
   "name": "t:general.header",
-  "tag": "header",
   "settings": [
     {
       "type": "link_list",
@@ -761,8 +471,7 @@
     {
       "type": "text",
       "id": "search_placeholder",
-      "label": "Zoekbalk tekst",
-      "default": "Zoek speeltjes, boxen..."
+      "label": "Zoekbalk placeholder"
     }
   ]
 }

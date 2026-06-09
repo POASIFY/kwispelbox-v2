@@ -57,11 +57,11 @@
     "customer_account_menu": "Customer account menu"
   },
   "header": {
-    "search_placeholder": "Search toys, boxes...",
-    "search_submit": "Search",
-    "cart_label": "Cart",
-    "account_label": "My account",
-    "menu_open": "Open menu",
-    "menu_close": "Close menu"
+    "search_placeholder": "Zoek speeltjes, boxen...",
+    "search_submit": "Zoeken",
+    "cart_label": "Winkelwagen",
+    "account_label": "Mijn account",
+    "menu_open": "Menu openen",
+    "menu_close": "Menu sluiten"
   }
 }
