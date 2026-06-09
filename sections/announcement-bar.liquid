@@ -1,0 +1,77 @@
+<div class="announcement" id="announcement-bar">
+  <p class="announcement__text">
+    {{ section.settings.text }}
+  </p>
+  <button
+    class="announcement__close"
+    type="button"
+    aria-label="Sluit aankondiging"
+    onclick="this.closest('#announcement-bar').style.display='none'"
+  >
+    &times;
+  </button>
+</div>
+
+{% stylesheet %}
+  .announcement {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background-color: #603A15;
+    color: #ffffff;
+    padding: 10px 48px 10px 16px;
+    position: relative;
+    font-family: 'Karla', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .announcement__text {
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .announcement__text a {
+    color: #FFE071;
+    text-decoration: underline;
+  }
+
+  .announcement__close {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.25rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+    transition: color 150ms ease;
+  }
+
+  .announcement__close:hover {
+    color: #ffffff;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Aankondigingsbalk",
+  "tag": "div",
+  "limit": 1,
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Tekst",
+      "default": "Gratis verzending vanaf €75 · Voor 22:00 besteld = morgen in huis"
+    }
+  ]
+}
+{% endschema %}
