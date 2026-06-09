@@ -48,6 +48,12 @@
           </a>
         {%- endif -%}
 
+        {%- if section.settings.cta_url != blank -%}
+          <a href="{{ section.settings.cta_url }}" class="kw-cta-btn">
+            {{ section.settings.cta_text | default: 'Kies je box' }}
+          </a>
+        {%- endif -%}
+
         <a href="{{ routes.cart_url }}" class="kw-cart-btn"
            aria-label="{{ 'header.cart_label' | t }}, {{ cart.item_count }}">
           {{- 'icon-cart.svg' | inline_asset_content -}}
@@ -286,6 +292,23 @@
   justify-content: center; padding: 0 5px;
 }
 
+.kw-cta-btn {
+  display: none;
+  align-items: center;
+  height: 44px;
+  padding: 0 20px;
+  background: #F7A048;
+  color: #fff;
+  border-radius: 999px;
+  font-family: 'Lilita One', cursive;
+  font-size: 0.9rem;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 160ms ease, transform 200ms cubic-bezier(.34,1.56,.64,1);
+}
+.kw-cta-btn:hover { background: #d9823a; transform: translateY(-2px); }
+
 .kw-menu-btn { display: flex; }
 
 .kw-search-mob {
@@ -361,6 +384,7 @@
   .kw-nav { display: block; }
   .kw-menu-btn { display: none !important; }
   .kw-actions { margin-left: 0; }
+  .kw-cta-btn { display: inline-flex; }
 }
 
 .kw-drawer {
@@ -472,6 +496,17 @@
       "type": "text",
       "id": "search_placeholder",
       "label": "Zoekbalk placeholder"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA link"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA tekst",
+      "default": "Kies je box"
     }
   ]
 }
