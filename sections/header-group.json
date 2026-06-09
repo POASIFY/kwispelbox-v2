@@ -4,9 +4,27 @@
   "sections": {
     "announcement": {
       "type": "announcement-bar",
-      "settings": {
-        "text": "Gratis verzending vanaf €75 · Voor 22:00 besteld = morgen in huis"
-      }
+      "blocks": {
+        "msg1": {
+          "type": "announcement",
+          "settings": {
+            "text": "Gratis verzending vanaf €75 · Voor 22:00 besteld = morgen in huis"
+          }
+        },
+        "msg2": {
+          "type": "announcement",
+          "settings": {
+            "text": "Al meer dan 1.200 blije honden 🐾"
+          }
+        },
+        "msg3": {
+          "type": "announcement",
+          "settings": {
+            "text": "100% tevredenheidsgarantie · Niet goed? Geld terug"
+          }
+        }
+      },
+      "block_order": ["msg1", "msg2", "msg3"]
     },
     "header": {
       "type": "header",
