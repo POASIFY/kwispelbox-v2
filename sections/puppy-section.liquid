@@ -1,0 +1,491 @@
+<section class="puppy">
+
+  <!-- Hoofd blok: afbeelding links + content rechts ──────── -->
+  <div class="puppy__main">
+
+    <!-- Grote afbeelding links -->
+    <div class="puppy__hero-img-wrap">
+      {%- if section.settings.hero_image != blank -%}
+        <img
+          src="{{ section.settings.hero_image | image_url: width: 900 }}"
+          srcset="{{ section.settings.hero_image | image_url: width: 600 }} 600w,
+                  {{ section.settings.hero_image | image_url: width: 900 }} 900w,
+                  {{ section.settings.hero_image | image_url: width: 1200 }} 1200w"
+          sizes="(max-width: 767px) 100vw, 50vw"
+          alt="{{ section.settings.hero_image.alt | default: 'Puppy met Kwispelbox' | escape }}"
+          width="900"
+          height="{{ 900 | divided_by: section.settings.hero_image.aspect_ratio | round }}"
+          loading="lazy"
+          class="puppy__hero-img"
+        >
+      {%- else -%}
+        <div class="puppy__hero-ph">
+          {{- 'icon-paw.svg' | inline_asset_content -}}
+          <span>Voeg puppy foto toe</span>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <!-- Content rechts -->
+    <div class="puppy__content">
+
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="puppy__eyebrow">
+          {{- 'icon-sparkle.svg' | inline_asset_content -}}
+          {{ section.settings.eyebrow }}
+        </p>
+      {%- endif -%}
+
+      <h2 class="puppy__title">{{ section.settings.title }}</h2>
+
+      {%- if section.settings.intro != blank -%}
+        <p class="puppy__intro">{{ section.settings.intro }}</p>
+      {%- endif -%}
+
+      <!-- Benefits + side image -->
+      <div class="puppy__benefits-wrap">
+
+        <div class="puppy__benefits">
+          {%- assign benefit_blocks = section.blocks | where: 'type', 'benefit' -%}
+          {%- for block in benefit_blocks -%}
+            <div class="puppy__benefit" {{ block.shopify_attributes }}>
+              <span class="puppy__benefit-icon puppy__benefit-icon--{{ block.settings.color }}" aria-hidden="true">
+                {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+              </span>
+              <div class="puppy__benefit-text">
+                <strong>{{ block.settings.title }}</strong>
+                <p>{{ block.settings.description }}</p>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <!-- Kleine afbeelding rechts -->
+        {%- if section.settings.side_image != blank -%}
+          <div class="puppy__side-img-wrap">
+            <img
+              src="{{ section.settings.side_image | image_url: width: 320 }}"
+              alt="{{ section.settings.side_image.alt | default: 'Puppy speelgoed' | escape }}"
+              width="320" height="400"
+              loading="lazy"
+              class="puppy__side-img"
+            >
+            {%- if section.settings.side_badge != blank -%}
+              <div class="puppy__side-badge">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                {{ section.settings.side_badge }}
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Favorieten strip ─────────────────────────────────── -->
+  <div class="puppy__favs">
+    <div class="puppy__favs-inner">
+
+      <!-- Links: titel + CTA -->
+      <div class="puppy__favs-cta">
+        <div class="puppy__favs-cta-icon" aria-hidden="true">
+          {{- 'icon-paw.svg' | inline_asset_content -}}
+        </div>
+        <div class="puppy__favs-cta-text">
+          <strong>{{ section.settings.favs_title }}</strong>
+          <span>{{ section.settings.favs_subtitle }}</span>
+        </div>
+        {%- if section.settings.cta_label != blank -%}
+          <a href="{{ section.settings.cta_url }}" class="puppy__cta">
+            {{ section.settings.cta_label }}
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        {%- endif -%}
+      </div>
+
+      <!-- Product items -->
+      {%- assign product_blocks = section.blocks | where: 'type', 'product_item' -%}
+      {%- for block in product_blocks -%}
+        <div class="puppy__product" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            <div class="puppy__product-img-wrap">
+              <img
+                src="{{ block.settings.image | image_url: width: 200 }}"
+                alt="{{ block.settings.title | escape }}"
+                width="200" height="160"
+                loading="lazy"
+                class="puppy__product-img"
+              >
+            </div>
+          {%- else -%}
+            <div class="puppy__product-img-ph">
+              {{- 'icon-toy.svg' | inline_asset_content -}}
+            </div>
+          {%- endif -%}
+          <strong class="puppy__product-title">{{ block.settings.title }}</strong>
+          <p class="puppy__product-desc">{{ block.settings.description }}</p>
+        </div>
+      {%- endfor -%}
+
+    </div>
+  </div>
+
+  <!-- Trust strip ──────────────────────────────────────── -->
+  {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
+  {%- if trust_blocks.size > 0 -%}
+    <div class="puppy__trust">
+      <div class="puppy__trust-inner">
+        {%- for block in trust_blocks -%}
+          <div class="puppy__trust-item" {{ block.shopify_attributes }}>
+            <span class="puppy__trust-icon puppy__trust-icon--{{ block.settings.color }}" aria-hidden="true">
+              {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+            </span>
+            <div class="puppy__trust-text">
+              <strong>{{ block.settings.title }}</strong>
+              {%- if block.settings.subtitle != blank -%}
+                <span>{{ block.settings.subtitle }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+</section>
+
+{% stylesheet %}
+/* ── Sectie ─────────────────────────────────────────────── */
+.puppy {
+  background: #FFF5F8;
+  overflow: hidden;
+}
+
+/* ── Hoofd blok ─────────────────────────────────────────── */
+.puppy__main {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+@media(min-width: 900px) {
+  .puppy__main { grid-template-columns: 1fr 1fr; min-height: 640px; }
+}
+
+/* ── Grote afbeelding links ─────────────────────────────── */
+.puppy__hero-img-wrap {
+  position: relative;
+  overflow: hidden;
+  min-height: 300px;
+}
+.puppy__hero-img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center top;
+  display: block;
+}
+@media(min-width: 900px) {
+  .puppy__hero-img {
+    border-radius: 0 40px 40px 0;
+  }
+}
+.puppy__hero-ph {
+  width: 100%; height: 100%; min-height: 300px;
+  background: #FFE5EE;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px; color: #FFB8CD;
+}
+
+/* ── Content rechts ─────────────────────────────────────── */
+.puppy__content {
+  padding: 48px 24px;
+  display: flex; flex-direction: column; gap: 20px;
+  justify-content: center;
+}
+@media(min-width: 900px) {
+  .puppy__content { padding: 64px 60px 64px 48px; }
+}
+
+.puppy__eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Karla', sans-serif;
+  font-size: .78rem; font-weight: 800;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: #e75480;
+}
+.puppy__eyebrow svg { width: 14px; height: 14px; color: #F7A048; flex-shrink: 0; }
+
+.puppy__title {
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  color: #3d2209; line-height: 1.05;
+}
+
+.puppy__intro {
+  font-family: 'Karla', sans-serif;
+  font-size: 1rem; color: #A88259; line-height: 1.75;
+  max-width: 46ch;
+}
+
+/* ── Benefits + side image ──────────────────────────────── */
+.puppy__benefits-wrap {
+  display: flex; gap: 20px; align-items: flex-start;
+}
+.puppy__benefits {
+  display: flex; flex-direction: column; gap: 16px; flex: 1;
+}
+.puppy__benefit {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: rgba(255,255,255,.7);
+  border: 1.5px solid #FFD6E3;
+  border-radius: 16px; padding: 14px 16px;
+}
+.puppy__benefit-icon {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.puppy__benefit-icon svg { width: 20px; height: 20px; }
+.puppy__benefit-icon--pink   { background: #fff0f5; color: #e75480; }
+.puppy__benefit-icon--green  { background: #e8f5e2; color: #66AA44; }
+.puppy__benefit-icon--yellow { background: #fffae0; color: #c49000; }
+.puppy__benefit-text strong {
+  display: block;
+  font-family: 'Lilita One', cursive;
+  font-size: .95rem; color: #3d2209; margin-bottom: 3px;
+}
+.puppy__benefit-text p {
+  font-family: 'Karla', sans-serif;
+  font-size: .8rem; color: #A88259; line-height: 1.55; margin: 0;
+}
+
+/* Side image */
+.puppy__side-img-wrap {
+  width: 140px; flex-shrink: 0; position: relative;
+  display: none;
+}
+@media(min-width: 1100px) { .puppy__side-img-wrap { display: block; } }
+.puppy__side-img {
+  width: 100%; border-radius: 20px;
+  box-shadow: 0 8px 28px rgba(96,58,21,.12); display: block;
+}
+.puppy__side-badge {
+  position: absolute; bottom: -10px; left: 50%;
+  transform: translateX(-50%);
+  background: #FFB8CD; color: #7a1a35;
+  font-family: 'Karla', sans-serif;
+  font-size: .68rem; font-weight: 700;
+  white-space: nowrap;
+  padding: 5px 12px; border-radius: 999px;
+  display: flex; align-items: center; gap: 5px;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+.puppy__side-badge svg { width: 10px; height: 10px; color: #e75480; flex-shrink: 0; }
+
+/* ── Favorieten strip ───────────────────────────────────── */
+.puppy__favs {
+  background: #fff;
+  border-top: 1.5px solid #FFD6E3;
+  border-bottom: 1.5px solid #FFD6E3;
+}
+.puppy__favs-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 20px;
+  display: flex; align-items: stretch; gap: 0;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.puppy__favs-inner::-webkit-scrollbar { display: none; }
+@media(min-width: 1200px) { .puppy__favs-inner { padding: 0 40px; overflow-x: visible; } }
+
+.puppy__favs-cta {
+  display: flex; flex-direction: column;
+  justify-content: center; gap: 10px;
+  padding: 28px 32px 28px 0;
+  min-width: 220px; flex-shrink: 0;
+  border-right: 1.5px solid #FFD6E3;
+}
+.puppy__favs-cta-icon {
+  width: 44px; height: 44px;
+  background: #e8f5e2; color: #66AA44;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.puppy__favs-cta-icon svg { width: 20px; height: 20px; }
+.puppy__favs-cta-text { display: flex; flex-direction: column; gap: 3px; }
+.puppy__favs-cta-text strong {
+  font-family: 'Lilita One', cursive;
+  font-size: 1.1rem; color: #3d2209;
+}
+.puppy__favs-cta-text span {
+  font-family: 'Karla', sans-serif;
+  font-size: .8rem; color: #A88259; line-height: 1.4;
+}
+.puppy__cta {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: 'Lilita One', cursive; font-size: .9rem;
+  background: #FFB8CD; color: #7a1a35;
+  padding: 11px 20px; border-radius: 999px;
+  text-decoration: none; white-space: nowrap;
+  border: none; cursor: pointer;
+  transition: background 160ms, transform 200ms cubic-bezier(.34,1.56,.64,1);
+  align-self: flex-start;
+}
+.puppy__cta:hover { background: #f09ab2; transform: translateY(-2px); }
+
+/* Product items */
+.puppy__product {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 24px 24px;
+  border-right: 1.5px solid #FFD6E3;
+  min-width: 160px; flex-shrink: 0;
+}
+.puppy__product:last-child { border-right: none; }
+.puppy__product-img-wrap {
+  width: 100%; height: 100px; overflow: hidden;
+  border-radius: 14px; background: #FFF5F8;
+}
+.puppy__product-img {
+  width: 100%; height: 100%;
+  object-fit: contain; display: block;
+  transition: transform 300ms ease;
+}
+.puppy__product:hover .puppy__product-img { transform: scale(1.08); }
+.puppy__product-img-ph {
+  width: 100%; height: 100px; border-radius: 14px;
+  background: #FFE5EE; display: flex;
+  align-items: center; justify-content: center; color: #FFB8CD;
+}
+.puppy__product-img-ph svg { width: 32px; height: 32px; }
+.puppy__product-title {
+  font-family: 'Lilita One', cursive;
+  font-size: .9rem; color: #3d2209; line-height: 1.2;
+}
+.puppy__product-desc {
+  font-family: 'Karla', sans-serif;
+  font-size: .75rem; color: #A88259; line-height: 1.5;
+}
+
+/* ── Trust strip ────────────────────────────────────────── */
+.puppy__trust { background: #FFF5F8; border-top: 1.5px solid #FFD6E3; }
+.puppy__trust-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 20px;
+  display: grid; grid-template-columns: repeat(2, 1fr);
+}
+@media(min-width: 768px) {
+  .puppy__trust-inner { grid-template-columns: repeat(4, 1fr); padding: 0 60px; }
+}
+.puppy__trust-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 20px 16px; border-right: 1px solid #FFD6E3;
+}
+.puppy__trust-item:nth-child(2n) { border-right: none; }
+.puppy__trust-item:last-child    { border-right: none; }
+@media(min-width: 768px) {
+  .puppy__trust-item:nth-child(2n) { border-right: 1px solid #FFD6E3; }
+  .puppy__trust-item:last-child    { border-right: none; }
+}
+.puppy__trust-icon {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.puppy__trust-icon svg { width: 20px; height: 20px; }
+.puppy__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
+.puppy__trust-icon--pink   { background: #fff0f5; color: #e75480; }
+.puppy__trust-icon--orange { background: #fff0e4; color: #F7A048; }
+.puppy__trust-icon--yellow { background: #fffae0; color: #c49000; }
+.puppy__trust-text { display: flex; flex-direction: column; gap: 2px; }
+.puppy__trust-text strong { font-family: 'Karla', sans-serif; font-size: .85rem; font-weight: 800; color: #3d2209; }
+.puppy__trust-text span   { font-size: .75rem; color: #A88259; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Puppy sectie",
+  "tag": "section",
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Voordeel",
+      "settings": [
+        {
+          "type": "select", "id": "icon", "label": "Icoon", "default": "puppy",
+          "options": [
+            {"value":"puppy","label":"Hond"},{"value":"leaf","label":"Blad"},
+            {"value":"heart","label":"Hart"},{"value":"shield","label":"Schild"},
+            {"value":"star","label":"Ster"},{"value":"gift","label":"Cadeau"}
+          ]
+        },
+        {
+          "type": "select", "id": "color", "label": "Kleur", "default": "pink",
+          "options": [
+            {"value":"pink","label":"Roze"},{"value":"green","label":"Groen"},
+            {"value":"yellow","label":"Geel"},{"value":"orange","label":"Oranje"}
+          ]
+        },
+        {"type":"text",    "id":"title",       "label":"Titel",       "default":"Zacht & veilig"},
+        {"type":"textarea","id":"description", "label":"Beschrijving","default":"Alle speeltjes zijn gemaakt van puppyveilige materialen."}
+      ]
+    },
+    {
+      "type": "product_item",
+      "name": "Product item",
+      "settings": [
+        {"type":"image_picker","id":"image",       "label":"Foto"},
+        {"type":"text",        "id":"title",       "label":"Titel",      "default":"Knuffelvriendjes"},
+        {"type":"text",        "id":"description", "label":"Beschrijving","default":"Zacht, lief en perfect om mee te knuffelen."}
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "select", "id": "icon", "label": "Icoon", "default": "shield",
+          "options": [
+            {"value":"shield","label":"Schild"},{"value":"heart","label":"Hart"},
+            {"value":"truck","label":"Vrachtwagen"},{"value":"gift","label":"Cadeau"},
+            {"value":"paw","label":"Poot"},{"value":"star","label":"Ster"}
+          ]
+        },
+        {
+          "type": "select", "id": "color", "label": "Kleur", "default": "green",
+          "options": [
+            {"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},
+            {"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"}
+          ]
+        },
+        {"type":"text","id":"title",    "label":"Titel",    "default":"100% veilig voor puppy's"},
+        {"type":"text","id":"subtitle", "label":"Subtitel", "default":"Zorgvuldig getest en geselecteerd."}
+      ]
+    }
+  ],
+  "settings": [
+    {"type":"image_picker","id":"hero_image",  "label":"Grote puppy afbeelding"},
+    {"type":"image_picker","id":"side_image",  "label":"Kleine zijafbeelding"},
+    {"type":"text",        "id":"side_badge",  "label":"Zijafbeelding badge",  "default":"Perfect voor puppy's van 8 weken tot 1 jaar"},
+    {"type":"text",        "id":"eyebrow",     "label":"Eyebrow",              "default":"Speciaal voor nieuwsgierige puppy's"},
+    {"type":"text",        "id":"title",       "label":"Titel",                "default":"Nieuw in de wereld van kwispels?"},
+    {"type":"textarea",    "id":"intro",       "label":"Intro tekst",          "default":"Onze puppycollectie zit boordevol zachte speeltjes, veilige kauwsnacks en knuffels die perfect passen bij hun eerste avonturen. Zorgvuldig geselecteerd voor een goede start vol speelplezier."},
+    {"type":"text",        "id":"favs_title",  "label":"Favorieten titel",     "default":"Puppy favorieten"},
+    {"type":"text",        "id":"favs_subtitle","label":"Favorieten subtitel", "default":"Onze meest gekozen items door baasjes van puppy's."},
+    {"type":"text",        "id":"cta_label",   "label":"CTA tekst",            "default":"Bekijk puppy favorieten"},
+    {"type":"url",         "id":"cta_url",     "label":"CTA link"}
+  ],
+  "presets": [{
+    "name": "Puppy sectie",
+    "blocks": [
+      {"type":"benefit","settings":{"icon":"puppy","color":"pink","title":"Zacht & veilig","description":"Alle speeltjes zijn gemaakt van puppyveilige materialen."}},
+      {"type":"benefit","settings":{"icon":"leaf","color":"green","title":"Ondersteunt de ontwikkeling","description":"Speeltjes die bijdragen aan de groei, curiositeit en het gebit."}},
+      {"type":"benefit","settings":{"icon":"heart","color":"yellow","title":"Liefdevol samengesteld","description":"Met extra knuffels en troostitems voor een vertrouwd gevoel."}},
+      {"type":"product_item","settings":{"title":"Knuffelvriendjes","description":"Zacht, lief en perfect om mee te knuffelen."}},
+      {"type":"product_item","settings":{"title":"Bijtspeeltjes","description":"Helpt bij het doorkomen van tandjes."}},
+      {"type":"product_item","settings":{"title":"Speel & ontdek","description":"Stimuleert nieuwsgierigheid en beweging."}},
+      {"type":"product_item","settings":{"title":"Natuurlijke snacks","description":"Gezonde beloningen die altijd in de smaak vallen."}},
+      {"type":"trust","settings":{"icon":"shield","color":"green","title":"100% veilig voor puppy's","subtitle":"Zorgvuldig getest en geselecteerd."}},
+      {"type":"trust","settings":{"icon":"heart","color":"pink","title":"Met liefde ingepakt","subtitle":"Een cadeautje voor jou \u00e9n je pup."}},
+      {"type":"trust","settings":{"icon":"truck","color":"orange","title":"Snelle levering","subtitle":"Binnen 1-2 werkdagen in huis."}},
+      {"type":"trust","settings":{"icon":"gift","color":"yellow","title":"Flexibel abonnement","subtitle":"Wijzig, pauzeer of stop wanneer je wilt."}}
+    ]
+  }]
+}
+{% endschema %}

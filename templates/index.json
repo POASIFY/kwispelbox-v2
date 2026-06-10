@@ -210,6 +210,9 @@
     },
     "reviews": {
       "type": "reviews"
+    },
+    "puppy-section": {
+      "type": "puppy-section"
     }
   },
   "order": [
@@ -220,6 +223,7 @@
     "how-it-works",
     "whats-inside",
     "social-proof",
-    "reviews"
+    "reviews",
+    "puppy-section"
   ]
 }
