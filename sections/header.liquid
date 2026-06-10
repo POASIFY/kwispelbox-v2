@@ -291,7 +291,7 @@
 .kw-shortcuts::-webkit-scrollbar{display:none}
 .kw-shortcuts__list{display:flex;gap:16px;list-style:none;width:max-content}
 .kw-shortcut{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;min-width:56px}
-.kw-shortcut__icon{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform 200ms cubic-bezier(.34,1.56,.64,1)}
+.kw-shortcut__icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform 200ms cubic-bezier(.34,1.56,.64,1)}
 .kw-shortcut:hover .kw-shortcut__icon{transform:scale(1.08)}
 .kw-shortcut__icon svg{width:24px;height:24px}
 .kw-shortcut__label{font-family:'Karla',sans-serif;font-size:.7rem;font-weight:700;color:#603A15;text-align:center;white-space:nowrap}
@@ -364,9 +364,19 @@
 @media(max-width:767px){
   .kw-account-btn{display:none!important}
   .kw-cart-btn__label{display:none!important}
+  .kw-cart-btn{
+    background:transparent!important;
+    color:#603A15!important;
+    width:44px;height:44px;padding:0;
+    box-shadow:none!important;
+    transform:none!important;
+  }
+  .kw-cart-btn:hover{background:transparent!important;transform:none!important}
+  .kw-cart-btn svg{width:26px;height:26px}
   .kw-cart-btn__badge{
-    position:absolute;top:-6px;right:-6px;
+    position:absolute;top:-4px;right:-4px;
     min-width:18px;height:18px;font-size:.65rem;
+    border:2px solid #F8EFDD;
   }
 }
 
