@@ -127,9 +127,9 @@
           <div class="puppy__product-img-wrap">
             {%- if block.settings.image != blank -%}
               <img
-                src="{{ block.settings.image | image_url: width: 200 }}"
+                src="{{ block.settings.image | image_url: width: 240 }}"
                 alt="{{ block.settings.title | escape }}"
-                width="200" height="200" loading="lazy"
+                width="240" loading="lazy"
                 class="puppy__product-img"
               >
             {%- else -%}
@@ -295,10 +295,11 @@
 
 /* Side image + badge */
 .puppy__side {
-  width: 140px; flex-shrink: 0;
-  padding-top: 12px; /* ruimte voor sparkle die er bovenuit steekt */
+  width: 145px; flex-shrink: 0;
+  padding-top: 14px;  /* ruimte boven voor sparkle */
+  padding-bottom: 28px; /* ruimte onder voor badge */
 }
-@media(max-width: 1024px) { .puppy__side { width: 120px; } }
+@media(max-width: 1024px) { .puppy__side { width: 125px; } }
 @media(max-width: 899px)  { .puppy__side { display: none; } }
 
 /* Lagen wrapper: foto + badge + sparkle gestapeld */
@@ -330,20 +331,32 @@
 @media(prefers-reduced-motion: reduce) { .puppy__side-sparkle { animation: none; } }
 .puppy__side-badge {
   position: absolute;
-  bottom: -12px; left: 50%;
+  bottom: -18px;
+  left: 50%;
   transform: translateX(-50%);
-  background: #FFF0F5; color: #c0394b;
+  background: #FFF0F5;
+  color: #c0394b;
   font-family: 'Karla', sans-serif;
-  font-size: .65rem; font-weight: 700;
-  text-align: center; line-height: 1.4;
-  padding: 7px 12px; border-radius: 12px;
+  font-size: .68rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.35;
+  padding: 8px 14px;
+  border-radius: 14px;
   border: 1.5px solid #FFB8CD;
-  display: flex; align-items: flex-start; gap: 4px;
-  white-space: nowrap;
-  box-shadow: 0 3px 12px rgba(231,84,128,.15);
-  z-index: 3;
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  min-width: 130px;
+  max-width: 150px;
+  white-space: normal;
+  box-shadow: 0 4px 14px rgba(231,84,128,.18);
+  z-index: 4;
 }
-.puppy__side-badge svg { width: 10px; height: 10px; flex-shrink: 0; margin-top: 2px; color: #e75480; }
+.puppy__side-badge svg {
+  width: 11px; height: 11px;
+  flex-shrink: 0; margin-top: 2px; color: #e75480;
+}
 
 /* ══ FAVORIETEN STRIP ══════════════════════════════════ */
 .puppy__favs {
@@ -409,18 +422,23 @@
 .puppy__product:last-child { border-right: none; }
 
 .puppy__product-img-wrap {
-  width: 88px; height: 88px; border-radius: 50%;
-  overflow: hidden; background: #FFF0F5;
-  border: 2.5px solid #FFD6E3; flex-shrink: 0;
+  width: 100px; height: 100px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
   transition: transform 300ms cubic-bezier(.34,1.56,.64,1);
 }
-.puppy__product:hover .puppy__product-img-wrap { transform: scale(1.08); }
-.puppy__product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.puppy__product:hover .puppy__product-img-wrap { transform: scale(1.1) rotate(-3deg); }
+.puppy__product-img {
+  width: 100%; height: 100%;
+  object-fit: contain; display: block;
+  /* PNG met transparantie werkt hier perfect */
+  filter: drop-shadow(0 4px 8px rgba(96,58,21,.15));
+}
 .puppy__product-ph {
   width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center; color: #FFB8CD;
 }
-.puppy__product-ph svg { width: 28px; height: 28px; }
+.puppy__product-ph svg { width: 40px; height: 40px; }
 
 .puppy__product-title {
   font-family: 'Lilita One', cursive;
