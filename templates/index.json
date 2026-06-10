@@ -204,6 +204,9 @@
     },
     "whats-inside": {
       "type": "whats-inside"
+    },
+    "social-proof": {
+      "type": "social-proof"
     }
   },
   "order": [
@@ -212,6 +215,7 @@
     "product-boxes",
     "why-kwispelbox",
     "how-it-works",
-    "whats-inside"
+    "whats-inside",
+    "social-proof"
   ]
 }
