@@ -123,15 +123,6 @@
           {%- endfor -%}
         </ul>
       {%- endif -%}
-
-      <!-- Abonnement selector -->
-      {%- if product.variants.size > 0 -%}
-        <div class="pb__subscription">
-          <div class="pb__sub-header">
-            <span class="pb__sub-title">Kies je abonnement</span>
-            {%- if section.settings.discount_label != blank -%}
-              <span class="pb__sub-savings">{{ section.settings.discount_label }}</span>
-            {%- endif -%}
           </div>
 
           <div class="pb__sub-options" id="PbVariants">
@@ -412,6 +403,10 @@
 .pb__summary {
   font-family: 'Karla', sans-serif;
   font-size: .9rem; color: #A88259; line-height: 1.75;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* Features */

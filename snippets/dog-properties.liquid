@@ -11,7 +11,8 @@
       <span class="dog-prop__req" aria-hidden="true">*</span>
     </p>
     <div class="dog-prop__pills" role="group">
-      {%- for optie in "Puppy,Volwassen,Senior" | split: "," -%}
+      {%- assign leeftijden = "Puppy,Volwassen,Senior" | split: "," -%}
+      {%- for optie in leeftijden -%}
         <label class="dog-prop__pill">
           <input type="radio" name="properties[Leeftijd van je hond]"
                  value="{{ optie }}" class="dog-prop__radio" required>
@@ -28,7 +29,8 @@
       <span class="dog-prop__req" aria-hidden="true">*</span>
     </p>
     <div class="dog-prop__pills" role="group">
-      {%- for optie in "Klein,Middel,Groot" | split: "," -%}
+      {%- assign formaten = "Klein,Middel,Groot" | split: "," -%}
+      {%- for optie in formaten -%}
         <label class="dog-prop__pill">
           <input type="radio" name="properties[Formaat van je hond]"
                  value="{{ optie }}" class="dog-prop__radio" required>
