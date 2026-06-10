@@ -1,20 +1,20 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
-      "type": "collection",
-      "settings": {}
+      "type": "main-collection",
+      "blocks": {
+        "t1": {"type":"trust","settings":{"icon":"heart",  "color":"pink",  "title":"Met liefde samengesteld","subtitle":"Elk item zorgvuldig geselecteerd."}},
+        "t2": {"type":"trust","settings":{"icon":"shield", "color":"green", "title":"100% veilig & getest",   "subtitle":"Alleen het beste voor jouw hond."}},
+        "t3": {"type":"trust","settings":{"icon":"truck",  "color":"orange","title":"Snelle levering",        "subtitle":"Voor 15:00 besteld, morgen in huis."}},
+        "t4": {"type":"trust","settings":{"icon":"lock",   "color":"yellow","title":"Veilig betalen",         "subtitle":"Betaal veilig en vertrouwd."}}
+      },
+      "block_order": ["t1","t2","t3","t4"],
+      "settings": {
+        "products_per_page": 12,
+        "featured_label": "Meest gekozen",
+        "featured_cta": "Kies deze box"
+      }
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["main"]
 }
