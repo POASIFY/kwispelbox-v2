@@ -1,0 +1,431 @@
+<section class="why-kw">
+  <div class="why-kw__wrap">
+
+    <!-- Links: groot beeld ─────────────────────────────── -->
+    <div class="why-kw__left">
+      <div class="why-kw__img-wrap">
+        {%- if section.settings.image != blank -%}
+          <img
+            src="{{ section.settings.image | image_url: width: 900 }}"
+            srcset="{{ section.settings.image | image_url: width: 600 }} 600w,
+                    {{ section.settings.image | image_url: width: 900 }} 900w,
+                    {{ section.settings.image | image_url: width: 1200 }} 1200w"
+            sizes="(max-width: 767px) 100vw, 50vw"
+            alt="{{ section.settings.image.alt | default: shop.name | escape }}"
+            width="900"
+            height="{{ 900 | divided_by: section.settings.image.aspect_ratio | round }}"
+            loading="lazy"
+            class="why-kw__img"
+          >
+        {%- else -%}
+          <div class="why-kw__img-ph">
+            {{- 'icon-paw.svg' | inline_asset_content -}}
+            <span>Voeg een hondenfoto toe</span>
+          </div>
+        {%- endif -%}
+
+        <!-- Cirkel badge -->
+        {%- if section.settings.badge_line1 != blank -%}
+          <div class="why-kw__badge" aria-label="{{ section.settings.badge_line1 }} {{ section.settings.badge_line2 }}">
+            <span class="why-kw__badge-icon" aria-hidden="true">
+              {{- 'icon-paw.svg' | inline_asset_content -}}
+            </span>
+            <span class="why-kw__badge-l1">{{ section.settings.badge_line1 }}</span>
+            {%- if section.settings.badge_line2 != blank -%}
+              <span class="why-kw__badge-l2">{{ section.settings.badge_line2 }}</span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <!-- Rechts: content ─────────────────────────────────── -->
+    <div class="why-kw__right">
+
+      <!-- Header -->
+      <div class="why-kw__header">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="why-kw__eyebrow">
+            {{ section.settings.eyebrow }}
+            <span aria-hidden="true">{{- 'icon-sparkle.svg' | inline_asset_content -}}</span>
+          </p>
+        {%- endif -%}
+        <h2 class="why-kw__title">{{ section.settings.title }}</h2>
+        {%- if section.settings.intro != blank -%}
+          <p class="why-kw__intro">{{ section.settings.intro }}</p>
+        {%- endif -%}
+      </div>
+
+      <!-- Benefits -->
+      <div class="why-kw__benefits">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'benefit' -%}
+            <div class="why-kw__benefit" {{ block.shopify_attributes }}>
+              <div class="why-kw__benefit-left">
+                <span class="why-kw__benefit-icon why-kw__benefit-icon--{{ block.settings.color }}" aria-hidden="true">
+                  {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+                </span>
+                <div class="why-kw__benefit-text">
+                  <h3 class="why-kw__benefit-title why-kw__benefit-title--{{ block.settings.color }}">
+                    {{ block.settings.title }}
+                  </h3>
+                  <p class="why-kw__benefit-desc">{{ block.settings.description }}</p>
+                </div>
+              </div>
+              {%- if block.settings.image != blank -%}
+                <div class="why-kw__benefit-img-wrap">
+                  <img
+                    src="{{ block.settings.image | image_url: width: 200 }}"
+                    alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                    width="200" height="160"
+                    loading="lazy"
+                    class="why-kw__benefit-img"
+                  >
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Onderste trust strip ─────────────────────────────── -->
+  {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
+  {%- if trust_blocks.size > 0 -%}
+    <div class="why-kw__trust-bar">
+      <div class="why-kw__trust-inner">
+        {%- for block in trust_blocks -%}
+          <div class="why-kw__trust-item" {{ block.shopify_attributes }}>
+            <span class="why-kw__trust-icon why-kw__trust-icon--{{ block.settings.color }}" aria-hidden="true">
+              {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+            </span>
+            <div>
+              <strong>{{ block.settings.title }}</strong>
+              {%- if block.settings.subtitle != blank -%}
+                <span>{{ block.settings.subtitle }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+</section>
+
+{% stylesheet %}
+/* ── Wrapper ────────────────────────────────────────────── */
+.why-kw {
+  background: #F8EFDD;
+  overflow: hidden;
+}
+.why-kw__wrap {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+@media(min-width: 900px) {
+  .why-kw__wrap {
+    grid-template-columns: 1fr 1fr;
+    min-height: 680px;
+  }
+}
+
+/* ── Linker afbeelding ──────────────────────────────────── */
+.why-kw__left {
+  position: relative;
+  min-height: 300px;
+}
+.why-kw__img-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+}
+.why-kw__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+.why-kw__img-ph {
+  width: 100%; height: 100%; min-height: 300px;
+  background: #EDE2C9;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px; color: #A88259; font-size: .875rem;
+}
+.why-kw__img-ph svg { width: 48px; height: 48px; }
+
+/* Ronde afbeelding op desktop */
+@media(min-width: 900px) {
+  .why-kw__img-wrap {
+    padding: 48px 0 48px 48px;
+  }
+  .why-kw__img {
+    border-radius: 32px;
+    box-shadow: 0 16px 64px rgba(96,58,21,.16);
+  }
+}
+
+/* ── Cirkel badge ───────────────────────────────────────── */
+.why-kw__badge {
+  position: absolute;
+  top: 32px; right: -20px;
+  width: 120px; height: 120px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 8px 32px rgba(96,58,21,.15);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; gap: 4px;
+  padding: 16px; z-index: 2;
+}
+@media(max-width: 899px) {
+  .why-kw__badge { top: 16px; right: 16px; width: 90px; height: 90px; }
+}
+.why-kw__badge-icon { color: #F7A048; }
+.why-kw__badge-icon svg { width: 18px; height: 18px; }
+.why-kw__badge-l1 {
+  font-family: 'Karla', sans-serif;
+  font-size: .75rem; font-weight: 700;
+  color: #603A15; line-height: 1.2;
+}
+.why-kw__badge-l2 {
+  font-family: 'Lilita One', cursive;
+  font-size: .95rem; color: #e75480;
+  line-height: 1;
+}
+
+/* ── Rechts: content ────────────────────────────────────── */
+.why-kw__right {
+  padding: 48px 24px 48px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 32px;
+}
+@media(min-width: 900px) {
+  .why-kw__right { padding: 64px 64px 64px 48px; }
+}
+
+.why-kw__eyebrow {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Karla', sans-serif;
+  font-size: .8rem; font-weight: 800;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: #e75480; margin-bottom: 8px;
+}
+.why-kw__eyebrow svg { width: 16px; height: 16px; color: #F7A048; }
+
+.why-kw__title {
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  color: #3d2209;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+.why-kw__intro {
+  font-family: 'Karla', sans-serif;
+  font-size: 1.05rem; color: #A88259;
+  line-height: 1.75; max-width: 48ch;
+}
+
+/* ── Benefits ───────────────────────────────────────────── */
+.why-kw__benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.why-kw__benefit {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 18px 20px;
+  border: 1.5px solid #EDE2C9;
+  transition: transform 200ms cubic-bezier(.34,1.56,.64,1),
+              box-shadow 200ms ease;
+}
+.why-kw__benefit:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 20px rgba(96,58,21,.1);
+}
+.why-kw__benefit-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+.why-kw__benefit-icon {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.why-kw__benefit-icon svg { width: 24px; height: 24px; }
+.why-kw__benefit-icon--green  { background: #e8f5e2; color: #66AA44; }
+.why-kw__benefit-icon--pink   { background: #fff0f5; color: #e75480; }
+.why-kw__benefit-icon--yellow { background: #fffae0; color: #c49000; }
+.why-kw__benefit-icon--orange { background: #fff0e4; color: #F7A048; }
+
+.why-kw__benefit-text { flex: 1; min-width: 0; }
+.why-kw__benefit-title {
+  font-family: 'Lilita One', cursive;
+  font-size: 1.1rem; margin-bottom: 4px; line-height: 1.2;
+}
+.why-kw__benefit-title--green  { color: #2d7a1a; }
+.why-kw__benefit-title--pink   { color: #c0394b; }
+.why-kw__benefit-title--yellow { color: #8a6200; }
+.why-kw__benefit-title--orange { color: #d9823a; }
+
+.why-kw__benefit-desc {
+  font-family: 'Karla', sans-serif;
+  font-size: .875rem; color: #A88259; line-height: 1.6;
+}
+
+.why-kw__benefit-img-wrap {
+  width: 90px; height: 80px;
+  border-radius: 14px; overflow: hidden;
+  flex-shrink: 0;
+}
+.why-kw__benefit-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+/* ── Trust strip ────────────────────────────────────────── */
+.why-kw__trust-bar {
+  background: #fff;
+  border-top: 1.5px solid #EDE2C9;
+}
+.why-kw__trust-inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+@media(min-width: 768px) {
+  .why-kw__trust-inner {
+    grid-template-columns: repeat(4, 1fr);
+    padding: 0 60px;
+  }
+}
+.why-kw__trust-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 18px 16px;
+  border-right: 1px solid #EDE2C9;
+}
+.why-kw__trust-item:last-child { border-right: none; }
+.why-kw__trust-item:nth-child(2n) { border-right: none; }
+@media(min-width: 768px) {
+  .why-kw__trust-item:nth-child(2n) { border-right: 1px solid #EDE2C9; }
+  .why-kw__trust-item:last-child    { border-right: none; }
+}
+.why-kw__trust-icon {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.why-kw__trust-icon svg { width: 20px; height: 20px; }
+.why-kw__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
+.why-kw__trust-icon--pink   { background: #fff0f5; color: #e75480; }
+.why-kw__trust-icon--orange { background: #fff0e4; color: #F7A048; }
+.why-kw__trust-icon--yellow { background: #fffae0; color: #c49000; }
+.why-kw__trust-item > div {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.why-kw__trust-item strong {
+  font-family: 'Karla', sans-serif;
+  font-size: .85rem; font-weight: 800; color: #603A15;
+}
+.why-kw__trust-item span {
+  font-size: .75rem; color: #A88259;
+}
+
+/* ── Mobiel ────────────────────────────────────────────── */
+@media(max-width: 899px) {
+  .why-kw__benefit-img-wrap { display: none; }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Waarom Kwispelbox",
+  "tag": "section",
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Voordeel",
+      "settings": [
+        {
+          "type": "select", "id": "icon", "label": "Icoon", "default": "heart",
+          "options": [
+            {"value":"heart","label":"Hart"},{"value":"paw","label":"Poot"},
+            {"value":"star","label":"Ster"},{"value":"gift","label":"Cadeau"},
+            {"value":"award","label":"Award"},{"value":"sparkle","label":"Sparkle"},
+            {"value":"toy","label":"Speeltje"},{"value":"shield","label":"Schild"}
+          ]
+        },
+        {
+          "type": "select", "id": "color", "label": "Kleur", "default": "green",
+          "options": [
+            {"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},
+            {"value":"yellow","label":"Geel"},{"value":"orange","label":"Oranje"}
+          ]
+        },
+        {"type":"text",         "id":"title",       "label":"Titel",       "default":"Meer speelplezier"},
+        {"type":"textarea",     "id":"description",  "label":"Beschrijving","default":"Nieuwe verrassingen houden honden nieuwsgierig, actief en blij."},
+        {"type":"image_picker", "id":"image",        "label":"Foto (rechts)"}
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "select", "id": "icon", "label": "Icoon", "default": "truck",
+          "options": [
+            {"value":"truck","label":"Vrachtwagen"},{"value":"gift","label":"Cadeau"},
+            {"value":"heart","label":"Hart"},{"value":"shield","label":"Schild"},
+            {"value":"paw","label":"Poot"},{"value":"star","label":"Ster"}
+          ]
+        },
+        {
+          "type": "select", "id": "color", "label": "Kleur", "default": "green",
+          "options": [
+            {"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},
+            {"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"}
+          ]
+        },
+        {"type":"text","id":"title",    "label":"Titel",    "default":"Snelle levering"},
+        {"type":"text","id":"subtitle", "label":"Subtitel", "default":"1-2 werkdagen"}
+      ]
+    }
+  ],
+  "settings": [
+    {"type":"image_picker","id":"image",       "label":"Hoofdafbeelding links"},
+    {"type":"text",        "id":"badge_line1", "label":"Badge regel 1", "default":"Geselecteerd met"},
+    {"type":"text",        "id":"badge_line2", "label":"Badge regel 2", "default":"liefde"},
+    {"type":"text",        "id":"eyebrow",     "label":"Eyebrow",       "default":"Waarom honden dol zijn op"},
+    {"type":"text",        "id":"title",       "label":"Titel",         "default":"Kwispelbox"},
+    {"type":"textarea",    "id":"intro",       "label":"Intro tekst",   "default":"Wij geloven dat elke hond het verdient om te spelen, te ontdekken en te genieten. Daarom stellen wij elke box samen met zorg, kwaliteit en een flinke dosis liefde."}
+  ],
+  "presets": [{
+    "name": "Waarom Kwispelbox",
+    "blocks": [
+      {"type":"benefit","settings":{"icon":"puppy","color":"green","title":"Meer speelplezier","description":"Nieuwe verrassingen houden honden nieuwsgierig, actief en blij."}},
+      {"type":"benefit","settings":{"icon":"award","color":"pink","title":"Zorgvuldig geselecteerd","description":"Alleen veilige, duurzame en kwalitatieve speeltjes waar wij 100% achter staan."}},
+      {"type":"benefit","settings":{"icon":"gift","color":"yellow","title":"Elke box is uniek","description":"Geen twee honden zijn hetzelfde. Geen twee boxen dus ook."}},
+      {"type":"trust","settings":{"icon":"truck","color":"green","title":"Snelle levering","subtitle":"1-2 werkdagen"}},
+      {"type":"trust","settings":{"icon":"gift","color":"pink","title":"Elke box een cadeautje","subtitle":"Met liefde ingepakt"}},
+      {"type":"trust","settings":{"icon":"heart","color":"orange","title":"Meer dan 1.200 blije honden","subtitle":"En dat worden er elke dag meer!"}},
+      {"type":"trust","settings":{"icon":"shield","color":"green","title":"100% veilig & getest","subtitle":"Alleen het beste voor jouw hond"}}
+    ]
+  }]
+}
+{% endschema %}

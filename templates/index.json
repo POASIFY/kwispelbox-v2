@@ -195,11 +195,15 @@
         "t4",
         "t5"
       ]
+    },
+    "why-kwispelbox": {
+      "type": "why-kwispelbox"
     }
   },
   "order": [
     "hero",
     "trust-bar",
-    "product-boxes"
+    "product-boxes",
+    "why-kwispelbox"
   ]
 }
