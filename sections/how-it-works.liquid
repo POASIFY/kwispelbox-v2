@@ -1,0 +1,441 @@
+<section class="hiw">
+
+  <!-- Header ───────────────────────────────────────────── -->
+  <div class="hiw__header">
+    <h2 class="hiw__title">{{ section.settings.title }}</h2>
+    {%- if section.settings.subtitle != blank -%}
+      <p class="hiw__sub">
+        {{- section.settings.subtitle_prefix -}}
+        <span class="hiw__sub-accent">{{- section.settings.subtitle_accent -}}</span>
+      </p>
+    {%- endif -%}
+  </div>
+
+  <!-- Stappen ──────────────────────────────────────────── -->
+  <div class="hiw__steps-wrap">
+    <div class="hiw__steps">
+
+      {%- assign step_blocks = section.blocks | where: 'type', 'step' -%}
+      {%- for block in step_blocks -%}
+        <div class="hiw__step hiw__step--{{ block.settings.color }}"
+             {{ block.shopify_attributes }}>
+
+          <!-- Nummer + verbindingslijn -->
+          <div class="hiw__step-top">
+            {%- unless forloop.first -%}
+              <div class="hiw__connector" aria-hidden="true">
+                <span class="hiw__connector-dot"></span>
+                {{- 'icon-paw.svg' | inline_asset_content -}}
+                <span class="hiw__connector-dot"></span>
+              </div>
+            {%- endunless -%}
+            <div class="hiw__num hiw__num--{{ block.settings.color }}">
+              {{ forloop.index }}
+            </div>
+          </div>
+
+          <!-- Cirkelafbeelding -->
+          <div class="hiw__img-wrap">
+            {%- if block.settings.image != blank -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 400 }}"
+                srcset="{{ block.settings.image | image_url: width: 300 }} 300w,
+                        {{ block.settings.image | image_url: width: 400 }} 400w"
+                sizes="(max-width: 767px) 70vw, 22vw"
+                alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                width="400" height="400"
+                loading="lazy"
+                class="hiw__img"
+              >
+            {%- else -%}
+              <div class="hiw__img-ph">
+                {{- 'icon-paw.svg' | inline_asset_content -}}
+              </div>
+            {%- endif -%}
+          </div>
+
+          <!-- Icoontje onder afbeelding -->
+          <div class="hiw__icon hiw__icon--{{ block.settings.color }}" aria-hidden="true">
+            {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+          </div>
+
+          <!-- Tekst -->
+          <div class="hiw__text">
+            <h3 class="hiw__step-title hiw__step-title--{{ block.settings.color }}">
+              {{ block.settings.title }}
+            </h3>
+            <p class="hiw__step-desc">{{ block.settings.description }}</p>
+          </div>
+
+        </div>
+      {%- endfor -%}
+
+    </div>
+  </div>
+
+  <!-- Trust strip ──────────────────────────────────────── -->
+  {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
+  {%- if trust_blocks.size > 0 -%}
+    <div class="hiw__trust">
+      <div class="hiw__trust-inner">
+
+        {%- if section.settings.trust_img_left != blank -%}
+          <div class="hiw__trust-avatar" aria-hidden="true">
+            <img src="{{ section.settings.trust_img_left | image_url: width: 120 }}"
+                 alt="" width="80" height="80" loading="lazy">
+          </div>
+        {%- endif -%}
+
+        <div class="hiw__trust-items">
+          {%- for block in trust_blocks -%}
+            <div class="hiw__trust-item" {{ block.shopify_attributes }}>
+              <span class="hiw__trust-icon hiw__trust-icon--{{ block.settings.color }}" aria-hidden="true">
+                {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+              </span>
+              <div class="hiw__trust-text">
+                <strong>{{ block.settings.title }}</strong>
+                {%- if block.settings.subtitle != blank -%}
+                  <span>{{ block.settings.subtitle }}</span>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- if section.settings.trust_img_right != blank -%}
+          <div class="hiw__trust-avatar" aria-hidden="true">
+            <img src="{{ section.settings.trust_img_right | image_url: width: 120 }}"
+                 alt="" width="80" height="80" loading="lazy">
+          </div>
+        {%- endif -%}
+
+      </div>
+    </div>
+  {%- endif -%}
+
+</section>
+
+{% stylesheet %}
+/* ── Sectie ─────────────────────────────────────────────── */
+.hiw {
+  background: #F8EFDD;
+  padding: 80px 0 0;
+  overflow: hidden;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.hiw__header {
+  text-align: center;
+  padding: 0 20px;
+  margin-bottom: 56px;
+}
+.hiw__title {
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  color: #3d2209;
+  line-height: 1.05;
+  margin-bottom: 12px;
+}
+.hiw__sub {
+  font-family: 'Karla', sans-serif;
+  font-size: 1.1rem;
+  color: #A88259;
+}
+.hiw__sub-accent {
+  color: #F7A048;
+  font-weight: 800;
+}
+
+/* ── Stappen wrapper ────────────────────────────────────── */
+.hiw__steps-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 0 20px 40px;
+}
+.hiw__steps-wrap::-webkit-scrollbar { display: none; }
+
+.hiw__steps {
+  display: flex;
+  gap: 0;
+  min-width: max-content;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 40px;
+  align-items: flex-start;
+  position: relative;
+}
+
+@media(min-width: 900px) {
+  .hiw__steps-wrap { overflow-x: visible; padding: 0 0 40px; }
+  .hiw__steps { min-width: unset; }
+}
+
+/* ── Stap ───────────────────────────────────────────────── */
+.hiw__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+
+/* ── Bovenste rij: connector + nummer ───────────────────── */
+.hiw__step-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+/* Verbindingslijn links van nummer */
+.hiw__connector {
+  position: absolute;
+  right: calc(50% + 28px);
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 4px;
+}
+.hiw__connector svg {
+  width: 14px; height: 14px;
+  color: #DAC9A1;
+  flex-shrink: 0;
+}
+.hiw__connector-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #DAC9A1;
+  flex-shrink: 0;
+}
+
+/* Genummerde cirkel */
+.hiw__num {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Lilita One', cursive;
+  font-size: 1.4rem;
+  color: #fff;
+  z-index: 1;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0,0,0,.12);
+}
+.hiw__num--green  { background: #66AA44; }
+.hiw__num--orange { background: #F7A048; }
+.hiw__num--pink   { background: #FFB8CD; color: #603A15; }
+.hiw__num--yellow { background: #FFE071; color: #603A15; }
+
+/* ── Cirkelafbeelding ───────────────────────────────────── */
+.hiw__img-wrap {
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #fff;
+  box-shadow: 0 8px 32px rgba(96,58,21,.14);
+  flex-shrink: 0;
+  background: #EDE2C9;
+}
+@media(min-width: 900px) {
+  .hiw__img-wrap { width: 220px; height: 220px; }
+}
+.hiw__img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 400ms ease;
+}
+.hiw__step:hover .hiw__img { transform: scale(1.06); }
+.hiw__img-ph {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  color: #DAC9A1;
+}
+.hiw__img-ph svg { width: 48px; height: 48px; }
+
+/* ── Icoon onder afbeelding ─────────────────────────────── */
+.hiw__icon {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: -22px;
+  border: 3px solid #F8EFDD;
+  z-index: 2;
+  position: relative;
+  flex-shrink: 0;
+}
+.hiw__icon svg { width: 20px; height: 20px; }
+.hiw__icon--green  { background: #e8f5e2; color: #66AA44; }
+.hiw__icon--orange { background: #fff0e4; color: #F7A048; }
+.hiw__icon--pink   { background: #fff0f5; color: #e75480; }
+.hiw__icon--yellow { background: #fffae0; color: #c49000; }
+
+/* ── Tekst ──────────────────────────────────────────────── */
+.hiw__text {
+  padding: 16px 20px 0;
+  max-width: 200px;
+}
+.hiw__step-title {
+  font-family: 'Lilita One', cursive;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.hiw__step-title--green  { color: #2d7a1a; }
+.hiw__step-title--orange { color: #d9823a; }
+.hiw__step-title--pink   { color: #c0394b; }
+.hiw__step-title--yellow { color: #8a6200; }
+
+.hiw__step-desc {
+  font-family: 'Karla', sans-serif;
+  font-size: .875rem;
+  color: #A88259;
+  line-height: 1.6;
+}
+
+/* ── Trust strip ────────────────────────────────────────── */
+.hiw__trust {
+  background: #EDE2C9;
+  border-top: 1.5px solid #DAC9A1;
+  margin-top: 40px;
+}
+.hiw__trust-inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 20px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+@media(min-width: 768px) { .hiw__trust-inner { padding: 20px 40px; } }
+
+.hiw__trust-avatar {
+  flex-shrink: 0;
+}
+.hiw__trust-avatar img {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 12px rgba(96,58,21,.12);
+  display: block;
+}
+@media(max-width: 767px) { .hiw__trust-avatar { display: none; } }
+
+.hiw__trust-items {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 0;
+  justify-content: space-around;
+}
+.hiw__trust-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+}
+.hiw__trust-icon {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.hiw__trust-icon svg { width: 18px; height: 18px; }
+.hiw__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
+.hiw__trust-icon--pink   { background: #fff0f5; color: #e75480; }
+.hiw__trust-icon--orange { background: #fff0e4; color: #F7A048; }
+
+.hiw__trust-text {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.hiw__trust-text strong {
+  font-family: 'Karla', sans-serif;
+  font-size: .85rem; font-weight: 800; color: #603A15;
+  line-height: 1.2;
+}
+.hiw__trust-text span {
+  font-size: .75rem; color: #A88259;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hoe werkt het",
+  "tag": "section",
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Stap",
+      "settings": [
+        {
+          "type": "select", "id": "color", "label": "Kleur", "default": "green",
+          "options": [
+            {"value":"green","label":"Groen"},
+            {"value":"orange","label":"Oranje"},
+            {"value":"pink","label":"Roze"},
+            {"value":"yellow","label":"Geel"}
+          ]
+        },
+        {
+          "type": "select", "id": "icon", "label": "Icoon", "default": "box",
+          "options": [
+            {"value":"box","label":"Doos"},{"value":"puppy","label":"Hond"},
+            {"value":"gift","label":"Cadeau"},{"value":"paw","label":"Poot"},
+            {"value":"heart","label":"Hart"},{"value":"star","label":"Ster"},
+            {"value":"sparkle","label":"Sparkle"}
+          ]
+        },
+        {"type":"image_picker","id":"image",       "label":"Afbeelding"},
+        {"type":"text",        "id":"title",       "label":"Titel",       "default":"Kies je box"},
+        {"type":"textarea",    "id":"description", "label":"Beschrijving","default":"Mini, Happy of Mega? Kies de box die het beste bij jouw hond past."}
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "select", "id": "icon", "label": "Icoon", "default": "heart",
+          "options": [
+            {"value":"heart","label":"Hart"},{"value":"shield","label":"Schild"},
+            {"value":"truck","label":"Vrachtwagen"},{"value":"gift","label":"Cadeau"},
+            {"value":"paw","label":"Poot"},{"value":"star","label":"Ster"}
+          ]
+        },
+        {
+          "type": "select", "id": "color", "label": "Kleur", "default": "pink",
+          "options": [
+            {"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},
+            {"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"}
+          ]
+        },
+        {"type":"text","id":"title",    "label":"Titel",    "default":"Met liefde samengesteld"},
+        {"type":"text","id":"subtitle", "label":"Subtitel", "default":"Want jouw hond verdient alleen het allerbeste."}
+      ]
+    }
+  ],
+  "settings": [
+    {"type":"text",        "id":"title",            "label":"Titel",            "default":"Hoe werkt het?"},
+    {"type":"text",        "id":"subtitle_prefix",  "label":"Subtitel prefix",  "default":"Van keuze tot kwispelgeluk in "},
+    {"type":"text",        "id":"subtitle_accent",  "label":"Subtitel accent",  "default":"4 simpele stappen."},
+    {"type":"image_picker","id":"trust_img_left",   "label":"Foto links (trust)"},
+    {"type":"image_picker","id":"trust_img_right",  "label":"Foto rechts (trust)"}
+  ],
+  "presets": [{
+    "name": "Hoe werkt het",
+    "blocks": [
+      {"type":"step","settings":{"color":"green","icon":"box","title":"Kies je box","description":"Mini, Happy of Mega? Kies de box die het beste bij jouw hond past."}},
+      {"type":"step","settings":{"color":"orange","icon":"puppy","title":"Vertel iets over je hond","description":"Een paar vragen over leeftijd, grootte en speelstijl. Dan weten wij wat hij leuk vindt!"}},
+      {"type":"step","settings":{"color":"pink","icon":"gift","title":"Wij stellen hem samen","description":"Onze experts selecteren met liefde de allerleukste speeltjes en knuffels speciaal voor jouw hond."}},
+      {"type":"step","settings":{"color":"green","icon":"paw","title":"Kwispelen gegarandeerd!","description":"Binnen 1-2 werkdagen aan de deur. Tijd voor speelplezier! Elke keer weer."}},
+      {"type":"trust","settings":{"icon":"heart","color":"pink","title":"Met liefde samengesteld","subtitle":"Want jouw hond verdient alleen het allerbeste."}},
+      {"type":"trust","settings":{"icon":"shield","color":"green","title":"100% tevreden of geld terug","subtitle":"Niet tevreden? Wij lossen het op."}},
+      {"type":"trust","settings":{"icon":"truck","color":"orange","title":"Snelle levering","subtitle":"Voor 22:00 besteld, morgen in huis."}}
+    ]
+  }]
+}
+{% endschema %}

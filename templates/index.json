@@ -198,12 +198,16 @@
     },
     "why-kwispelbox": {
       "type": "why-kwispelbox"
+    },
+    "how-it-works": {
+      "type": "how-it-works"
     }
   },
   "order": [
     "hero",
     "trust-bar",
     "product-boxes",
-    "why-kwispelbox"
+    "why-kwispelbox",
+    "how-it-works"
   ]
 }
