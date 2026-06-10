@@ -1,57 +1,281 @@
-<footer>
-  <div class="footer__copyright">
-    &copy;
-    {{ 'now' | date: '%Y' }}
-    {{ shop.name | link_to: routes.root_url }}, {{ powered_by_link }}
+<footer class="kw-footer full-width" role="contentinfo">
+
+  <!-- Top: logo + kolommen ────────────────────────────── -->
+  <div class="kw-footer__top">
+    <div class="kw-footer__inner">
+
+      <!-- Brand kolom -->
+      <div class="kw-footer__brand">
+        <a href="{{ routes.root_url }}" class="kw-footer__logo" aria-label="{{ shop.name }}">
+          {%- if settings.logo != blank -%}
+            <img src="{{ settings.logo | image_url: width: 160 }}"
+                 alt="{{ shop.name }}" width="120" height="40" loading="lazy"
+                 class="kw-footer__logo-img">
+          {%- else -%}
+            <span class="kw-footer__logo-text">
+              {{ shop.name }}
+              <span class="kw-footer__logo-paw" aria-hidden="true">
+                {{- 'icon-paw.svg' | inline_asset_content -}}
+              </span>
+            </span>
+          {%- endif -%}
+        </a>
+
+        {%- if section.settings.tagline != blank -%}
+          <p class="kw-footer__tagline">{{ section.settings.tagline }}</p>
+        {%- endif -%}
+
+        <!-- Social links -->
+        <div class="kw-footer__social">
+          {%- if section.settings.instagram_url != blank -%}
+            <a href="{{ section.settings.instagram_url }}"
+               class="kw-footer__social-link" rel="noopener" target="_blank"
+               aria-label="Instagram">
+              {{- 'icon-instagram.svg' | inline_asset_content -}}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.tiktok_url != blank -%}
+            <a href="{{ section.settings.tiktok_url }}"
+               class="kw-footer__social-link" rel="noopener" target="_blank"
+               aria-label="TikTok">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.31 6.31 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.27 8.27 0 004.84 1.54V6.73a4.85 4.85 0 01-1.07-.04z"/>
+              </svg>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.facebook_url != blank -%}
+            <a href="{{ section.settings.facebook_url }}"
+               class="kw-footer__social-link" rel="noopener" target="_blank"
+               aria-label="Facebook">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+            </a>
+          {%- endif -%}
+        </div>
+
+        <!-- Trust badges -->
+        <div class="kw-footer__trust-badges">
+          <div class="kw-footer__trust-badge">
+            {{- 'icon-shield.svg' | inline_asset_content -}}
+            <span>Veilig betalen</span>
+          </div>
+          <div class="kw-footer__trust-badge">
+            {{- 'icon-truck.svg' | inline_asset_content -}}
+            <span>Snel geleverd</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nav kolommen via blocks -->
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'nav_column' -%}
+          <div class="kw-footer__col" {{ block.shopify_attributes }}>
+            <h3 class="kw-footer__col-title">{{ block.settings.title }}</h3>
+            {%- if block.settings.menu != blank -%}
+              {%- assign footer_menu = linklists[block.settings.menu] -%}
+              <ul class="kw-footer__links" role="list">
+                {%- for link in footer_menu.links -%}
+                  <li>
+                    <a href="{{ link.url }}" class="kw-footer__link">
+                      {{ link.title }}
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+    </div>
   </div>
 
-  <div class="footer__links">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
+  <!-- Bottom bar ───────────────────────────────────────── -->
+  <div class="kw-footer__bottom">
+    <div class="kw-footer__bottom-inner">
+
+      <!-- Copyright -->
+      <p class="kw-footer__copy">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}.
+        Alle rechten voorbehouden.
+      </p>
+
+      <!-- Legal links -->
+      {%- if section.settings.legal_menu != blank -%}
+        <nav class="kw-footer__legal" aria-label="Juridische links">
+          {%- assign legal_nav = linklists[section.settings.legal_menu] -%}
+          {%- for link in legal_nav.links -%}
+            <a href="{{ link.url }}" class="kw-footer__legal-link">
+              {{ link.title }}
+            </a>
+          {%- endfor -%}
+        </nav>
+      {%- endif -%}
+
+      <!-- Betaalmethoden -->
+      <div class="kw-footer__payments" aria-label="Betaalmethoden">
+        {%- for type in shop.enabled_payment_types -%}
+          {{ type | payment_type_svg_tag: class: 'kw-payment-icon' }}
+        {%- endfor -%}
+      </div>
+
+    </div>
   </div>
 
-  <div class="footer__payment">
-    {% if section.settings.show_payment_icons %}
-      {% for type in shop.enabled_payment_types %}
-        {{ type | payment_type_svg_tag }}
-      {% endfor %}
-    {% endif %}
-  </div>
 </footer>
 
 {% stylesheet %}
-  footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
+/* ── Footer basis ───────────────────────────────────────── */
+.kw-footer {
+  background: #3d2209;
+  color: rgba(255,255,255,.65);
+  font-family: 'Karla', sans-serif;
+}
+
+/* ── Top sectie ─────────────────────────────────────────── */
+.kw-footer__top { padding: 60px 0 48px; }
+.kw-footer__inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+@media(min-width: 768px) {
+  .kw-footer__inner {
+    grid-template-columns: 1.6fr repeat(3, 1fr);
+    gap: 32px;
+    padding: 0 60px;
   }
-  footer a {
-    text-decoration: none;
-    color: var(--color-foreground);
-  }
-  footer .footer__links,
-  footer .footer__payment {
-    display: flex;
-    gap: 1rem;
-  }
+}
+
+/* ── Brand kolom ────────────────────────────────────────── */
+.kw-footer__logo { display: inline-flex; text-decoration: none; margin-bottom: 16px; }
+.kw-footer__logo-img { height: 40px; width: auto; filter: brightness(0) invert(1); }
+.kw-footer__logo-text {
+  font-family: 'Lilita One', cursive;
+  font-size: 1.6rem; color: #F7A048;
+  display: flex; align-items: center; gap: 4px;
+}
+.kw-footer__logo-paw svg { width: 18px; height: 18px; color: #F7A048; }
+.kw-footer__tagline {
+  font-size: .875rem; color: rgba(255,255,255,.4);
+  line-height: 1.65; max-width: 240px; margin-bottom: 20px;
+}
+
+/* Social -->*/
+.kw-footer__social { display: flex; gap: 8px; margin-bottom: 24px; }
+.kw-footer__social-link {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.5);
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+  transition: background 160ms, color 160ms;
+}
+.kw-footer__social-link:hover { background: #F7A048; color: #fff; }
+.kw-footer__social-link svg { width: 18px; height: 18px; }
+
+/* Trust badges -->*/
+.kw-footer__trust-badges { display: flex; flex-direction: column; gap: 8px; }
+.kw-footer__trust-badge {
+  display: flex; align-items: center; gap: 8px;
+  font-size: .78rem; font-weight: 600;
+  color: rgba(255,255,255,.4);
+}
+.kw-footer__trust-badge svg { width: 14px; height: 14px; color: #66AA44; flex-shrink: 0; }
+
+/* ── Nav kolommen ───────────────────────────────────────── */
+.kw-footer__col { display: flex; flex-direction: column; gap: 16px; }
+.kw-footer__col-title {
+  font-family: 'Lilita One', cursive;
+  font-size: .78rem; font-weight: 700;
+  color: rgba(255,255,255,.9);
+  text-transform: uppercase; letter-spacing: .1em;
+}
+.kw-footer__links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.kw-footer__link {
+  font-size: .875rem; color: rgba(255,255,255,.5);
+  text-decoration: none;
+  transition: color 140ms;
+}
+.kw-footer__link:hover { color: #F7A048; }
+
+/* ── Bottom bar ─────────────────────────────────────────── */
+.kw-footer__bottom {
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding: 20px 0;
+}
+.kw-footer__bottom-inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  justify-content: space-between;
+}
+@media(min-width: 768px) { .kw-footer__bottom-inner { padding: 0 60px; } }
+
+.kw-footer__copy {
+  font-size: .75rem; color: rgba(255,255,255,.28);
+}
+
+.kw-footer__legal {
+  display: flex; flex-wrap: wrap; gap: 16px;
+}
+.kw-footer__legal-link {
+  font-size: .75rem; color: rgba(255,255,255,.3);
+  text-decoration: none; transition: color 140ms;
+}
+.kw-footer__legal-link:hover { color: rgba(255,255,255,.7); }
+
+.kw-footer__payments {
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+}
+.kw-payment-icon {
+  height: 22px; width: auto;
+  opacity: 0.6; border-radius: 3px;
+  transition: opacity 140ms;
+}
+.kw-payment-icon:hover { opacity: 1; }
+
+/* ── Mobiel: kolommen uitklappen ────────────────────────── */
+@media(max-width: 767px) {
+  .kw-footer__top { padding: 40px 0 32px; }
+  .kw-footer__bottom-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+}
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:general.footer",
-  "settings": [
+  "name": "Footer",
+  "tag": "footer",
+  "blocks": [
     {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_payment_icons",
-      "label": "t:labels.show_payment_icons",
-      "default": true
+      "type": "nav_column",
+      "name": "Navigatiekolom",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Kolomtitel", "default": "Shop" },
+        { "type": "link_list", "id": "menu", "label": "Menu" }
+      ]
     }
-  ]
+  ],
+  "settings": [
+    { "type": "text",      "id": "tagline",        "label": "Tagline",           "default": "Meer kwispels per doos." },
+    { "type": "url",       "id": "instagram_url",  "label": "Instagram URL" },
+    { "type": "url",       "id": "tiktok_url",     "label": "TikTok URL" },
+    { "type": "url",       "id": "facebook_url",   "label": "Facebook URL" },
+    { "type": "link_list", "id": "legal_menu",     "label": "Juridisch menu" }
+  ],
+  "presets": [{
+    "name": "Footer",
+    "blocks": [
+      { "type": "nav_column", "settings": { "title": "Shop" } },
+      { "type": "nav_column", "settings": { "title": "Klantenservice" } },
+      { "type": "nav_column", "settings": { "title": "Over Kwispelbox" } }
+    ]
+  }]
 }
 {% endschema %}
