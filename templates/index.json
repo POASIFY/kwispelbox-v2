@@ -3,7 +3,57 @@
     "hero": {
       "type": "hero",
       "settings": {}
+    },
+    "trust-bar": {
+      "type": "trust-bar",
+      "blocks": {
+        "tb1": {
+          "type": "item",
+          "settings": {
+            "icon": "gift",
+            "color": "green",
+            "title": "Duurzaam & bewust",
+            "subtitle": "Geselecteerd met zorg"
+          }
+        },
+        "tb2": {
+          "type": "item",
+          "settings": {
+            "icon": "paw",
+            "color": "orange",
+            "title": "Alleen het allerleukste",
+            "subtitle": "Speelplezier gegarandeerd"
+          }
+        },
+        "tb3": {
+          "type": "item",
+          "settings": {
+            "icon": "heart",
+            "color": "pink",
+            "title": "Voor elke hond",
+            "subtitle": "Puppy, volwassen & senior"
+          }
+        },
+        "tb4": {
+          "type": "item",
+          "settings": {
+            "icon": "star",
+            "color": "yellow",
+            "title": "Elke box uniek",
+            "subtitle": "Geen twee zijn hetzelfde"
+          }
+        }
+      },
+      "block_order": [
+        "tb1",
+        "tb2",
+        "tb3",
+        "tb4"
+      ]
     }
   },
-  "order": ["hero"]
+  "order": [
+    "hero",
+    "trust-bar"
+  ]
 }
