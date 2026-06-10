@@ -24,9 +24,9 @@
           <div class="hiw__step-top">
             {%- unless forloop.first -%}
               <div class="hiw__connector" aria-hidden="true">
-                <span class="hiw__connector-dot"></span>
-                {{- 'icon-paw.svg' | inline_asset_content -}}
-                <span class="hiw__connector-dot"></span>
+                <span class="hiw__connector-line"></span>
+                <span class="hiw__connector-paw">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
+                <span class="hiw__connector-line"></span>
               </div>
             {%- endunless -%}
             <div class="hiw__num hiw__num--{{ block.settings.color }}">
@@ -193,23 +193,27 @@
 /* Verbindingslijn links van nummer */
 .hiw__connector {
   position: absolute;
-  right: calc(50% + 28px);
+  right: calc(50% + 32px);
   left: 0;
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  gap: 4px;
+  justify-content: center;
+  gap: 8px;
 }
-.hiw__connector svg {
-  width: 14px; height: 14px;
-  color: #DAC9A1;
+/* Gestippelde lijn links en rechts van poot */
+.hiw__connector-line {
+  flex: 1;
+  height: 2px;
+  border-top: 2.5px dashed #C4A882;
+  border-radius: 2px;
+}
+.hiw__connector-paw {
+  display: flex; align-items: center;
   flex-shrink: 0;
 }
-.hiw__connector-dot {
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: #DAC9A1;
-  flex-shrink: 0;
+.hiw__connector-paw svg {
+  width: 16px; height: 16px;
+  color: #C4A882;
 }
 
 /* Genummerde cirkel */
@@ -274,19 +278,27 @@
 
 /* ── Tekst ──────────────────────────────────────────────── */
 .hiw__text {
-  padding: 16px 20px 0;
-  max-width: 200px;
+  padding: 20px 16px 20px;
+  max-width: 220px;
+  border-radius: 20px;
+  margin-top: 8px;
+  width: 100%;
 }
+/* Gekleurde achtergrond per stap */
+.hiw__step--green  .hiw__text { background: #e8f5e2; }
+.hiw__step--orange .hiw__text { background: #fff0e4; }
+.hiw__step--pink   .hiw__text { background: #fff0f5; }
+.hiw__step--yellow .hiw__text { background: #fffae0; }
 .hiw__step-title {
   font-family: 'Lilita One', cursive;
   font-size: 1.2rem;
   line-height: 1.2;
   margin-bottom: 8px;
 }
-.hiw__step-title--green  { color: #2d7a1a; }
-.hiw__step-title--orange { color: #d9823a; }
-.hiw__step-title--pink   { color: #c0394b; }
-.hiw__step-title--yellow { color: #8a6200; }
+.hiw__step-title--green  { color: #2d7a1a; font-size: 1.3rem; }
+.hiw__step-title--orange { color: #b86a1e; font-size: 1.3rem; }
+.hiw__step-title--pink   { color: #c0394b; font-size: 1.3rem; }
+.hiw__step-title--yellow { color: #8a6200; font-size: 1.3rem; }
 
 .hiw__step-desc {
   font-family: 'Karla', sans-serif;
