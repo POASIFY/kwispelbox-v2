@@ -1,0 +1,807 @@
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<div class="ps full-width" data-product-id="{{ product.id }}">
+
+  <!-- ══ ABOVE THE FOLD ══════════════════════════════════ -->
+  <div class="ps__fold">
+
+    <!-- Links: galerij ──────────────────────────────────── -->
+    <div class="ps__gallery">
+      <div class="ps__gallery-main" id="PsGalleryMain">
+
+        {%- if product.images.size > 0 -%}
+          {%- for image in product.images -%}
+            <div class="ps__slide{% if forloop.first %} is-active{% endif %}"
+                 id="PsSlide{{ forloop.index }}">
+              <img
+                src="{{ image | image_url: width: 900 }}"
+                srcset="{{ image | image_url: width: 500 }} 500w, {{ image | image_url: width: 900 }} 900w"
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                alt="{{ image.alt | default: product.title | escape }}"
+                width="900"
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                fetchpriority="{% if forloop.first %}high{% else %}auto{% endif %}"
+                class="ps__slide-img"
+              >
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          <div class="ps__slide is-active">
+            <div class="ps__slide-ph">
+              {{- 'icon-toy.svg' | inline_asset_content -}}
+              <span>Voeg productfoto toe</span>
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if product.images.size > 1 -%}
+          <button class="ps__arrow ps__arrow--prev" id="PsPrev" type="button" aria-label="Vorige">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <button class="ps__arrow ps__arrow--next" id="PsNext" type="button" aria-label="Volgende">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        {%- endif -%}
+
+      </div>
+
+      <!-- Dots mobiel -->
+      {%- if product.images.size > 1 -%}
+        <div class="ps__dots" aria-hidden="true" id="PsDots">
+          {%- for image in product.images limit: 5 -%}
+            <span class="ps__dot{% if forloop.first %} is-active{% endif %}"
+                  data-slide="{{ forloop.index }}"></span>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      <!-- Thumbnails desktop -->
+      {%- if product.images.size > 1 -%}
+        <div class="ps__thumbs">
+          {%- for image in product.images limit: 5 -%}
+            <button class="ps__thumb{% if forloop.first %} is-active{% endif %}"
+                    data-slide="{{ forloop.index }}" type="button">
+              <img src="{{ image | image_url: width: 200 }}"
+                   alt="{{ image.alt | default: product.title }}"
+                   width="200" loading="lazy">
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <!-- Rechts: product info ─────────────────────────────── -->
+    <div class="ps__info">
+
+      <!-- Breadcrumb / categorie -->
+      {%- if product.type != blank -%}
+        <p class="ps__type">{{ product.type }}</p>
+      {%- endif -%}
+
+      <!-- Titel -->
+      <h1 class="ps__title">{{ product.title }}</h1>
+
+      <!-- Sterren -->
+      <div class="ps__rating">
+        <div class="ps__stars">
+          {%- for i in (1..5) -%}{{- 'icon-star.svg' | inline_asset_content -}}{%- endfor -%}
+        </div>
+        <span class="ps__rating-score">{{ section.settings.review_score }}</span>
+        <span class="ps__rating-count">({{ section.settings.review_count }} reviews)</span>
+      </div>
+
+      <!-- Prijs -->
+      <div class="ps__price-row">
+        <span class="ps__price">{{ current_variant.price | money }}</span>
+        {%- if current_variant.compare_at_price > current_variant.price -%}
+          <span class="ps__compare">{{ current_variant.compare_at_price | money }}</span>
+          <span class="ps__discount-badge">
+            -{{ current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price }}%
+          </span>
+        {%- endif -%}
+      </div>
+
+      <!-- Korte beschrijving -->
+      {%- if product.metafields.custom.summary != blank -%}
+        <p class="ps__summary">{{ product.metafields.custom.summary }}</p>
+      {%- elsif product.description != blank -%}
+        <p class="ps__summary">{{ product.description | strip_html | truncate: 200 }}</p>
+      {%- endif -%}
+
+      <div class="ps__divider"></div>
+
+      <!-- Varianten -->
+      {%- if product.variants.size > 1 -%}
+        <div class="ps__variants">
+          {%- for option in product.options_with_values -%}
+            <div class="ps__option">
+              <p class="ps__option-label">
+                {{ option.name }}:
+                <strong id="PsOptionVal{{ option.position }}">{{ option.selected_value }}</strong>
+              </p>
+              <div class="ps__option-pills">
+                {%- for value in option.values -%}
+                  <label class="ps__pill">
+                    <input
+                      type="radio"
+                      name="option{{ option.position }}"
+                      value="{{ value }}"
+                      class="ps__pill-radio"
+                      data-option="{{ option.position }}"
+                      {% if option.selected_value == value %}checked{% endif %}
+                    >
+                    <span>{{ value }}</span>
+                  </label>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+        <div class="ps__divider"></div>
+      {%- endif -%}
+
+      <!-- Specificaties -->
+      {%- assign spec_blocks = section.blocks | where: 'type', 'spec' -%}
+      {%- if spec_blocks.size > 0 -%}
+        <dl class="ps__specs">
+          {%- for block in spec_blocks -%}
+            <div class="ps__spec-row" {{ block.shopify_attributes }}>
+              <dt>{{ block.settings.label }}</dt>
+              <dd>{{ block.settings.value }}</dd>
+            </div>
+          {%- endfor -%}
+        </dl>
+        <div class="ps__divider"></div>
+      {%- endif -%}
+
+      <!-- USPs -->
+      {%- assign usp_blocks = section.blocks | where: 'type', 'usp' -%}
+      {%- if usp_blocks.size > 0 -%}
+        <ul class="ps__usps">
+          {%- for block in usp_blocks -%}
+            <li {{ block.shopify_attributes }}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#66AA44" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+              <span>{{ block.settings.text }}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+        <div class="ps__divider"></div>
+      {%- endif -%}
+
+      <!-- Hond eigenschappen -->
+      {%- render 'dog-properties' -%}
+
+      <!-- Delivery -->
+      <div class="ps__delivery">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#66AA44" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        {{ section.settings.delivery_text }}
+      </div>
+
+      <!-- Hoeveelheid + ATC -->
+      <form id="PsForm" action="/cart/add" method="post">
+        <input type="hidden" name="id" id="PsVariantId" value="{{ current_variant.id }}">
+        <div class="ps__atc-row">
+          <div class="ps__qty">
+            <button type="button" class="ps__qty-btn" id="PsQtyMinus" aria-label="Minder">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg>
+            </button>
+            <input type="number" name="quantity" value="1" min="1" max="99"
+                   id="PsQtyInput" class="ps__qty-input" aria-label="Aantal">
+            <button type="button" class="ps__qty-btn" id="PsQtyPlus" aria-label="Meer">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+          </div>
+          <button type="submit" class="ps__atc"
+                  {% unless current_variant.available %}disabled{% endunless %}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+            {%- if current_variant.available -%}
+              {{ section.settings.atc_label }}
+            {%- else -%}
+              Uitverkocht
+            {%- endif -%}
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ══ VOLLEDIGE BESCHRIJVING ══════════════════════════ -->
+  {%- if product.description != blank -%}
+    <div class="ps__desc-section">
+      <div class="ps__desc-inner">
+        <h2 class="ps__section-title">Productomschrijving</h2>
+        <div class="ps__desc-content rte">{{ product.description }}</div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  <!-- ══ TRUST STRIP ════════════════════════════════════ -->
+  {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
+  {%- if trust_blocks.size > 0 -%}
+    <div class="ps__trust-strip">
+      {%- for block in trust_blocks -%}
+        <div class="ps__trust-item" {{ block.shopify_attributes }}>
+          <span class="ps__trust-icon ps__trust-icon--{{ block.settings.color }}" aria-hidden="true">
+            {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+          </span>
+          <div>
+            <strong>{{ block.settings.title }}</strong>
+            {%- if block.settings.subtitle != blank -%}
+              <span>{{ block.settings.subtitle }}</span>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  <!-- ══ BOX UPSELL ════════════════════════════════════ -->
+  {%- if section.settings.show_upsell -%}
+    <div class="ps__upsell">
+      <div class="ps__upsell-inner">
+        <div class="ps__upsell-copy">
+          <p class="ps__upsell-eyebrow">
+            {{- 'icon-gift.svg' | inline_asset_content -}}
+            {{ section.settings.upsell_eyebrow }}
+          </p>
+          <h2 class="ps__upsell-title">{{ section.settings.upsell_title }}</h2>
+          <p class="ps__upsell-text">{{ section.settings.upsell_text }}</p>
+          <a href="{{ section.settings.upsell_url }}" class="ps__upsell-btn">
+            {{- 'icon-gift.svg' | inline_asset_content -}}
+            {{ section.settings.upsell_cta }}
+          </a>
+        </div>
+        {%- if section.settings.upsell_image != blank -%}
+          <div class="ps__upsell-img-wrap">
+            <img src="{{ section.settings.upsell_image | image_url: width: 600 }}"
+                 alt="{{ section.settings.upsell_title }}"
+                 width="600" loading="lazy" class="ps__upsell-img">
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  <!-- ══ REVIEWS ════════════════════════════════════════ -->
+  {%- assign review_blocks = section.blocks | where: 'type', 'review' -%}
+  {%- if review_blocks.size > 0 -%}
+    <div class="ps__reviews-section">
+      <div class="ps__reviews-inner">
+        <h2 class="ps__section-title">
+          {{ section.settings.reviews_title }}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e75480" stroke-width="2" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        </h2>
+        <div class="ps__reviews-grid">
+          {%- for block in review_blocks -%}
+            <div class="ps__review-card" {{ block.shopify_attributes }}>
+              <div class="ps__review-top">
+                {%- if block.settings.avatar != blank -%}
+                  <img src="{{ block.settings.avatar | image_url: width: 100 }}"
+                       alt="{{ block.settings.author }}" width="52" height="52"
+                       loading="lazy" class="ps__review-avatar">
+                {%- else -%}
+                  <div class="ps__review-avatar-ph">{{ block.settings.author | slice: 0, 1 | upcase }}</div>
+                {%- endif -%}
+                <div>
+                  <strong class="ps__review-author">{{ block.settings.author }}</strong>
+                  <div class="ps__review-stars">
+                    {%- for i in (1..block.settings.stars) -%}
+                      {{- 'icon-star.svg' | inline_asset_content -}}
+                    {%- endfor -%}
+                  </div>
+                </div>
+              </div>
+              <p class="ps__review-text">{{ block.settings.text }}</p>
+              {%- if block.settings.dog_name != blank -%}
+                <p class="ps__review-dog">
+                  {{- 'icon-paw.svg' | inline_asset_content -}}
+                  {{ block.settings.dog_name }}
+                </p>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+</div>
+
+{% stylesheet %}
+.ps { background: #fff; overflow-x: hidden; }
+
+/* ── Above the fold ──────────────────────────────────────── */
+.ps__fold {
+  display: grid; grid-template-columns: 1fr;
+  gap: 32px; max-width: 1280px; margin: 0 auto;
+  padding: 40px 20px 48px;
+}
+@media(min-width: 1024px) {
+  .ps__fold {
+    grid-template-columns: 52% 1fr;
+    gap: 56px; padding: 48px 60px 56px;
+    align-items: start;
+  }
+}
+
+/* ── Gallery ─────────────────────────────────────────────── */
+.ps__gallery-main {
+  position: relative; border-radius: 20px;
+  overflow: hidden; background: #F8EFDD; aspect-ratio: 1;
+}
+.ps__slide { display: none; width: 100%; height: 100%; }
+.ps__slide.is-active { display: block; }
+.ps__slide-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ps__slide-ph {
+  width: 100%; height: 100%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 12px; color: #A88259;
+}
+.ps__arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,.92); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #3d2209; box-shadow: 0 2px 12px rgba(96,58,21,.15); z-index: 3;
+  transition: all 160ms;
+}
+.ps__arrow:hover { transform: translateY(-50%) scale(1.08); }
+.ps__arrow--prev { left: 14px; }
+.ps__arrow--next { right: 14px; }
+
+.ps__dots { display: none; justify-content: center; gap: 6px; padding: 10px 0 4px; }
+.ps__dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #DAC9A1;
+  cursor: pointer; transition: background 200ms, transform 200ms;
+}
+.ps__dot.is-active { background: #66AA44; transform: scale(1.25); }
+
+.ps__thumbs { display: flex; gap: 8px; margin-top: 8px; width: 100%; }
+.ps__thumb {
+  flex: 1; min-width: 0; aspect-ratio: 1;
+  border-radius: 12px; overflow: hidden;
+  border: 2.5px solid #EDE2C9; cursor: pointer; padding: 0; background: none;
+  transition: border-color 150ms, transform 200ms;
+}
+.ps__thumb.is-active { border-color: #66AA44; }
+.ps__thumb:hover { transform: scale(1.04); border-color: #66AA44; }
+.ps__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ── Product info ─────────────────────────────────────────── */
+.ps__info { display: flex; flex-direction: column; gap: 18px; }
+@media(min-width: 1024px) { .ps__info { position: sticky; top: 24px; } }
+
+.ps__type {
+  font-family: 'Karla', sans-serif; font-size: .72rem; font-weight: 800;
+  letter-spacing: .12em; text-transform: uppercase; color: #A88259;
+}
+.ps__title {
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+  color: #3d2209; line-height: 1.08; margin: 0;
+}
+
+/* Sterren */
+.ps__rating { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ps__stars { display: flex; gap: 2px; color: #F7A048; }
+.ps__stars svg { width: 18px; height: 18px; }
+.ps__rating-score { font-family: 'Karla', sans-serif; font-weight: 800; font-size: .9rem; color: #3d2209; }
+.ps__rating-count { font-family: 'Karla', sans-serif; font-size: .82rem; color: #A88259; }
+
+/* Prijs */
+.ps__price-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ps__price {
+  font-family: 'Lilita One', cursive; font-size: 1.8rem; color: #3d2209;
+}
+.ps__compare {
+  font-family: 'Karla', sans-serif; font-size: 1rem;
+  color: #A88259; text-decoration: line-through;
+}
+.ps__discount-badge {
+  font-family: 'Karla', sans-serif; font-size: .72rem; font-weight: 800;
+  background: #e8f5e2; color: #2d7a1a;
+  padding: 3px 10px; border-radius: 999px;
+}
+
+/* Beschrijving */
+.ps__summary {
+  font-family: 'Karla', sans-serif;
+  font-size: .92rem; color: #A88259; line-height: 1.75;
+}
+
+/* Divider */
+.ps__divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #EDE2C9 30%, #EDE2C9 70%, transparent);
+}
+
+/* Varianten */
+.ps__variants { display: flex; flex-direction: column; gap: 14px; }
+.ps__option { display: flex; flex-direction: column; gap: 8px; }
+.ps__option-label {
+  font-family: 'Karla', sans-serif; font-size: .82rem; color: #A88259;
+}
+.ps__option-label strong { color: #3d2209; }
+.ps__option-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.ps__pill { cursor: pointer; display: inline-flex; }
+.ps__pill-radio { position: absolute; opacity: 0; width: 0; height: 0; }
+.ps__pill span {
+  display: inline-flex; align-items: center; padding: 8px 18px;
+  border: 2px solid #DAC9A1; border-radius: 999px;
+  font-family: 'Karla', sans-serif; font-size: .82rem; font-weight: 700;
+  color: #A88259; background: #fff; transition: all 150ms;
+}
+.ps__pill:hover span { border-color: #66AA44; color: #66AA44; background: #e8f5e2; }
+.ps__pill-radio:checked + span { background: #66AA44; border-color: #66AA44; color: #fff; }
+
+/* Specificaties */
+.ps__specs { display: flex; flex-direction: column; gap: 0; margin: 0; }
+.ps__spec-row {
+  display: flex; gap: 16px; padding: 10px 0;
+  border-bottom: 1px solid #F0E8D8;
+  font-family: 'Karla', sans-serif; font-size: .85rem;
+}
+.ps__spec-row:last-child { border-bottom: none; }
+.ps__spec-row dt { font-weight: 800; color: #3d2209; min-width: 130px; flex-shrink: 0; }
+.ps__spec-row dd { color: #A88259; margin: 0; }
+
+/* USPs */
+.ps__usps { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.ps__usps li {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Karla', sans-serif; font-size: .88rem;
+  font-weight: 700; color: #3d2209;
+}
+.ps__usps li svg { flex-shrink: 0; }
+
+/* Delivery */
+.ps__delivery {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: 'Karla', sans-serif; font-size: .82rem; font-weight: 700;
+  color: #2d7a1a; background: #e8f5e2;
+  border: 1.5px solid #c8e6c0; border-radius: 12px; padding: 12px 16px;
+}
+.ps__delivery svg { flex-shrink: 0; color: #66AA44; }
+
+/* Hoeveelheid + ATC */
+.ps__atc-row { display: flex; gap: 12px; align-items: stretch; }
+.ps__qty {
+  display: flex; align-items: center;
+  border: 2px solid #EDE2C9; border-radius: 14px; overflow: hidden;
+  background: #fff; flex-shrink: 0;
+}
+.ps__qty-btn {
+  width: 44px; height: 52px; border: none; background: none;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: #3d2209; transition: background 150ms;
+}
+.ps__qty-btn:hover { background: #F8EFDD; }
+.ps__qty-input {
+  width: 44px; text-align: center; border: none; outline: none;
+  font-family: 'Karla', sans-serif; font-size: .95rem; font-weight: 800;
+  color: #3d2209; background: transparent;
+  -moz-appearance: textfield;
+}
+.ps__qty-input::-webkit-outer-spin-button,
+.ps__qty-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+.ps__atc {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 20px; background: #F7A048; color: #fff;
+  font-family: 'Lilita One', cursive; font-size: 1.05rem;
+  border: none; border-radius: 14px; cursor: pointer;
+  box-shadow: 0 6px 24px rgba(247,160,72,.3);
+  transition: background 160ms, transform 200ms cubic-bezier(.34,1.56,.64,1);
+}
+.ps__atc:hover { background: #d9823a; transform: translateY(-2px); }
+.ps__atc:disabled { background: #C4A882; cursor: not-allowed; box-shadow: none; transform: none; }
+
+/* ── Beschrijving sectie ─────────────────────────────────── */
+.ps__desc-section { background: #F8EFDD; padding: 56px 0; }
+.ps__desc-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 20px;
+  display: grid; grid-template-columns: 1fr;
+  gap: 32px;
+}
+@media(min-width: 768px) {
+  .ps__desc-inner { padding: 0 60px; }
+}
+.ps__section-title {
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  color: #3d2209; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.ps__desc-content {
+  font-family: 'Karla', sans-serif;
+  font-size: .92rem; color: #603A15; line-height: 1.8;
+  max-width: 680px;
+}
+.ps__desc-content p { margin-bottom: 12px; }
+.ps__desc-content ul { padding-left: 20px; margin-bottom: 12px; }
+.ps__desc-content li { margin-bottom: 6px; }
+
+/* ── Trust strip ─────────────────────────────────────────── */
+.ps__trust-strip {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  background: #fff; border-top: 2px solid #F0E8D8; border-bottom: 2px solid #F0E8D8;
+}
+@media(min-width: 768px) { .ps__trust-strip { grid-template-columns: repeat(4, 1fr); } }
+.ps__trust-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 24px 20px; border-right: 1px solid #EDE2C9;
+}
+.ps__trust-item:nth-child(2n) { border-right: none; }
+.ps__trust-item:last-child    { border-right: none; }
+@media(min-width: 768px) {
+  .ps__trust-item:nth-child(2n) { border-right: 1px solid #EDE2C9; }
+  .ps__trust-item:last-child    { border-right: none; }
+}
+.ps__trust-icon {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.ps__trust-icon svg { width: 20px; height: 20px; }
+.ps__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
+.ps__trust-icon--pink   { background: #fff0f5; color: #e75480; }
+.ps__trust-icon--orange { background: #fff0e4; color: #F7A048; }
+.ps__trust-icon--yellow { background: #fffae0; color: #c49000; }
+.ps__trust-item > div { display: flex; flex-direction: column; gap: 3px; }
+.ps__trust-item strong { font-family: 'Karla', sans-serif; font-size: .85rem; font-weight: 800; color: #3d2209; }
+.ps__trust-item span   { font-family: 'Karla', sans-serif; font-size: .75rem; color: #A88259; }
+
+/* ── Box upsell ──────────────────────────────────────────── */
+.ps__upsell { background: #FFF9E8; padding: 56px 0; border-top: 2px solid #FFE071; }
+.ps__upsell-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 20px;
+  display: grid; grid-template-columns: 1fr;
+  gap: 32px; align-items: center;
+}
+@media(min-width: 768px) {
+  .ps__upsell-inner { grid-template-columns: 1fr 1fr; padding: 0 60px; }
+}
+.ps__upsell-copy { display: flex; flex-direction: column; gap: 16px; }
+.ps__upsell-eyebrow {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: 'Karla', sans-serif; font-size: .75rem; font-weight: 800;
+  letter-spacing: .1em; text-transform: uppercase; color: #F7A048;
+}
+.ps__upsell-eyebrow svg { width: 14px; height: 14px; flex-shrink: 0; }
+.ps__upsell-title {
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(1.6rem, 3vw, 2.2rem); color: #3d2209; line-height: 1.1;
+}
+.ps__upsell-text {
+  font-family: 'Karla', sans-serif; font-size: .92rem;
+  color: #A88259; line-height: 1.7; max-width: 44ch;
+}
+.ps__upsell-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Lilita One', cursive; font-size: .95rem;
+  background: #F7A048; color: #fff;
+  padding: 13px 24px; border-radius: 999px; text-decoration: none;
+  align-self: flex-start;
+  box-shadow: 0 6px 20px rgba(247,160,72,.3);
+  transition: background 160ms, transform 200ms cubic-bezier(.34,1.56,.64,1);
+}
+.ps__upsell-btn:hover { background: #d9823a; transform: translateY(-2px); }
+.ps__upsell-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+.ps__upsell-img-wrap { border-radius: 20px; overflow: hidden; }
+.ps__upsell-img { width: 100%; display: block; border-radius: 20px; }
+
+/* ── Reviews sectie ─────────────────────────────────────── */
+.ps__reviews-section { background: #F8EFDD; padding: 64px 0; }
+.ps__reviews-inner { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+@media(min-width: 768px) { .ps__reviews-inner { padding: 0 60px; } }
+.ps__reviews-grid {
+  display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 8px;
+}
+@media(min-width: 640px)  { .ps__reviews-grid { grid-template-columns: repeat(2, 1fr); } }
+@media(min-width: 1024px) { .ps__reviews-grid { grid-template-columns: repeat(3, 1fr); } }
+
+.ps__review-card {
+  background: #fff; border-radius: 20px; padding: 22px;
+  display: flex; flex-direction: column; gap: 12px;
+  border: 1.5px solid #EDE2C9;
+  box-shadow: 0 2px 12px rgba(96,58,21,.06);
+  transition: transform 220ms cubic-bezier(.34,1.56,.64,1), box-shadow 220ms;
+}
+.ps__review-card:hover { transform: translateY(-5px); box-shadow: 0 10px 32px rgba(96,58,21,.11); }
+.ps__review-top { display: flex; align-items: flex-start; gap: 12px; }
+.ps__review-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  object-fit: cover; flex-shrink: 0; border: 2.5px solid #EDE2C9;
+}
+.ps__review-avatar-ph {
+  width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+  background: #fff0e4; color: #F7A048;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Lilita One', cursive; font-size: 1.2rem;
+}
+.ps__review-author { display: block; font-family: 'Karla', sans-serif; font-size: .88rem; font-weight: 800; color: #3d2209; }
+.ps__review-stars { display: flex; gap: 2px; color: #F7A048; margin-top: 3px; }
+.ps__review-stars svg { width: 14px; height: 14px; }
+.ps__review-text { font-family: 'Karla', sans-serif; font-size: .82rem; color: #A88259; line-height: 1.7; flex: 1; }
+.ps__review-dog { display: flex; align-items: center; gap: 5px; font-family: 'Karla', sans-serif; font-size: .72rem; color: #A88259; font-style: italic; }
+.ps__review-dog svg { width: 12px; height: 12px; color: #F7A048; }
+
+/* ══ MOBIEL ═══════════════════════════════════════════════ */
+@media(max-width: 767px) {
+  .ps__fold { padding: 0 0 32px; gap: 0; }
+  .ps__gallery-main { border-radius: 0; aspect-ratio: 4/3; }
+  .ps__thumbs { display: none; }
+  .ps__dots { display: flex !important; }
+  .ps__info { padding: 24px 16px; gap: 16px; }
+  .ps__atc-row { flex-direction: column; }
+  .ps__qty { justify-content: center; }
+  .ps__atc { width: 100%; }
+  .ps__desc-section { padding: 40px 0; }
+  .ps__trust-strip {
+    display: flex; flex-wrap: nowrap;
+    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .ps__trust-strip::-webkit-scrollbar { display: none; }
+  .ps__trust-item { flex: 0 0 auto; min-width: 170px; }
+  .ps__reviews-section { padding: 40px 0; }
+  .ps__reviews-inner { padding: 0; overflow: hidden; }
+  .ps__section-title { padding: 0 16px; }
+  .ps__reviews-grid {
+    display: flex; flex-wrap: nowrap;
+    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    gap: 12px; padding: 4px 16px 12px; grid-template-columns: unset;
+  }
+  .ps__reviews-grid::-webkit-scrollbar { display: none; }
+  .ps__review-card { flex: 0 0 78vw; max-width: 280px; }
+  .ps__upsell { padding: 40px 0; }
+  .ps__upsell-inner { padding: 0 16px; }
+}
+{% endstylesheet %}
+
+<script>
+(function() {
+  var slides = document.querySelectorAll('.ps__slide');
+  var thumbs = document.querySelectorAll('.ps__thumb');
+  var dots   = document.querySelectorAll('.ps__dot');
+  var curr   = 1;
+
+  function goTo(idx) {
+    curr = Math.max(1, Math.min(idx, slides.length));
+    slides.forEach(function(s) { s.classList.remove('is-active'); });
+    thumbs.forEach(function(t) { t.classList.remove('is-active'); });
+    dots.forEach(function(d, i) { d.classList.toggle('is-active', i + 1 === curr); });
+    var s = document.getElementById('PsSlide' + curr);
+    if (s) s.classList.add('is-active');
+    if (thumbs[curr - 1]) thumbs[curr - 1].classList.add('is-active');
+  }
+
+  thumbs.forEach(function(b) { b.addEventListener('click', function() { goTo(parseInt(this.dataset.slide)); }); });
+  dots.forEach(function(d)   { d.addEventListener('click', function() { goTo(parseInt(this.dataset.slide)); }); });
+  var prev = document.getElementById('PsPrev');
+  var next = document.getElementById('PsNext');
+  if (prev) prev.addEventListener('click', function() { goTo(curr - 1); });
+  if (next) next.addEventListener('click', function() { goTo(curr + 1); });
+
+  // Quantity
+  var qtyInput = document.getElementById('PsQtyInput');
+  document.getElementById('PsQtyMinus') && document.getElementById('PsQtyMinus').addEventListener('click', function() {
+    if (qtyInput && parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value) - 1;
+  });
+  document.getElementById('PsQtyPlus') && document.getElementById('PsQtyPlus').addEventListener('click', function() {
+    if (qtyInput) qtyInput.value = parseInt(qtyInput.value) + 1;
+  });
+
+  // Variant selector
+  document.querySelectorAll('.ps__pill-radio').forEach(function(r) {
+    r.addEventListener('change', function() {
+      var pos = this.dataset.option;
+      var label = document.getElementById('PsOptionVal' + pos);
+      if (label) label.textContent = this.value;
+    });
+  });
+
+  // Dog properties validatie
+  var form = document.getElementById('PsForm');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      var valid = true;
+      ['leeftijd','formaat'].forEach(function(p) {
+        var g = document.querySelector('[data-prop="' + p + '"]');
+        if (!g) return;
+        var checked = g.querySelector('input:checked');
+        var err = g.querySelector('.dog-prop__error');
+        if (!checked) {
+          valid = false; g.classList.add('dog-prop--invalid');
+          if (err) err.hidden = false;
+        } else {
+          g.classList.remove('dog-prop--invalid');
+          if (err) err.hidden = true;
+        }
+      });
+      if (!valid) {
+        e.preventDefault();
+        var f = document.querySelector('.dog-prop--invalid');
+        if (f) f.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  }
+  document.querySelectorAll('.dog-prop__radio').forEach(function(r) {
+    r.addEventListener('change', function() {
+      var g = this.closest('[data-prop]');
+      if (g) { g.classList.remove('dog-prop--invalid'); var e = g.querySelector('.dog-prop__error'); if (e) e.hidden = true; }
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Losse productpagina",
+  "tag": "div",
+  "blocks": [
+    {
+      "type": "usp", "name": "USP",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Tekst", "default": "Veilig voor alle honden" }
+      ]
+    },
+    {
+      "type": "spec", "name": "Specificatie",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label",  "default": "Materiaal" },
+        { "type": "text", "id": "value", "label": "Waarde", "default": "Pluche, 100% veilig" }
+      ]
+    },
+    {
+      "type": "trust", "name": "Trust item",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icoon", "default": "shield",
+          "options": [{"value":"shield","label":"Schild"},{"value":"heart","label":"Hart"},{"value":"truck","label":"Vrachtwagen"},{"value":"lock","label":"Slot"},{"value":"gift","label":"Cadeau"},{"value":"paw","label":"Poot"}] },
+        { "type": "select", "id": "color", "label": "Kleur", "default": "green",
+          "options": [{"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},{"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"}] },
+        { "type": "text", "id": "title",    "label": "Titel",    "default": "Veilig voor honden" },
+        { "type": "text", "id": "subtitle", "label": "Subtitel", "default": "Getest en gecertificeerd." }
+      ]
+    },
+    {
+      "type": "review", "name": "Review",
+      "settings": [
+        { "type": "image_picker", "id": "avatar",   "label": "Profielfoto" },
+        { "type": "text",         "id": "author",   "label": "Naam",    "default": "Lisa & Max" },
+        { "type": "range",        "id": "stars",    "label": "Sterren", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "textarea",     "id": "text",     "label": "Review",  "default": "Mijn hond is er gek op!" },
+        { "type": "text",         "id": "dog_name", "label": "Hond + ras", "default": "Max – Golden Retriever" }
+      ]
+    }
+  ],
+  "settings": [
+    { "type": "text", "id": "review_score",  "label": "Review score",   "default": "4,8/5" },
+    { "type": "text", "id": "review_count",  "label": "Aantal reviews", "default": "248" },
+    { "type": "text", "id": "delivery_text", "label": "Bezorging tekst","default": "Voor 15:00 besteld, morgen geleverd" },
+    { "type": "text", "id": "atc_label",     "label": "Knoptekst",      "default": "Voeg toe aan winkelwagen" },
+    { "type": "text", "id": "reviews_title", "label": "Reviews titel",  "default": "Wat andere baasjes zeggen" },
+    { "type": "header", "content": "Box upsell" },
+    { "type": "checkbox",     "id": "show_upsell",    "label": "Toon upsell",     "default": true },
+    { "type": "text",         "id": "upsell_eyebrow", "label": "Eyebrow",         "default": "Populaire keuze" },
+    { "type": "text",         "id": "upsell_title",   "label": "Titel",           "default": "Liever een complete verrassing?" },
+    { "type": "textarea",     "id": "upsell_text",    "label": "Tekst",           "default": "De meeste baasjes kiezen voor een Kwispelbox — een complete verrassingsbox vol zorgvuldig geselecteerde speeltjes en dit soort producten." },
+    { "type": "url",          "id": "upsell_url",     "label": "Link",            "default": "/collections/all" },
+    { "type": "text",         "id": "upsell_cta",     "label": "Knoptekst",       "default": "Bekijk de Kwispelboxen" },
+    { "type": "image_picker", "id": "upsell_image",   "label": "Upsell afbeelding" }
+  ],
+  "presets": [{
+    "name": "Losse productpagina",
+    "blocks": [
+      {"type":"usp","settings":{"text":"Veilig voor alle honden — getest en gecertificeerd"}},
+      {"type":"usp","settings":{"text":"Duurzame materialen — lang speelplezier"}},
+      {"type":"usp","settings":{"text":"Gratis verzending vanaf €75"}},
+      {"type":"trust","settings":{"icon":"shield","color":"green","title":"100% veilig","subtitle":"Getest en gecertificeerd."}},
+      {"type":"trust","settings":{"icon":"heart","color":"pink","title":"Met liefde gemaakt","subtitle":"Kwaliteit die je ziet."}},
+      {"type":"trust","settings":{"icon":"truck","color":"orange","title":"Snelle levering","subtitle":"Voor 15:00 besteld, morgen in huis."}},
+      {"type":"trust","settings":{"icon":"lock","color":"yellow","title":"Veilig betalen","subtitle":"Betaal veilig en vertrouwd."}},
+      {"type":"review","settings":{"author":"Lisa & Max","stars":5,"text":"Mijn hond speelt er elke dag mee. Super kwaliteit!","dog_name":"Max – Golden Retriever"}},
+      {"type":"review","settings":{"author":"Sanne & Bo","stars":5,"text":"Stevig, leuk en Bo is er dol op. Aanrader!","dog_name":"Bo – Labrador"}},
+      {"type":"review","settings":{"author":"Tom & Pip","stars":5,"text":"Snel geleverd en precies zoals omschreven.","dog_name":"Pip – Beagle"}}
+    ]
+  }]
+}
+{% endschema %}

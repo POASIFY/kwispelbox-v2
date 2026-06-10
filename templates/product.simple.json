@@ -1,0 +1,33 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product-simple",
+      "blocks": {
+        "u1": {"type":"usp","settings":{"text":"Veilig voor alle honden — getest en gecertificeerd"}},
+        "u2": {"type":"usp","settings":{"text":"Duurzame materialen — lang speelplezier"}},
+        "u3": {"type":"usp","settings":{"text":"Gratis verzending vanaf €75"}},
+        "t1": {"type":"trust","settings":{"icon":"shield","color":"green","title":"100% veilig","subtitle":"Getest en gecertificeerd."}},
+        "t2": {"type":"trust","settings":{"icon":"heart","color":"pink","title":"Met liefde gemaakt","subtitle":"Kwaliteit die je ziet."}},
+        "t3": {"type":"trust","settings":{"icon":"truck","color":"orange","title":"Snelle levering","subtitle":"Voor 15:00 besteld, morgen in huis."}},
+        "t4": {"type":"trust","settings":{"icon":"lock","color":"yellow","title":"Veilig betalen","subtitle":"Betaal veilig en vertrouwd."}},
+        "r1": {"type":"review","settings":{"author":"Lisa & Max","stars":5,"text":"Mijn hond speelt er elke dag mee. Super kwaliteit!","dog_name":"Max – Golden Retriever"}},
+        "r2": {"type":"review","settings":{"author":"Sanne & Bo","stars":5,"text":"Stevig, leuk en Bo is er dol op. Aanrader!","dog_name":"Bo – Labrador"}},
+        "r3": {"type":"review","settings":{"author":"Tom & Pip","stars":5,"text":"Snel geleverd en precies zoals omschreven.","dog_name":"Pip – Beagle"}}
+      },
+      "block_order": ["u1","u2","u3","t1","t2","t3","t4","r1","r2","r3"],
+      "settings": {
+        "review_score": "4,8/5",
+        "review_count": "248",
+        "delivery_text": "Voor 15:00 besteld, morgen geleverd",
+        "atc_label": "Voeg toe aan winkelwagen",
+        "reviews_title": "Wat andere baasjes zeggen",
+        "show_upsell": true,
+        "upsell_eyebrow": "Populaire keuze",
+        "upsell_title": "Liever een complete verrassing?",
+        "upsell_text": "De meeste baasjes kiezen voor een Kwispelbox — een complete verrassingsbox vol zorgvuldig geselecteerde speeltjes en dit soort producten.",
+        "upsell_cta": "Bekijk de Kwispelboxen"
+      }
+    }
+  },
+  "order": ["main"]
+}
