@@ -1,147 +1,102 @@
 <div class="ann full-width" role="region" aria-label="Aankondigingen">
-
   {%- if section.blocks.size > 0 -%}
-
-    {%- comment -%} Screen readers: echte tekst, aria-live {%- endcomment -%}
-    <div class="ann__a11y" aria-live="polite" aria-atomic="true">
+    <ul class="ann__list" role="list">
       {%- for block in section.blocks -%}
-        <p class="ann__a11y-item{% if forloop.first %} is-active{% endif %}"
-           {{ block.shopify_attributes }}>
-          {{ block.settings.text }}
-        </p>
+        <li class="ann__item" {{ block.shopify_attributes }}>
+          <span class="ann__icon" aria-hidden="true">
+            {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+          </span>
+          <span class="ann__text">{{ block.settings.text }}</span>
+        </li>
+        {%- unless forloop.last -%}
+          <li class="ann__sep" aria-hidden="true">|</li>
+        {%- endunless -%}
       {%- endfor -%}
-    </div>
-
-    {%- comment -%} Mobiel: marquee ticker (aria-hidden) {%- endcomment -%}
-    <div class="ann__ticker" aria-hidden="true">
-      <div class="ann__ticker-track">
-        {%- for i in (1..2) -%}
-          {%- for block in section.blocks -%}
-            <span class="ann__ticker-item">{{ block.settings.text }}</span>
-            <span class="ann__ticker-dot">&#xB7;</span>
-          {%- endfor -%}
-        {%- endfor -%}
-      </div>
-    </div>
-
+    </ul>
   {%- endif -%}
-
 </div>
 
 {% stylesheet %}
+/* Verborgen op mobiel, zichtbaar op desktop */
 .ann {
   background-color: #603A15;
   color: #ffffff;
-  width: 100%;
-  overflow: hidden;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
   font-family: 'Karla', sans-serif;
-  font-size: 0.8125rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  letter-spacing: 0.01em;
+  display: none;
 }
 
-/* Mobiel: ticker zichtbaar, tekst verborgen */
-.ann__a11y { display: none; }
-.ann__a11y-item { display: none; }
-.ann__a11y-item.is-active { display: block; }
-
-.ann__ticker {
-  display: flex;
-  width: 100%;
-  overflow: hidden;
+@media (min-width: 768px) {
+  .ann { display: block; }
 }
-.ann__ticker-track {
+
+.ann__list {
   display: flex;
   align-items: center;
+  justify-content: center;
+  list-style: none;
+  width: 100%;
+  padding: 11px 24px;
+  gap: 0;
+}
+
+.ann__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   white-space: nowrap;
-  animation: ann-ticker 28s linear infinite;
-  will-change: transform;
+  padding: 0 20px;
 }
-.ann__ticker-item {
-  padding: 10px 0;
+
+.ann__icon {
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
-}
-.ann__ticker-dot {
-  padding: 0 16px;
   color: #FFE071;
+}
+.ann__icon svg { width: 14px; height: 14px; }
+
+.ann__sep {
+  color: rgba(255,255,255,.25);
+  font-size: 0.9rem;
   flex-shrink: 0;
-}
-
-@keyframes ann-ticker {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* Desktop: roterende tekst zichtbaar, ticker verborgen */
-@media (min-width: 768px) {
-  .ann__ticker { display: none; }
-  .ann__a11y {
-    display: block;
-    width: 100%;
-    text-align: center;
-    padding: 10px 24px;
-  }
-  .ann__a11y-item { display: none; opacity: 0; transition: opacity 500ms ease; }
-  .ann__a11y-item.is-active { display: block; opacity: 1; }
-}
-
-/* Reduced motion: altijd statisch */
-@media (prefers-reduced-motion: reduce) {
-  .ann__ticker { display: none; }
-  .ann__ticker-track { animation: none; }
-  .ann__a11y { display: block; width: 100%; text-align: center; padding: 10px 24px; }
-  .ann__a11y-item.is-active { display: block; opacity: 1; }
+  list-style: none;
 }
 {% endstylesheet %}
-
-{% javascript %}
-(function () {
-  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) return;
-  if (window.innerWidth < 768) return;
-  var items = document.querySelectorAll('.ann__a11y-item');
-  if (items.length <= 1) return;
-  var current = 0;
-  setInterval(function () {
-    items[current].classList.remove('is-active');
-    current = (current + 1) % items.length;
-    items[current].classList.add('is-active');
-  }, 4000);
-})();
-{% endjavascript %}
 
 {% schema %}
 {
   "name": "Aankondigingsbalk",
   "tag": "div",
   "limit": 1,
-  "enabled_on": {
-    "groups": ["header"]
-  },
+  "enabled_on": { "groups": ["header"] },
   "blocks": [
     {
       "type": "announcement",
       "name": "Aankondiging",
       "settings": [
         {
+          "type": "select",
+          "id": "icon",
+          "label": "Icoon",
+          "default": "truck",
+          "options": [
+            { "value": "truck",   "label": "Verzending" },
+            { "value": "star",    "label": "Ster" },
+            { "value": "gift",    "label": "Cadeau" },
+            { "value": "heart",   "label": "Hart" },
+            { "value": "shield",  "label": "Schild" },
+            { "value": "refresh", "label": "Retour" },
+            { "value": "paw",     "label": "Poot" }
+          ]
+        },
+        {
           "type": "text",
           "id": "text",
           "label": "Tekst",
-          "default": "Gratis verzending vanaf €75"
+          "default": "Gratis verzending vanaf \u20ac75"
         }
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "name": "Aankondigingsbalk",
-      "blocks": [
-        { "type": "announcement", "settings": { "text": "Gratis verzending vanaf €75 · Voor 22:00 besteld = morgen in huis" } },
-        { "type": "announcement", "settings": { "text": "Al meer dan 1.200 blije honden 🐾" } },
-        { "type": "announcement", "settings": { "text": "100% tevredenheidsgarantie · Niet goed? Geld terug" } }
       ]
     }
   ]

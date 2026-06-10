@@ -7,8 +7,8 @@
     "trust-bar": {
       "type": "trust-bar",
       "blocks": {
-        "tb1": {
-          "type": "item",
+        "d1": {
+          "type": "desktop_item",
           "settings": {
             "icon": "gift",
             "color": "green",
@@ -16,8 +16,8 @@
             "subtitle": "Geselecteerd met zorg"
           }
         },
-        "tb2": {
-          "type": "item",
+        "d2": {
+          "type": "desktop_item",
           "settings": {
             "icon": "paw",
             "color": "orange",
@@ -25,8 +25,8 @@
             "subtitle": "Speelplezier gegarandeerd"
           }
         },
-        "tb3": {
-          "type": "item",
+        "d3": {
+          "type": "desktop_item",
           "settings": {
             "icon": "heart",
             "color": "pink",
@@ -34,21 +34,51 @@
             "subtitle": "Puppy, volwassen & senior"
           }
         },
-        "tb4": {
-          "type": "item",
+        "d4": {
+          "type": "desktop_item",
           "settings": {
             "icon": "star",
             "color": "yellow",
             "title": "Elke box uniek",
             "subtitle": "Geen twee zijn hetzelfde"
           }
+        },
+        "m1": {
+          "type": "mobile_item",
+          "settings": {
+            "icon": "truck",
+            "color": "green",
+            "title": "Snelle levering",
+            "subtitle": "1-2 werkdagen"
+          }
+        },
+        "m2": {
+          "type": "mobile_item",
+          "settings": {
+            "icon": "refresh",
+            "color": "orange",
+            "title": "Niet goed?",
+            "subtitle": "Geld terug"
+          }
+        },
+        "m3": {
+          "type": "mobile_item",
+          "settings": {
+            "icon": "shield",
+            "color": "brown",
+            "title": "Veilig betalen",
+            "subtitle": "100% veilig"
+          }
         }
       },
       "block_order": [
-        "tb1",
-        "tb2",
-        "tb3",
-        "tb4"
+        "d1",
+        "d2",
+        "d3",
+        "d4",
+        "m1",
+        "m2",
+        "m3"
       ]
     }
   },

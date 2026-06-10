@@ -1,71 +1,117 @@
-<div class="trust-bar full-width">
+<section class="trust-bar full-width">
   <div class="trust-bar__inner">
-    {%- for block in section.blocks -%}
-      {%- if block.type == 'item' -%}
-        <div class="trust-bar__item" {{ block.shopify_attributes }}>
-          <span class="trust-bar__icon trust-bar__icon--{{ block.settings.color }}" aria-hidden="true">
-            {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
-          </span>
-          <span class="trust-bar__text">
-            <strong>{{ block.settings.title }}</strong>
-            <span>{{ block.settings.subtitle }}</span>
-          </span>
-        </div>
-      {%- endif -%}
+
+    {%- comment -%} Desktop: 4 merkwaarden items {%- endcomment -%}
+    {%- assign desktop_blocks = section.blocks | where: 'type', 'desktop_item' -%}
+    {%- for block in desktop_blocks -%}
+      <div class="trust-bar__item trust-bar__item--desktop" {{ block.shopify_attributes }}>
+        <span class="trust-bar__icon trust-bar__icon--{{ block.settings.color }}" aria-hidden="true">
+          {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+        </span>
+        <span class="trust-bar__text">
+          <strong>{{ block.settings.title }}</strong>
+          <span>{{ block.settings.subtitle }}</span>
+        </span>
+      </div>
     {%- endfor -%}
+
+    {%- comment -%} Mobiel: 3 USP items {%- endcomment -%}
+    {%- assign mobile_blocks = section.blocks | where: 'type', 'mobile_item' -%}
+    {%- for block in mobile_blocks -%}
+      <div class="trust-bar__item trust-bar__item--mobile" {{ block.shopify_attributes }}>
+        <span class="trust-bar__icon trust-bar__icon--{{ block.settings.color }}" aria-hidden="true">
+          {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+        </span>
+        <span class="trust-bar__text">
+          <strong>{{ block.settings.title }}</strong>
+          <span>{{ block.settings.subtitle }}</span>
+        </span>
+      </div>
+    {%- endfor -%}
+
   </div>
-</div>
+</section>
 
 {% stylesheet %}
 .trust-bar {
-  background: #fff;
+  background: #ffffff;
   border-top: 1px solid #EDE2C9;
   border-bottom: 1px solid #EDE2C9;
 }
 .trust-bar__inner {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 20px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0;
+  display: flex;
 }
-@media(min-width: 768px) {
-  .trust-bar__inner {
-    grid-template-columns: repeat(4, 1fr);
-    padding: 0 60px;
-  }
+
+/* Desktop items */
+.trust-bar__item--desktop {
+  display: none;
+  flex: 1;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+  border-right: 1px solid #EDE2C9;
 }
-.trust-bar__item {
+.trust-bar__item--desktop:last-of-type { border-right: none; }
+
+/* Mobiel items */
+.trust-bar__item--mobile {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 20px 8px;
+  border-right: 1px solid #EDE2C9;
+}
+.trust-bar__item--mobile:last-of-type { border-right: none; }
+
+/* Icon */
+.trust-bar__icon {
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px;
-  border-right: 1px solid #EDE2C9;
-  border-bottom: 1px solid #EDE2C9;
-}
-@media(min-width: 768px) {
-  .trust-bar__item { border-bottom: none; }
-}
-.trust-bar__item:nth-child(2n) { border-right: none; }
-@media(min-width: 768px) {
-  .trust-bar__item:nth-child(2n) { border-right: 1px solid #EDE2C9; }
-  .trust-bar__item:last-child    { border-right: none; }
-}
-.trust-bar__icon {
-  width: 44px; height: 44px;
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
+  justify-content: center;
   flex-shrink: 0;
 }
+/* Desktop: grote ronde gekleurde cirkel */
+.trust-bar__item--desktop .trust-bar__icon {
+  width: 48px; height: 48px;
+}
+/* Mobiel: kleiner, geen achtergrond */
+.trust-bar__item--mobile .trust-bar__icon {
+  width: 32px; height: 32px;
+  background: transparent !important;
+}
 .trust-bar__icon svg { width: 22px; height: 22px; }
+.trust-bar__item--mobile .trust-bar__icon svg { width: 26px; height: 26px; }
+
 .trust-bar__icon--green  { background: #e8f5e2; color: #66AA44; }
 .trust-bar__icon--orange { background: #fff0e4; color: #F7A048; }
 .trust-bar__icon--pink   { background: #fff0f5; color: #e75480; }
 .trust-bar__icon--yellow { background: #fffae0; color: #c49000; }
+.trust-bar__icon--brown  { background: #F8EFDD; color: #A88259; }
+.trust-bar__icon--teal   { background: #e0f5f0; color: #2a9d8f; }
+
 .trust-bar__text { display: flex; flex-direction: column; gap: 2px; }
-.trust-bar__text strong { font-family: 'Karla', sans-serif; font-size: .85rem; font-weight: 800; color: #603A15; line-height: 1.2; }
+.trust-bar__text strong { font-family: 'Karla', sans-serif; font-size: .875rem; font-weight: 800; color: #603A15; line-height: 1.2; }
 .trust-bar__text span   { font-size: .75rem; color: #A88259; line-height: 1.3; }
+
+/* Mobiel layout */
+@media (max-width: 767px) {
+  .trust-bar__item--desktop { display: none !important; }
+  .trust-bar__item--mobile  { display: flex; }
+  .trust-bar__inner { padding: 0; }
+}
+
+/* Desktop layout */
+@media (min-width: 768px) {
+  .trust-bar__item--desktop { display: flex; }
+  .trust-bar__item--mobile  { display: none !important; }
+  .trust-bar__inner { padding: 0 60px; }
+}
 {% endstylesheet %}
 
 {% schema %}
@@ -74,43 +120,53 @@
   "tag": "section",
   "blocks": [
     {
-      "type": "item",
-      "name": "Item",
+      "type": "desktop_item",
+      "name": "Desktop item",
       "settings": [
-        {
-          "type": "select", "id": "icon", "label": "Icoon", "default": "gift",
+        { "type": "select", "id": "icon", "label": "Icoon", "default": "gift",
           "options": [
-            { "value": "gift",    "label": "Cadeau" },
-            { "value": "paw",     "label": "Poot" },
-            { "value": "heart",   "label": "Hart" },
-            { "value": "star",    "label": "Ster" },
-            { "value": "truck",   "label": "Vrachtwagen" },
-            { "value": "shield",  "label": "Schild" },
-            { "value": "refresh", "label": "Retour" }
+            {"value":"gift","label":"Cadeau"},{"value":"paw","label":"Poot"},
+            {"value":"heart","label":"Hart"},{"value":"star","label":"Ster"},
+            {"value":"truck","label":"Vrachtwagen"},{"value":"shield","label":"Schild"},
+            {"value":"refresh","label":"Retour"},{"value":"toy","label":"Speeltje"}
           ]
         },
-        {
-          "type": "select", "id": "color", "label": "Kleur", "default": "green",
+        { "type": "select", "id": "color", "label": "Kleur", "default": "green",
           "options": [
-            { "value": "green",  "label": "Groen" },
-            { "value": "orange", "label": "Oranje" },
-            { "value": "pink",   "label": "Roze" },
-            { "value": "yellow", "label": "Geel" }
+            {"value":"green","label":"Groen"},{"value":"orange","label":"Oranje"},
+            {"value":"pink","label":"Roze"},{"value":"yellow","label":"Geel"},
+            {"value":"brown","label":"Bruin"},{"value":"teal","label":"Turquoise"}
           ]
         },
         { "type": "text", "id": "title",    "label": "Titel",    "default": "Duurzaam & bewust" },
         { "type": "text", "id": "subtitle", "label": "Subtitel", "default": "Geselecteerd met zorg" }
       ]
+    },
+    {
+      "type": "mobile_item",
+      "name": "Mobiel item",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icoon", "default": "truck",
+          "options": [
+            {"value":"truck","label":"Vrachtwagen"},{"value":"shield","label":"Schild"},
+            {"value":"refresh","label":"Retour"},{"value":"gift","label":"Cadeau"},
+            {"value":"paw","label":"Poot"},{"value":"heart","label":"Hart"},
+            {"value":"star","label":"Ster"}
+          ]
+        },
+        { "type": "select", "id": "color", "label": "Kleur", "default": "green",
+          "options": [
+            {"value":"green","label":"Groen"},{"value":"orange","label":"Oranje"},
+            {"value":"pink","label":"Roze"},{"value":"yellow","label":"Geel"}
+          ]
+        },
+        { "type": "text", "id": "title",    "label": "Titel",    "default": "Snelle levering" },
+        { "type": "text", "id": "subtitle", "label": "Subtitel", "default": "1-2 werkdagen" }
+      ]
     }
   ],
   "presets": [{
-    "name": "Vertrouwensbalk",
-    "blocks": [
-      { "type": "item", "settings": { "icon": "gift",   "color": "green",  "title": "Duurzaam & bewust",       "subtitle": "Geselecteerd met zorg" }},
-      { "type": "item", "settings": { "icon": "paw",    "color": "orange", "title": "Alleen het allerleukste", "subtitle": "Speelplezier gegarandeerd" }},
-      { "type": "item", "settings": { "icon": "heart",  "color": "pink",   "title": "Voor elke hond",          "subtitle": "Puppy, volwassen & senior" }},
-      { "type": "item", "settings": { "icon": "star",   "color": "yellow", "title": "Elke box uniek",          "subtitle": "Geen twee zijn hetzelfde" }}
-    ]
+    "name": "Vertrouwensbalk"
   }]
 }
 {% endschema %}
