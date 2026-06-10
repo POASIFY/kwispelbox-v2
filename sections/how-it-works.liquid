@@ -22,21 +22,6 @@
 
           <!-- Nummer + verbindingslijn -->
           <div class="hiw__step-top">
-            {%- unless forloop.first -%}
-              <div class="hiw__connector" aria-hidden="true">
-                <svg class="hiw__connector-wave" viewBox="0 0 120 14" preserveAspectRatio="none" aria-hidden="true">
-                  <path d="M0,7 Q10,1 20,7 Q30,13 40,7 Q50,1 60,7 Q70,13 80,7 Q90,1 100,7 Q110,13 120,7"
-                        fill="none" stroke="#C4A882" stroke-width="1.8"
-                        stroke-dasharray="5 3" stroke-linecap="round"/>
-                </svg>
-                <span class="hiw__connector-paw">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
-                <svg class="hiw__connector-wave" viewBox="0 0 120 14" preserveAspectRatio="none" aria-hidden="true">
-                  <path d="M0,7 Q10,1 20,7 Q30,13 40,7 Q50,1 60,7 Q70,13 80,7 Q90,1 100,7 Q110,13 120,7"
-                        fill="none" stroke="#C4A882" stroke-width="1.8"
-                        stroke-dasharray="5 3" stroke-linecap="round"/>
-                </svg>
-              </div>
-            {%- endunless -%}
             <div class="hiw__num hiw__num--{{ block.settings.color }}">
               {{ forloop.index }}
             </div>
@@ -199,33 +184,32 @@
 }
 
 /* Verbindingslijn links van nummer */
-.hiw__connector {
-  position: absolute;
-  right: calc(50% + 32px);
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+/* connector verwijderd */
+/* Elk stap img-wrap krijgt unieke blob vorm */
+.hiw__step:nth-child(1) .hiw__img-wrap {
+  border-radius: 62% 38% 46% 54% / 60% 44% 56% 40%;
 }
-.hiw__connector-wave {
-  flex: 1;
-  height: 14px;
-  overflow: visible;
+.hiw__step:nth-child(2) .hiw__img-wrap {
+  border-radius: 40% 60% 55% 45% / 48% 62% 38% 52%;
 }
-.hiw__connector-paw {
-  display: flex; align-items: center;
-  flex-shrink: 0; margin: 0 6px;
+.hiw__step:nth-child(3) .hiw__img-wrap {
+  border-radius: 55% 45% 38% 62% / 44% 58% 42% 56%;
 }
-.hiw__connector-paw svg {
-  width: 16px; height: 16px;
-  color: #C4A882;
+.hiw__step:nth-child(4) .hiw__img-wrap {
+  border-radius: 48% 52% 60% 40% / 56% 40% 60% 44%;
 }
+
+/* Hover: subtiele morph animatie */
+.hiw__step:nth-child(1) .hiw__img-wrap:hover { border-radius: 38% 62% 54% 46% / 44% 56% 44% 56%; }
+.hiw__step:nth-child(2) .hiw__img-wrap:hover { border-radius: 60% 40% 45% 55% / 52% 38% 62% 48%; }
+.hiw__step:nth-child(3) .hiw__img-wrap:hover { border-radius: 45% 55% 62% 38% / 58% 44% 56% 42%; }
+.hiw__step:nth-child(4) .hiw__img-wrap:hover { border-radius: 52% 48% 40% 60% / 40% 60% 44% 56%; }
 
 /* Genummerde cirkel */
 .hiw__num {
   width: 52px; height: 52px;
   border-radius: 50%;
+  position: relative; z-index: 2;
   display: flex; align-items: center; justify-content: center;
   font-family: 'Lilita One', cursive;
   font-size: 1.4rem;
@@ -248,6 +232,7 @@
   box-shadow: 0 8px 32px rgba(96,58,21,.14);
   flex-shrink: 0;
   background: #EDE2C9;
+  transition: border-radius 600ms cubic-bezier(.68,-0.55,.27,1.55), box-shadow 300ms ease;
 }
 @media(min-width: 900px) {
   .hiw__img-wrap { width: 220px; height: 220px; }
