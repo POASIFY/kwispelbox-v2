@@ -526,6 +526,103 @@
   font-family: 'Karla', sans-serif; font-size: .78rem;
   color: #c0394b; line-height: 1.45;
 }
+
+/* ════════════════════════════════════════════════════════
+   MOBIELE LAYOUT
+════════════════════════════════════════════════════════ */
+@media(max-width: 767px) {
+
+  /* ── Tekst links uitlijnen ─────────────────────────── */
+  .pb__eyebrow,
+  .pb__title,
+  .pb__reviews,
+  .pb__summary,
+  .pb__reviews-title { text-align: left; justify-content: flex-start; }
+
+  /* ── Above the fold: meer lucht ───────────────────── */
+  .pb__fold { padding: 20px 16px 32px; gap: 24px; }
+
+  /* ── Features: horizontale slider ────────────────── */
+  .pb__features {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 8px;
+    padding-bottom: 4px;
+    margin: 0 -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .pb__features::-webkit-scrollbar { display: none; }
+  .pb__features li {
+    flex-shrink: 0;
+    white-space: nowrap;
+    background: #f6fdf2;
+    border: 1.5px solid #c8e6c0;
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: .78rem;
+  }
+
+  /* ── Trust strip: horizontale slider ──────────────── */
+  .pb__trust-strip {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    border-top: 2px solid #F0E8D8;
+    border-bottom: 2px solid #F0E8D8;
+  }
+  .pb__trust-strip::-webkit-scrollbar { display: none; }
+  .pb__trust-item {
+    flex-shrink: 0;
+    min-width: 180px;
+    border-right: 1px solid #EDE2C9;
+    padding: 18px 16px;
+  }
+  .pb__trust-item:last-child { border-right: none; }
+
+  /* ── Reviews: horizontale slider ─────────────────── */
+  .pb__reviews-grid {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 12px;
+    margin: 0 -20px;
+    padding: 0 20px 8px;
+  }
+  .pb__reviews-grid::-webkit-scrollbar { display: none; }
+  .pb__review-card {
+    flex-shrink: 0;
+    width: 78vw;
+    max-width: 300px;
+  }
+  .pb__review-cta {
+    flex-shrink: 0;
+    width: 60vw;
+    max-width: 220px;
+  }
+
+  /* ── Dog properties pills: wrap ───────────────────── */
+  .dog-prop__pills { gap: 6px; }
+  .dog-prop__pill span { padding: 7px 14px; font-size: .78rem; }
+
+  /* ── Thumbnails: scroll ───────────────────────────── */
+  .pb__thumbs {
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  .pb__thumbs::-webkit-scrollbar { display: none; }
+
+  /* ── Reviews sectie padding ───────────────────────── */
+  .pb__reviews-section { padding: 40px 0; }
+  .pb__reviews-inner { padding: 0 20px; }
+
+}
 {% endstylesheet %}
 
 <script>
