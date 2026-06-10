@@ -138,6 +138,83 @@
     </div>
   </div>
 
+  <!-- ══ TRUST STRIP ════════════════════════════════════ -->
+  {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
+  {%- if trust_blocks.size > 0 -%}
+    <div class="pb__trust-strip">
+      {%- for block in trust_blocks -%}
+        <div class="pb__trust-item" {{ block.shopify_attributes }}>
+          <span class="pb__trust-icon pb__trust-icon--{{ block.settings.color }}" aria-hidden="true">
+            {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+          </span>
+          <div>
+            <strong>{{ block.settings.title }}</strong>
+            {%- if block.settings.subtitle != blank -%}
+              <span>{{ block.settings.subtitle }}</span>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  <!-- ══ REVIEWS ════════════════════════════════════════ -->
+  {%- assign review_blocks = section.blocks | where: 'type', 'review' -%}
+  {%- if review_blocks.size > 0 -%}
+    <div class="pb__reviews-section">
+      <div class="pb__reviews-inner">
+
+        <h2 class="pb__reviews-title">
+          {{ section.settings.reviews_title }}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e75480" stroke-width="2" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        </h2>
+
+        <div class="pb__reviews-grid">
+          {%- for block in review_blocks -%}
+            <div class="pb__review-card" {{ block.shopify_attributes }}>
+              <div class="pb__review-top">
+                <div class="pb__review-avatar-wrap">
+                  {%- if block.settings.avatar != blank -%}
+                    <img src="{{ block.settings.avatar | image_url: width: 100 }}"
+                         alt="{{ block.settings.author }}" width="52" height="52"
+                         loading="lazy" class="pb__review-avatar">
+                  {%- else -%}
+                    <div class="pb__review-avatar-ph">{{ block.settings.author | slice: 0, 1 | upcase }}</div>
+                  {%- endif -%}
+                </div>
+                <div>
+                  <strong class="pb__review-author">{{ block.settings.author }}</strong>
+                  <div class="pb__review-stars">
+                    {%- for i in (1..block.settings.stars) -%}
+                      {{- 'icon-star.svg' | inline_asset_content -}}
+                    {%- endfor -%}
+                  </div>
+                </div>
+              </div>
+              <p class="pb__review-text">{{ block.settings.text }}</p>
+              {%- if block.settings.dog_name != blank -%}
+                <p class="pb__review-dog">
+                  {{- 'icon-paw.svg' | inline_asset_content -}}
+                  {{ block.settings.dog_name }}
+                </p>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+
+          <div class="pb__review-cta">
+            <span class="pb__review-cta-icon" aria-hidden="true">
+              {{- 'icon-paw.svg' | inline_asset_content -}}
+            </span>
+            <strong>{{ section.settings.social_proof_count }}</strong>
+            <p>{{ section.settings.social_proof_text }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+</div>
+
 {% stylesheet %}
 /* ══ Wrapper ══════════════════════════════════════════════ */
 .pb { background: #fff; }
