@@ -199,13 +199,23 @@
       </div>
 
       <!-- Verzending logos -->
-      <div class="kw-footer__shipping">
-        <span class="kw-footer__shipping-label">Wij verzenden met</span>
-        <div class="kw-footer__shipping-logos">
-          <span class="kw-footer__shipping-logo kw-footer__shipping-logo--postnl">PostNL</span>
-          <span class="kw-footer__shipping-logo kw-footer__shipping-logo--dhl">DHL</span>
+      {%- if section.settings.shipping_logo_1 != blank or section.settings.shipping_logo_2 != blank -%}
+        <div class="kw-footer__shipping">
+          <span class="kw-footer__shipping-label">Wij verzenden met</span>
+          <div class="kw-footer__shipping-logos">
+            {%- if section.settings.shipping_logo_1 != blank -%}
+              <img src="{{ section.settings.shipping_logo_1 | image_url: width: 120 }}"
+                   alt="{{ section.settings.shipping_logo_1_alt | default: 'Verzender' }}"
+                   height="28" loading="lazy" class="kw-footer__shipping-img">
+            {%- endif -%}
+            {%- if section.settings.shipping_logo_2 != blank -%}
+              <img src="{{ section.settings.shipping_logo_2 | image_url: width: 120 }}"
+                   alt="{{ section.settings.shipping_logo_2_alt | default: 'Verzender' }}"
+                   height="28" loading="lazy" class="kw-footer__shipping-img">
+            {%- endif -%}
+          </div>
         </div>
-      </div>
+      {%- endif -%}
 
     </div>
   </div>
@@ -354,6 +364,9 @@
   display: flex; flex-direction: column; gap: 12px;
   position: relative; overflow: visible;
 }
+.kw-footer__nl-input-wrap + .kw-footer__nl-btn {
+  margin-top: 6px;
+}
 
 /* Mail icon met hartje */
 .kw-footer__nl-icon {
@@ -476,18 +489,12 @@
   font-family: 'Karla', sans-serif; font-size: .78rem; color: #A88259; white-space: nowrap;
 }
 .kw-footer__shipping-logos { display: flex; gap: 8px; align-items: center; }
-.kw-footer__shipping-logo {
-  height: 28px; padding: 0 12px; border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  font-family: Arial, sans-serif; font-weight: 900; font-size: .72rem;
-  letter-spacing: .05em;
+.kw-footer__shipping-img {
+  height: 28px; width: auto;
+  object-fit: contain; border-radius: 4px;
+  opacity: .9; transition: opacity 140ms;
 }
-.kw-footer__shipping-logo--postnl {
-  background: #FF6200; color: #fff;
-}
-.kw-footer__shipping-logo--dhl {
-  background: #FFCC00; color: #D40511;
-}
+.kw-footer__shipping-img:hover { opacity: 1; }
 
 /* ── Bottom bar ─────────────────────────────────────────── */
 .kw-footer__bottom {
@@ -571,7 +578,11 @@
     { "type": "text",      "id": "nl_placeholder","label": "Input placeholder",      "default": "Jouw e-mailadres" },
     { "type": "text",      "id": "nl_btn",        "label": "Knoptekst",              "default": "Ja, ik meld me aan!" },
     { "type": "text",      "id": "nl_privacy",    "label": "Privacy tekst",          "default": "Geen spam, alleen leuke kwispels." },
-    { "type": "link_list", "id": "legal_menu",    "label": "Juridisch menu" }
+    { "type": "link_list",    "id": "legal_menu",          "label": "Juridisch menu" },
+    { "type": "image_picker", "id": "shipping_logo_1",     "label": "Verzender logo 1 (bijv. PostNL)" },
+    { "type": "text",         "id": "shipping_logo_1_alt", "label": "Verzender 1 alt tekst", "default": "PostNL" },
+    { "type": "image_picker", "id": "shipping_logo_2",     "label": "Verzender logo 2 (bijv. DHL)" },
+    { "type": "text",         "id": "shipping_logo_2_alt", "label": "Verzender 2 alt tekst", "default": "DHL" }
   ],
   "presets": [{
     "name": "Footer",
