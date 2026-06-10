@@ -1,0 +1,540 @@
+<section class="pboxes">
+  <div class="pboxes__wrap">
+
+    <!-- Sectie header -->
+    <div class="pboxes__header">
+      <h2 class="pboxes__title">{{ section.settings.title }}</h2>
+      <p class="pboxes__sub">{{ section.settings.subtitle }}</p>
+    </div>
+
+    <!-- Drie kaarten -->
+    <div class="pboxes__grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'box' -%}
+          <div class="pbox pbox--{{ block.settings.color }}{% if block.settings.featured %} pbox--featured{% endif %}"
+               {{ block.shopify_attributes }}>
+
+            <!-- Badge -->
+            {%- if block.settings.badge != blank -%}
+              <div class="pbox__badge">
+                {{ block.settings.badge }}
+                {%- if block.settings.featured -%}
+                  <span aria-hidden="true">✦</span>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            <!-- Afbeelding -->
+            <div class="pbox__img-wrap">
+              {%- if block.settings.image != blank -%}
+                <img
+                  src="{{ block.settings.image | image_url: width: 600 }}"
+                  srcset="{{ block.settings.image | image_url: width: 400 }} 400w,
+                          {{ block.settings.image | image_url: width: 600 }} 600w,
+                          {{ block.settings.image | image_url: width: 800 }} 800w"
+                  sizes="(max-width: 767px) 90vw, (max-width: 1024px) 45vw, 360px"
+                  alt="{{ block.settings.image.alt | default: block.settings.name | escape }}"
+                  width="600"
+                  height="{{ 600 | divided_by: block.settings.image.aspect_ratio | round }}"
+                  loading="lazy"
+                  class="pbox__img"
+                >
+              {%- else -%}
+                <div class="pbox__img-placeholder">
+                  {{- 'icon-box.svg' | inline_asset_content -}}
+                  <span>Voeg afbeelding toe</span>
+                </div>
+              {%- endif -%}
+            </div>
+
+            <!-- Body -->
+            <div class="pbox__body">
+              <h3 class="pbox__name">{{ block.settings.name }}</h3>
+              <p class="pbox__count">{{ block.settings.count }}</p>
+
+              <!-- Features -->
+              {%- if block.settings.feat1 != blank or block.settings.feat2 != blank or block.settings.feat3 != blank -%}
+                <ul class="pbox__feats" role="list">
+                  {%- if block.settings.feat1 != blank -%}
+                    <li class="pbox__feat">
+                      {{- 'icon-' | append: block.settings.feat1_icon | append: '.svg' | inline_asset_content -}}
+                      {{ block.settings.feat1 }}
+                    </li>
+                  {%- endif -%}
+                  {%- if block.settings.feat2 != blank -%}
+                    <li class="pbox__feat">
+                      {{- 'icon-' | append: block.settings.feat2_icon | append: '.svg' | inline_asset_content -}}
+                      {{ block.settings.feat2 }}
+                    </li>
+                  {%- endif -%}
+                  {%- if block.settings.feat3 != blank -%}
+                    <li class="pbox__feat">
+                      {{- 'icon-' | append: block.settings.feat3_icon | append: '.svg' | inline_asset_content -}}
+                      {{ block.settings.feat3 }}
+                    </li>
+                  {%- endif -%}
+                </ul>
+              {%- endif -%}
+
+              <!-- Prijs + CTA -->
+              <div class="pbox__footer">
+                <span class="pbox__price">{{ block.settings.price }}</span>
+                <a href="{{ block.settings.url }}" class="pbox__btn">
+                  {{ block.settings.btn_label }}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                       aria-hidden="true">
+                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                  </svg>
+                </a>
+              </div>
+
+              <!-- Favoriet label (alleen featured) -->
+              {%- if block.settings.featured and block.settings.fav_label != blank -%}
+                <p class="pbox__fav">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                  </svg>
+                  {{ block.settings.fav_label }}
+                  <svg width="20" height="16" viewBox="0 0 24 20" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                       aria-hidden="true">
+                    <path d="M3 3 C 3 14, 16 14, 20 8"/>
+                    <path d="M16 6 l4 2 l-1 -4"/>
+                  </svg>
+                </p>
+              {%- endif -%}
+
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    <!-- Onderste trust strip -->
+    <div class="pboxes__trust">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'trust_item' -%}
+          <div class="pboxes__trust-item" {{ block.shopify_attributes }}>
+            {%- if block.settings.type == 'avatars' -%}
+              <div class="pboxes__avatars">
+                {%- for i in (1..3) -%}
+                  <div class="pboxes__avatar"></div>
+                {%- endfor -%}
+              </div>
+              <div class="pboxes__trust-text">
+                <strong>{{ block.settings.title }}</strong>
+                <span>{{ block.settings.subtitle }}</span>
+              </div>
+            {%- elsif block.settings.type == 'stars' -%}
+              <div class="pboxes__stars" aria-label="{{ block.settings.title }}">
+                {%- for i in (1..5) -%}
+                  {{- 'icon-star.svg' | inline_asset_content -}}
+                {%- endfor -%}
+              </div>
+              <div class="pboxes__trust-text">
+                <strong>{{ block.settings.title }}</strong>
+                <span>{{ block.settings.subtitle }}</span>
+              </div>
+            {%- else -%}
+              <span class="pboxes__trust-icon pboxes__trust-icon--{{ block.settings.color }}" aria-hidden="true">
+                {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+              </span>
+              <div class="pboxes__trust-text">
+                <strong>{{ block.settings.title }}</strong>
+                {%- if block.settings.subtitle != blank -%}
+                  <span>{{ block.settings.subtitle }}</span>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+{% stylesheet %}
+/* ── Sectie wrapper ─────────────────────────────────────────── */
+.pboxes {
+  background: #F8EFDD;
+  padding: 64px 0 80px;
+}
+.pboxes__wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+@media(min-width:1200px){ .pboxes__wrap { padding: 0 60px; } }
+
+/* ── Header ─────────────────────────────────────────────────── */
+.pboxes__header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.pboxes__title {
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: #3d2209;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+.pboxes__sub {
+  font-family: 'Karla', sans-serif;
+  font-size: 1.1rem;
+  color: #A88259;
+}
+
+/* ── Grid ───────────────────────────────────────────────────── */
+.pboxes__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: start;
+}
+@media(min-width: 768px) {
+  .pboxes__grid {
+    grid-template-columns: repeat(3, 1fr);
+    align-items: end;
+  }
+}
+
+/* ── Kaart basis ────────────────────────────────────────────── */
+.pbox {
+  background: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 2px solid #EDE2C9;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 250ms cubic-bezier(.34,1.56,.64,1),
+              box-shadow 250ms ease;
+}
+.pbox:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(96,58,21,.13);
+}
+
+/* ── Featured kaart (Happy) ─────────────────────────────────── */
+.pbox--featured {
+  border-width: 2.5px;
+}
+.pbox--orange.pbox--featured { border-color: #F7A048; box-shadow: 0 8px 32px rgba(247,160,72,.18); }
+@media(min-width:768px) {
+  .pbox--featured {
+    transform: scale(1.03);
+    transform-origin: center center;
+  }
+  .pbox--featured:hover {
+    transform: scale(1.03) translateY(-6px);
+  }
+}
+
+/* ── Badge ──────────────────────────────────────────────────── */
+.pbox__badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 2;
+  font-family: 'Karla', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 5px 14px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.pbox--green  .pbox__badge { background: #e8f5e2; color: #2d7a1a; }
+.pbox--orange .pbox__badge { background: #F7A048; color: #fff; }
+.pbox--pink   .pbox__badge { background: #fff0f5; color: #c0394b; }
+
+/* ── Afbeelding ─────────────────────────────────────────────── */
+.pbox__img-wrap {
+  width: 100%;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: #F8EFDD;
+  flex-shrink: 0;
+}
+.pbox__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 400ms ease;
+}
+.pbox:hover .pbox__img { transform: scale(1.04); }
+.pbox__img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #DAC9A1;
+  font-size: 0.875rem;
+}
+.pbox__img-placeholder svg { width: 48px; height: 48px; }
+
+/* ── Body ───────────────────────────────────────────────────── */
+.pbox__body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+.pbox__name {
+  font-family: 'Lilita One', cursive;
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+.pbox--green  .pbox__name { color: #2d7a1a; }
+.pbox--orange .pbox__name { color: #d9823a; }
+.pbox--pink   .pbox__name { color: #c0394b; }
+
+.pbox__count {
+  font-family: 'Karla', sans-serif;
+  font-size: 0.95rem;
+  color: #A88259;
+  margin-top: -8px;
+}
+
+/* ── Features ───────────────────────────────────────────────── */
+.pbox__feats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+}
+.pbox__feat {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Karla', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #603A15;
+  background: #F8EFDD;
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+.pbox__feat svg { width: 13px; height: 13px; color: #A88259; flex-shrink: 0; }
+
+/* ── Footer: prijs + knop ───────────────────────────────────── */
+.pbox__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+.pbox__price {
+  font-family: 'Lilita One', cursive;
+  font-size: 1.75rem;
+  color: #3d2209;
+  line-height: 1;
+}
+.pbox__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Lilita One', cursive;
+  font-size: 0.95rem;
+  padding: 12px 20px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #fff;
+  white-space: nowrap;
+  transition: transform 200ms cubic-bezier(.34,1.56,.64,1), box-shadow 180ms;
+}
+.pbox__btn:hover { transform: translateY(-2px); }
+.pbox--green  .pbox__btn { background: #66AA44; box-shadow: 0 4px 14px rgba(102,170,68,.35); }
+.pbox--green  .pbox__btn:hover { background: #4d8833; }
+.pbox--orange .pbox__btn { background: #F7A048; box-shadow: 0 4px 14px rgba(247,160,72,.35); }
+.pbox--orange .pbox__btn:hover { background: #d9823a; }
+.pbox--pink   .pbox__btn { background: #FFB8CD; color: #603A15; box-shadow: 0 4px 14px rgba(255,184,205,.4); }
+.pbox--pink   .pbox__btn:hover { background: #f09ab2; }
+
+/* ── Favoriet label ─────────────────────────────────────────── */
+.pbox__fav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Karla', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #F7A048;
+  margin-top: 4px;
+}
+.pbox__fav svg:first-child { flex-shrink: 0; }
+
+/* ── Onderste trust strip ───────────────────────────────────── */
+.pboxes__trust {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 48px;
+  padding: 24px 32px;
+  background: #fff;
+  border-radius: 20px;
+  border: 1.5px solid #EDE2C9;
+}
+.pboxes__trust-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pboxes__avatars {
+  display: flex;
+}
+.pboxes__avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: #EDE2C9;
+  border: 2px solid #fff;
+  margin-left: -8px;
+}
+.pboxes__avatar:first-child { margin-left: 0; background: #DAC9A1; }
+.pboxes__avatar:nth-child(2) { background: #c4a882; }
+.pboxes__avatar:nth-child(3) { background: #A88259; }
+
+.pboxes__trust-icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.pboxes__trust-icon svg { width: 18px; height: 18px; }
+.pboxes__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
+.pboxes__trust-icon--orange { background: #fff0e4; color: #F7A048; }
+.pboxes__trust-icon--pink   { background: #fff0f5; color: #e75480; }
+.pboxes__trust-icon--yellow { background: #fffae0; color: #c49000; }
+
+.pboxes__trust-text {
+  display: flex; flex-direction: column; gap: 1px;
+}
+.pboxes__trust-text strong {
+  font-family: 'Karla', sans-serif;
+  font-size: 0.85rem; font-weight: 800; color: #603A15;
+}
+.pboxes__trust-text span {
+  font-size: 0.75rem; color: #A88259;
+}
+
+.pboxes__stars { display: flex; gap: 2px; }
+.pboxes__stars svg { width: 16px; height: 16px; color: #F7A048; }
+
+/* ── Mobiel ─────────────────────────────────────────────────── */
+@media(max-width:767px) {
+  .pboxes { padding: 48px 0 60px; }
+  .pboxes__trust { padding: 20px; justify-content: center; }
+  .pbox--featured { transform: none; }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Verrassingsboxen",
+  "tag": "section",
+  "blocks": [
+    {
+      "type": "box",
+      "name": "Box kaart",
+      "settings": [
+        {
+          "type": "header", "content": "Kaart"
+        },
+        {
+          "type": "select", "id": "color", "label": "Kleurthema", "default": "green",
+          "options": [
+            { "value": "green",  "label": "Groen (Mini)" },
+            { "value": "orange", "label": "Oranje (Happy)" },
+            { "value": "pink",   "label": "Roze (Mega)" }
+          ]
+        },
+        { "type": "checkbox", "id": "featured", "label": "Uitgelicht (Featured)", "default": false },
+        { "type": "text",     "id": "badge",    "label": "Badge tekst", "default": "Perfect om kennis te maken" },
+        { "type": "image_picker", "id": "image", "label": "Productafbeelding" },
+        { "type": "text", "id": "name",  "label": "Naam",  "default": "Mini Kwispelbox" },
+        { "type": "text", "id": "count", "label": "Aantal verrassingen", "default": "3 verrassingen" },
+        {
+          "type": "header", "content": "Features"
+        },
+        { "type": "select", "id": "feat1_icon", "label": "Feature 1 icoon", "default": "box",
+          "options": [
+            {"value":"box","label":"Doos"},{"value":"gift","label":"Cadeau"},
+            {"value":"heart","label":"Hart"},{"value":"paw","label":"Poot"},
+            {"value":"star","label":"Ster"},{"value":"toy","label":"Speeltje"}
+          ]
+        },
+        { "type": "text", "id": "feat1", "label": "Feature 1", "default": "3 speeltjes" },
+        { "type": "select", "id": "feat2_icon", "label": "Feature 2 icoon", "default": "heart",
+          "options": [
+            {"value":"box","label":"Doos"},{"value":"gift","label":"Cadeau"},
+            {"value":"heart","label":"Hart"},{"value":"paw","label":"Poot"},
+            {"value":"star","label":"Ster"},{"value":"toy","label":"Speeltje"}
+          ]
+        },
+        { "type": "text", "id": "feat2", "label": "Feature 2", "default": "Voor elke hond" },
+        { "type": "select", "id": "feat3_icon", "label": "Feature 3 icoon", "default": "paw",
+          "options": [
+            {"value":"box","label":"Doos"},{"value":"gift","label":"Cadeau"},
+            {"value":"heart","label":"Hart"},{"value":"paw","label":"Poot"},
+            {"value":"star","label":"Ster"},{"value":"toy","label":"Speeltje"}
+          ]
+        },
+        { "type": "text", "id": "feat3", "label": "Feature 3", "default": "Veel kwispels" },
+        {
+          "type": "header", "content": "Prijs en knop"
+        },
+        { "type": "text", "id": "price",     "label": "Prijs",     "default": "\u20ac49,95" },
+        { "type": "text", "id": "btn_label", "label": "Knoptekst", "default": "Kies Mini" },
+        { "type": "url",  "id": "url",       "label": "Link" },
+        { "type": "text", "id": "fav_label", "label": "Favoriet tekst (alleen featured)" }
+      ]
+    },
+    {
+      "type": "trust_item",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "select", "id": "type", "label": "Type", "default": "icon",
+          "options": [
+            { "value": "icon",    "label": "Icoon" },
+            { "value": "avatars", "label": "Avatars" },
+            { "value": "stars",   "label": "Sterren" }
+          ]
+        },
+        {
+          "type": "select", "id": "icon", "label": "Icoon", "default": "heart",
+          "options": [
+            {"value":"heart","label":"Hart"},{"value":"gift","label":"Cadeau"},
+            {"value":"paw","label":"Poot"},{"value":"star","label":"Ster"},
+            {"value":"shield","label":"Schild"},{"value":"truck","label":"Vrachtwagen"}
+          ]
+        },
+        {
+          "type": "select", "id": "color", "label": "Kleur", "default": "pink",
+          "options": [
+            {"value":"green","label":"Groen"},{"value":"orange","label":"Oranje"},
+            {"value":"pink","label":"Roze"},{"value":"yellow","label":"Geel"}
+          ]
+        },
+        { "type": "text", "id": "title",    "label": "Titel",    "default": "Met liefde samengesteld" },
+        { "type": "text", "id": "subtitle", "label": "Subtitel" }
+      ]
+    }
+  ],
+  "settings": [
+    { "type": "text", "id": "title",    "label": "Titel",    "default": "Onze verrassingsboxen" },
+    { "type": "text", "id": "subtitle", "label": "Subtitel", "default": "Elke box een feestje. Welke kies jij?" }
+  ],
+  "presets": [{ "name": "Verrassingsboxen" }]
+}
+{% endschema %}

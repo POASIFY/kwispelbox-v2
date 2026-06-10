@@ -80,10 +80,126 @@
         "m2",
         "m3"
       ]
+    },
+    "product-boxes": {
+      "type": "product-boxes",
+      "blocks": {
+        "box1": {
+          "type": "box",
+          "settings": {
+            "color": "green",
+            "featured": false,
+            "badge": "Perfect om kennis te maken",
+            "name": "Mini Kwispelbox",
+            "count": "3 verrassingen",
+            "feat1": "3 speeltjes",
+            "feat1_icon": "box",
+            "feat2": "Voor elke hond",
+            "feat2_icon": "heart",
+            "feat3": "Veel kwispels",
+            "feat3_icon": "paw",
+            "price": "€49,95",
+            "btn_label": "Kies Mini"
+          }
+        },
+        "box2": {
+          "type": "box",
+          "settings": {
+            "color": "orange",
+            "featured": true,
+            "badge": "Meest gekozen",
+            "name": "Happy Kwispelbox",
+            "count": "4 verrassingen",
+            "feat1": "4 speeltjes",
+            "feat1_icon": "box",
+            "feat2": "Met zorg samengesteld",
+            "feat2_icon": "heart",
+            "feat3": "Voor elke hond",
+            "feat3_icon": "paw",
+            "price": "€64,95",
+            "btn_label": "Kies Happy",
+            "fav_label": "Favoriet van onze klanten!"
+          }
+        },
+        "box3": {
+          "type": "box",
+          "settings": {
+            "color": "pink",
+            "featured": false,
+            "badge": "Beste waarde",
+            "name": "Mega Kwispelbox",
+            "count": "5 verrassingen",
+            "feat1": "5 speeltjes",
+            "feat1_icon": "box",
+            "feat2": "Extra veel plezier",
+            "feat2_icon": "star",
+            "feat3": "Voor elke hond",
+            "feat3_icon": "paw",
+            "price": "€79,95",
+            "btn_label": "Kies Mega"
+          }
+        },
+        "t1": {
+          "type": "trust_item",
+          "settings": {
+            "type": "avatars",
+            "title": "1.200+",
+            "subtitle": "blije honden"
+          }
+        },
+        "t2": {
+          "type": "trust_item",
+          "settings": {
+            "type": "icon",
+            "icon": "heart",
+            "color": "pink",
+            "title": "Met liefde samengesteld"
+          }
+        },
+        "t3": {
+          "type": "trust_item",
+          "settings": {
+            "type": "icon",
+            "icon": "gift",
+            "color": "green",
+            "title": "Duurzaam & bewust",
+            "subtitle": "Geselecteerd met zorg"
+          }
+        },
+        "t4": {
+          "type": "trust_item",
+          "settings": {
+            "type": "icon",
+            "icon": "box",
+            "color": "orange",
+            "title": "Elke box uniek",
+            "subtitle": "Geen twee zijn hetzelfde"
+          }
+        },
+        "t5": {
+          "type": "trust_item",
+          "settings": {
+            "type": "stars",
+            "title": "4.9/5",
+            "subtitle": "Uitstekend beoordeeld"
+          }
+        }
+      },
+      "block_order": [
+        "box1",
+        "box2",
+        "box3",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5"
+      ]
     }
   },
   "order": [
     "hero",
-    "trust-bar"
+    "trust-bar",
+    "product-boxes"
   ]
 }
