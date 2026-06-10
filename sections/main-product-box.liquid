@@ -59,6 +59,16 @@
 
       </div>
 
+      <!-- Dot indicators voor mobiel -->
+      {%- if product.images.size > 1 -%}
+        <div class="pb__dots" aria-hidden="true" id="PbDots">
+          {%- for image in product.images limit: 5 -%}
+            <span class="pb__dot{% if forloop.first %} is-active{% endif %}"
+                  data-slide="{{ forloop.index }}"></span>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
       {%- if product.images.size > 1 -%}
         <div class="pb__thumbs">
           {%- for image in product.images limit: 5 -%}
@@ -528,82 +538,127 @@
 }
 
 
+
 /* ════════════════════════════════════════════════════════
    MOBIELE LAYOUT
 ════════════════════════════════════════════════════════ */
-
-/* Voorkom horizontale scroll op pagina niveau */
 .pb { overflow-x: hidden; }
 
 @media(max-width: 767px) {
 
-  /* ── Basis padding ─────────────────────────────────── */
-  .pb__fold { padding: 20px 16px 32px; gap: 24px; }
+  /* ── Fold layout ────────────────────────────────────── */
+  .pb__fold {
+    padding: 0 0 32px;
+    gap: 0;
+  }
 
-  /* ── Tekst links uitlijnen ─────────────────────────── */
-  .pb__eyebrow { justify-content: flex-start; }
-  .pb__reviews { justify-content: flex-start; }
-  .pb__reviews-title { justify-content: flex-start; }
+  /* ── Galerij: full-width, geen border-radius ─────────── */
+  .pb__gallery { width: 100%; }
+  .pb__gallery-main {
+    border-radius: 0;
+    aspect-ratio: 4/3;
+  }
+  .pb__gallery-arrow--prev { left: 12px; }
+  .pb__gallery-arrow--next { right: 12px; }
 
-  /* ── Features: pill slider ─────────────────────────── */
+  /* Badge positie aanpassen */
+  .pb__badge-popular { top: 14px; left: 14px; }
+  .pb__circle-badge  { top: 14px; right: 14px; width: 78px; height: 78px; }
+
+  /* Thumbnails: verbergen op mobiel, dots tonen */
+  .pb__thumbs { display: none; }
+  .pb__dots {
+    display: flex !important;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 0 4px;
+  }
+  .pb__dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #DAC9A1; cursor: pointer;
+    transition: background 200ms, transform 200ms;
+  }
+  .pb__dot.is-active { background: #66AA44; transform: scale(1.25); }
+
+  /* ── Product info: padding ───────────────────────────── */
+  .pb__info {
+    padding: 24px 16px 8px;
+    gap: 16px;
+  }
+
+  /* ── Tekst links ─────────────────────────────────────── */
+  .pb__eyebrow  { justify-content: flex-start; }
+  .pb__reviews  { justify-content: flex-start; }
+
+  /* ── Features: verticale lijst (niet slider) ─────────── */
   .pb__features {
-    flex-direction: row;
+    display: flex;
+    flex-direction: column;
     flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    overflow-x: visible;
+    width: auto;
+    margin-left: 0;
+    padding-left: 0;
+    padding-right: 0;
     gap: 8px;
-    /* Scroll tot rand scherm */
-    width: calc(100% + 32px);
-    margin-left: -16px;
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-bottom: 2px;
   }
-  .pb__features::-webkit-scrollbar { display: none; }
   .pb__features li {
-    flex-shrink: 0;
-    white-space: nowrap;
-    background: #f6fdf2;
-    border: 1.5px solid #c8e6c0;
-    border-radius: 999px;
-    padding: 7px 14px;
-    font-size: .78rem;
+    white-space: normal;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    font-size: .85rem;
   }
 
-  /* ── Trust strip: slider ───────────────────────────── */
-  .pb__trust-strip {
+  /* ── Dog properties: pills netter ───────────────────── */
+  .dog-props { gap: 20px; }
+  .dog-prop__label { font-size: .85rem; }
+  .dog-prop__pills {
     display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    grid-template-columns: unset;
+    flex-wrap: wrap;
+    gap: 8px;
   }
-  .pb__trust-strip::-webkit-scrollbar { display: none; }
+  .dog-prop__pill span {
+    padding: 9px 20px;
+    font-size: .82rem;
+    border-radius: 999px;
+  }
+
+  /* ── Delivery + ATC: volledige breedte ───────────────── */
+  .pb__delivery { margin: 0; }
+  .pb__atc { font-size: 1rem; padding: 16px 20px; }
+
+  /* ── Trust strip: icon boven tekst, 4 kolommen ───────── */
+  .pb__trust-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    overflow-x: visible;
+    flex-wrap: unset;
+  }
   .pb__trust-item {
-    flex: 0 0 auto;
-    min-width: 180px;
+    flex: unset;
+    min-width: unset;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 16px 8px;
+    gap: 8px;
     border-right: 1px solid #EDE2C9 !important;
   }
   .pb__trust-item:last-child { border-right: none !important; }
-
-  /* ── Thumbnails: niet doorlopen ────────────────────── */
-  .pb__thumbs {
-    overflow-x: auto;
-    scrollbar-width: none;
-    flex-wrap: nowrap;
-    padding-bottom: 2px;
+  .pb__trust-item > div {
+    align-items: center;
+    text-align: center;
   }
-  .pb__thumbs::-webkit-scrollbar { display: none; }
-  .pb__thumb { flex-shrink: 0; }
+  .pb__trust-item strong { font-size: .72rem; line-height: 1.3; }
+  .pb__trust-item span   { display: none; } /* subtitel verbergen op mobiel */
+  .pb__trust-icon { margin-top: 0; width: 40px; height: 40px; }
 
-  /* ── Reviews sectie ────────────────────────────────── */
+  /* ── Reviews: horizontale slider ────────────────────── */
   .pb__reviews-section { padding: 40px 0; }
-  .pb__reviews-inner { padding: 0; overflow: hidden; }
-  .pb__reviews-title { padding: 0 20px; }
-
-  /* Reviews grid als slider */
+  .pb__reviews-inner   { padding: 0; overflow: hidden; }
+  .pb__reviews-title   { padding: 0 16px 0; font-size: 1.3rem; }
   .pb__reviews-grid {
     display: flex;
     flex-wrap: nowrap;
@@ -611,24 +666,24 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     gap: 12px;
-    padding: 4px 20px 12px;
+    padding: 4px 16px 12px;
     grid-template-columns: unset;
   }
   .pb__reviews-grid::-webkit-scrollbar { display: none; }
   .pb__review-card {
-    flex: 0 0 80vw;
-    max-width: 300px;
+    flex: 0 0 78vw;
+    max-width: 280px;
   }
   .pb__review-cta {
-    flex: 0 0 65vw;
-    max-width: 220px;
+    flex: 0 0 60vw;
+    max-width: 200px;
+    min-height: 160px;
   }
 
-  /* ── Dog properties ────────────────────────────────── */
-  .dog-prop__pills { gap: 6px; }
-  .dog-prop__pill span { padding: 7px 14px; font-size: .78rem; }
-
 }
+
+/* Dots standaard verborgen op desktop */
+.pb__dots { display: none; }
 {% endstylesheet %}
 
 <script>
@@ -645,7 +700,16 @@
     var slide = document.getElementById('PbSlide' + currentIdx);
     if (slide) slide.classList.add('is-active');
     if (thumbs[currentIdx - 1]) thumbs[currentIdx - 1].classList.add('is-active');
+    // Update dots
+    document.querySelectorAll('.pb__dot').forEach(function(d, i) {
+      d.classList.toggle('is-active', i + 1 === currentIdx);
+    });
   }
+
+  // Dots klikbaar
+  document.querySelectorAll('.pb__dot').forEach(function(dot) {
+    dot.addEventListener('click', function() { goTo(parseInt(this.dataset.slide)); });
+  });
 
   thumbs.forEach(function(btn) {
     btn.addEventListener('click', function() { goTo(parseInt(this.dataset.slide)); });
