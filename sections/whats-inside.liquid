@@ -380,6 +380,169 @@
 .inside__trust-text span {
   font-size: .75rem; color: #A88259;
 }
+
+/* ══════════════════════════════════════════════════════════
+   MOBIELE LAYOUT — whats-inside
+══════════════════════════════════════════════════════════ */
+@media (max-width: 899px) {
+
+  .inside { padding: 48px 0 0; }
+
+  /* Header aanpassen */
+  .inside__header { margin-bottom: 28px; }
+  .inside__title  { font-size: clamp(1.9rem, 8vw, 2.6rem); }
+
+  /* Verberg desktop 3-kolom grid */
+  .inside__wrap { display: none; }
+
+  /* Toon mobiele items */
+  .inside__mob-list { display: flex; }
+}
+
+/* Mobiele itemlijst */
+.inside__mob-list {
+  display: none;
+  flex-direction: column;
+  gap: 0;
+  padding: 0 16px;
+  margin-bottom: 0;
+}
+
+/* Elk item: icon | tekst | foto */
+.inside__mob-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid #EDE2C9;
+}
+.inside__mob-item:last-child { border-bottom: none; }
+
+.inside__mob-item-icon {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.inside__mob-item-icon svg { width: 24px; height: 24px; }
+.inside__mob-item-icon--pink   { background: #fff0f5; color: #e75480; }
+.inside__mob-item-icon--green  { background: #e8f5e2; color: #66AA44; }
+.inside__mob-item-icon--yellow { background: #fffae0; color: #c49000; }
+.inside__mob-item-icon--orange { background: #fff0e4; color: #F7A048; }
+
+.inside__mob-item-text { flex: 1; min-width: 0; }
+.inside__mob-item-text strong {
+  display: block;
+  font-family: 'Lilita One', cursive;
+  font-size: .95rem; color: #3d2209; margin-bottom: 3px;
+}
+.inside__mob-item-text p {
+  font-family: 'Karla', sans-serif;
+  font-size: .78rem; color: #A88259; line-height: 1.5; margin: 0;
+}
+
+.inside__mob-item-photo {
+  width: 64px; height: 64px;
+  border-radius: 12px; overflow: hidden;
+  flex-shrink: 0; background: #EDE2C9;
+}
+.inside__mob-item-photo img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+
+/* ── Roze tagline strip ─────────────────────────────────── */
+.inside__mob-tagline {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 16px 0;
+  padding: 18px 16px;
+  background: #FFF0F5;
+  border: 1.5px solid #FFD6E3;
+  border-radius: 16px;
+}
+@media(max-width: 899px) { .inside__mob-tagline { display: flex; } }
+.inside__mob-tagline > div { flex: 1; }
+.inside__mob-tagline strong {
+  display: block;
+  font-family: 'Karla', sans-serif;
+  font-size: .85rem; font-weight: 800; color: #3d2209; margin-bottom: 3px;
+}
+.inside__mob-tagline span {
+  font-family: 'Karla', sans-serif;
+  font-size: .78rem; color: #A88259; line-height: 1.45;
+}
+.inside__mob-tagline svg { width: 16px; height: 16px; color: #F7A048; }
+
+/* ── Hero doos full-width ───────────────────────────────── */
+.inside__mob-hero {
+  display: none;
+  position: relative;
+  margin: 20px 16px 0;
+}
+@media(max-width: 899px) { .inside__mob-hero { display: block; } }
+.inside__mob-hero-img {
+  width: 100%; border-radius: 20px;
+  display: block;
+  box-shadow: 0 8px 32px rgba(96,58,21,.14);
+}
+.inside__mob-hero-badge {
+  position: absolute;
+  bottom: 16px; right: 16px;
+  background: rgba(255,255,255,.92);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 4px; text-align: center;
+  box-shadow: 0 4px 16px rgba(96,58,21,.12);
+  max-width: 110px;
+}
+.inside__mob-hero-badge svg { width: 13px; height: 13px; }
+.inside__mob-hero-badge span {
+  font-family: 'Lilita One', cursive;
+  font-size: .72rem; color: #3d2209; line-height: 1.3;
+}
+
+/* ── Bottom USP sectie ──────────────────────────────────── */
+.inside__mob-usps {
+  display: none;
+  padding: 32px 16px 24px;
+}
+@media(max-width: 899px) { .inside__mob-usps { display: block; } }
+.inside__mob-usps-title {
+  font-family: 'Lilita One', cursive;
+  font-size: 1.5rem; color: #3d2209;
+  text-align: center; margin-bottom: 24px;
+}
+.inside__mob-usps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.inside__mob-usp {
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center; gap: 8px;
+}
+.inside__mob-usp-icon {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.inside__mob-usp-icon svg { width: 24px; height: 24px; }
+.inside__mob-usp-icon--green  { background: #e8f5e2; color: #66AA44; }
+.inside__mob-usp-icon--pink   { background: #fff0f5; color: #e75480; }
+.inside__mob-usp-icon--yellow { background: #fffae0; color: #c49000; }
+.inside__mob-usp-icon--orange { background: #fff0e4; color: #F7A048; }
+.inside__mob-usp strong {
+  font-family: 'Karla', sans-serif;
+  font-size: .82rem; font-weight: 800; color: #3d2209;
+}
+.inside__mob-usp p {
+  font-family: 'Karla', sans-serif;
+  font-size: .75rem; color: #A88259; line-height: 1.45; margin: 0;
+}
+
+/* Verberg desktop trust strip op mobiel */
+@media(max-width: 899px) {
+  .inside__trust { display: none; }
+}
 {% endstylesheet %}
 
 {% schema %}
@@ -421,6 +584,16 @@
       ]
     },
     {
+      "type": "mobile_usp",
+      "name": "Mobiel USP",
+      "settings": [
+        {"type":"select","id":"icon","label":"Icoon","default":"puppy","options":[{"value":"puppy","label":"Hond"},{"value":"heart","label":"Hart"},{"value":"paw","label":"Poot"},{"value":"star","label":"Ster"},{"value":"leaf","label":"Blad"}]},
+        {"type":"select","id":"color","label":"Kleur","default":"green","options":[{"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},{"value":"yellow","label":"Geel"},{"value":"orange","label":"Oranje"}]},
+        {"type":"text","id":"title","label":"Titel","default":"Voor elke leeftijd"},
+        {"type":"text","id":"description","label":"Beschrijving","default":"Puppy, volwassen of senior."}
+      ]
+    },
+    {
       "type": "trust",
       "name": "Trust item",
       "settings": [
@@ -449,7 +622,10 @@
     {"type":"text",        "id":"title",       "label":"Titel",            "default":"Wat zit er in een Kwispelbox?"},
     {"type":"textarea",    "id":"subtitle",    "label":"Subtitel",         "default":"Elke box is een feestje om uit te pakken. Dit kun je verwachten in jouw verrassingsbox:"},
     {"type":"image_picker","id":"hero_image",  "label":"Doos afbeelding"},
-    {"type":"text",        "id":"badge",       "label":"Badge tekst",      "default":"Geen twee boxen zijn hetzelfde!"}
+    {"type":"text",        "id":"badge",       "label":"Badge tekst",      "default":"Geen twee boxen zijn hetzelfde!"},
+    {"type":"text","id":"mob_tagline","label":"Mobiel tagline","default":"De inhoud van elke Kwispelbox is een verrassing!"},
+    {"type":"text","id":"mob_tagline_sub","label":"Mobiel tagline subtitel","default":"Zo blijft het elke keer weer een feestje om uit te pakken."},
+    {"type":"text","id":"mob_usp_title","label":"Mobiel USP titel","default":"Perfect voor elke hond"}
   ],
   "presets": [{
     "name": "Wat zit erin",

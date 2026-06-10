@@ -203,7 +203,41 @@
       "type": "how-it-works"
     },
     "whats-inside": {
-      "type": "whats-inside"
+      "type": "whats-inside",
+      "blocks": {
+        "mu1": {
+          "type": "mobile_usp",
+          "settings": {
+            "icon": "puppy",
+            "color": "green",
+            "title": "Voor elke leeftijd",
+            "description": "Puppy, volwassen of senior."
+          }
+        },
+        "mu2": {
+          "type": "mobile_usp",
+          "settings": {
+            "icon": "heart",
+            "color": "pink",
+            "title": "Voor elk ras",
+            "description": "Klein of groot, elke hond is welkom."
+          }
+        },
+        "mu3": {
+          "type": "mobile_usp",
+          "settings": {
+            "icon": "paw",
+            "color": "yellow",
+            "title": "Voor elk karakter",
+            "description": "Rustig, speels of ondeugend, wij hebben de perfecte mix."
+          }
+        }
+      },
+      "block_order": [
+        "mu1",
+        "mu2",
+        "mu3"
+      ]
     },
     "social-proof": {
       "type": "social-proof"
