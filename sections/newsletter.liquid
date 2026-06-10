@@ -1,15 +1,17 @@
-{%- form 'customer', id: 'KwispelclubForm', class: 'newsletter-form' -%}
-{%- assign form_posted = form.posted_successfully? -%}
+{%- assign form_posted = false -%}
+{%- form 'customer', id: 'KwClubCheck' -%}
+  {%- assign form_posted = form.posted_successfully? -%}
 {%- endform -%}
 
 <section class="kclub">
 
-  <!-- ═══ TOP: Copy + Afbeelding ══════════════════════════ -->
+  <!-- ═══ TOP: copy links + foto rechts ══════════════════ -->
   <div class="kclub__top">
 
-    <!-- Links: copy + perks + formulier -->
+    <!-- Links ──────────────────────────────────────────── -->
     <div class="kclub__copy">
 
+      <!-- Eyebrow -->
       {%- if section.settings.eyebrow != blank -%}
         <p class="kclub__eyebrow">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
@@ -17,17 +19,19 @@
         </p>
       {%- endif -%}
 
+      <!-- Titel -->
       <h2 class="kclub__title">
-        {{ section.settings.title_line1 }}
+        <span class="kclub__title-plain">{{ section.settings.title_line1 }}</span><br>
         <span class="kclub__title-accent">{{ section.settings.title_line2 }}</span>
         <span class="kclub__title-paw" aria-hidden="true">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
       </h2>
 
+      <!-- Intro -->
       {%- if section.settings.intro != blank -%}
         <p class="kclub__intro">{{ section.settings.intro }}</p>
       {%- endif -%}
 
-      <!-- Perks 2×2 -->
+      <!-- Perks 2×2 grid -->
       {%- assign perk_blocks = section.blocks | where: 'type', 'perk' -%}
       {%- if perk_blocks.size > 0 -%}
         <div class="kclub__perks">
@@ -48,29 +52,24 @@
       <!-- Email formulier -->
       {%- if form_posted -%}
         <div class="kclub__success" role="alert">
-          <span class="kclub__success-icon">{{- 'icon-check-circle.svg' | inline_asset_content -}}</span>
+          <span style="color:#66AA44;display:flex;flex-shrink:0">{{- 'icon-check-circle.svg' | inline_asset_content -}}</span>
           <div>
             <strong>{{ section.settings.success_title }}</strong>
             <p>{{ section.settings.success_text }}</p>
           </div>
         </div>
       {%- else -%}
-        {%- form 'customer', id: 'KwispelclubForm' -%}
+        {%- form 'customer', id: 'KwClubForm' -%}
           <input type="hidden" name="contact[tags]" value="newsletter,kwispelclub">
           <div class="kclub__form">
             <div class="kclub__input-wrap">
-              <span class="kclub__input-icon" aria-hidden="true">
-                {{- 'icon-mail.svg' | inline_asset_content -}}
-              </span>
-              <label for="KwispelclubEmail" class="kclub__sr-only">E-mailadres</label>
+              <span class="kclub__input-icon" aria-hidden="true">{{- 'icon-mail.svg' | inline_asset_content -}}</span>
+              <label for="KwClubEmail" class="kclub__sr-only">E-mailadres</label>
               <input
-                type="email"
-                id="KwispelclubEmail"
-                name="contact[email]"
+                type="email" id="KwClubEmail" name="contact[email]"
                 class="kclub__input"
                 placeholder="{{ section.settings.input_placeholder }}"
-                required
-                autocomplete="email"
+                required autocomplete="email"
               >
             </div>
             <button type="submit" class="kclub__btn">
@@ -81,51 +80,63 @@
           <p class="kclub__privacy">
             {{- 'icon-lock.svg' | inline_asset_content -}}
             {{ section.settings.privacy_text }}
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" style="color:#e75480;flex-shrink:0"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" style="color:#e75480;flex-shrink:0"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
           </p>
         {%- endform -%}
       {%- endif -%}
 
     </div>
 
-    <!-- Rechts: grote afbeelding -->
-    <div class="kclub__img-wrap">
-      {%- if section.settings.hero_image != blank -%}
-        <img
-          src="{{ section.settings.hero_image | image_url: width: 800 }}"
-          srcset="{{ section.settings.hero_image | image_url: width: 500 }} 500w,
-                  {{ section.settings.hero_image | image_url: width: 800 }} 800w"
-          sizes="(max-width: 767px) 100vw, 45vw"
-          alt="{{ section.settings.hero_image.alt | default: 'Kwispelclub' | escape }}"
-          width="800"
-          height="{{ 800 | divided_by: section.settings.hero_image.aspect_ratio | round }}"
-          loading="lazy"
-          class="kclub__img"
-        >
-      {%- else -%}
-        <div class="kclub__img-ph">
-          {{- 'icon-paw.svg' | inline_asset_content -}}
-          <span>Voeg afbeelding toe</span>
-        </div>
-      {%- endif -%}
+    <!-- Rechts: foto + speech bubble + decoratie ───────── -->
+    <div class="kclub__img-col">
 
-      {%- if section.settings.speech_bubble != blank -%}
-        <div class="kclub__bubble" aria-hidden="true">
-          <span>{{ section.settings.speech_bubble }}</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="color:#e75480"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-        </div>
-      {%- endif -%}
+      <!-- Decoratieve roze streepjes linksboven (buiten foto) -->
+      <div class="kclub__img-deco" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="20" y1="2" x2="20" y2="14" stroke="#e75480" stroke-width="3" stroke-linecap="round"/>
+          <line x1="28" y1="6" x2="22" y2="16" stroke="#e75480" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="12" y1="6" x2="18" y2="16" stroke="#e75480" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <!-- Grote foto -->
+      <div class="kclub__img-wrap">
+        {%- if section.settings.hero_image != blank -%}
+          <img
+            src="{{ section.settings.hero_image | image_url: width: 900 }}"
+            srcset="{{ section.settings.hero_image | image_url: width: 600 }} 600w,
+                    {{ section.settings.hero_image | image_url: width: 900 }} 900w"
+            sizes="(max-width: 899px) 100vw, 45vw"
+            alt="{{ section.settings.hero_image.alt | default: 'Kwispelclub' | escape }}"
+            width="900" loading="lazy" class="kclub__img"
+          >
+        {%- else -%}
+          <div class="kclub__img-ph">
+            {{- 'icon-paw.svg' | inline_asset_content -}}
+            <span>Voeg foto toe</span>
+          </div>
+        {%- endif -%}
+
+        <!-- Speech bubble rechtsboven op foto -->
+        {%- if section.settings.speech_bubble != blank -%}
+          <div class="kclub__bubble" aria-hidden="true">
+            <span>{{ section.settings.speech_bubble }}</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="color:#e75480;flex-shrink:0"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          </div>
+        {%- endif -%}
+      </div>
     </div>
 
   </div>
 
-  <!-- ═══ BOTTOM: Community + Trust ══════════════════════ -->
+  <!-- ═══ BOTTOM: community links + trust rechts ═════════ -->
   <div class="kclub__bottom">
 
-    <!-- Links: community -->
+    <!-- Links: community ───────────────────────────────── -->
     <div class="kclub__community">
-      <div class="kclub__community-header">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" style="color:#e75480"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+
+      <div class="kclub__community-head">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" style="color:#e75480;flex-shrink:0"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
         <div>
           <strong>{{ section.settings.community_title }}</strong>
           <p>{{ section.settings.community_sub }}</p>
@@ -134,52 +145,62 @@
 
       {%- if section.settings.instagram_handle != blank -%}
         <a href="https://instagram.com/{{ section.settings.instagram_handle | remove: '@' }}"
-           class="kclub__insta-pill" rel="noopener" target="_blank">
+           class="kclub__insta" rel="noopener" target="_blank">
           {{- 'icon-instagram.svg' | inline_asset_content -}}
           {{ section.settings.instagram_handle }}
         </a>
       {%- endif -%}
 
-      <!-- Polaroid grid -->
+      <!-- Polaroid foto's -->
       {%- assign photo_blocks = section.blocks | where: 'type', 'community_photo' -%}
       {%- if photo_blocks.size > 0 -%}
         <div class="kclub__polaroids">
           {%- for block in photo_blocks -%}
-            <div class="kclub__polaroid" {{ block.shopify_attributes }}>
+            <div class="kclub__polaroid kclub__polaroid--{{ forloop.index }}" {{ block.shopify_attributes }}>
               {%- if block.settings.image != blank -%}
                 <img src="{{ block.settings.image | image_url: width: 200 }}"
-                     alt="" width="200" height="200"
-                     loading="lazy" class="kclub__polaroid-img">
+                     alt="" width="200" height="200" loading="lazy"
+                     class="kclub__polaroid-img">
               {%- else -%}
-                <div class="kclub__polaroid-ph">{{- 'icon-paw.svg' | inline_asset_content -}}</div>
+                <div class="kclub__polaroid-ph">{{- 'icon-camera.svg' | inline_asset_content -}}</div>
               {%- endif -%}
             </div>
           {%- endfor -%}
+          <!-- Zweefhart boven laatste polaroid -->
+          <div class="kclub__polaroid-heart" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="40" height="40" rx="10" fill="#e75480"/>
+              <path d="M20 30 C20 30 10 22 10 15 C10 11.5 12.5 9 16 9 C18 9 19.5 10 20 11.5 C20.5 10 22 9 24 9 C27.5 9 30 11.5 30 15 C30 22 20 30 20 30Z" fill="white"/>
+            </svg>
+          </div>
         </div>
       {%- endif -%}
 
       {%- if section.settings.hashtag != blank -%}
         <p class="kclub__hashtag">
           {{ section.settings.hashtag }}
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" style="color:#e75480"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" style="color:#e75480"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
         </p>
       {%- endif -%}
+
     </div>
 
-    <!-- Rechts: trust items -->
+    <!-- Rechts: trust 2×2 ──────────────────────────────── -->
     <div class="kclub__trust-col">
+
       <p class="kclub__trust-title">
-        {{- 'icon-paw.svg' | inline_asset_content -}}
+        <span style="display:flex;align-items:center;color:#F7A048">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
         {{ section.settings.trust_title }}
       </p>
+
+      {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
       <div class="kclub__trust-grid">
-        {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
         {%- for block in trust_blocks -%}
           <div class="kclub__trust-item" {{ block.shopify_attributes }}>
             <span class="kclub__trust-icon kclub__trust-icon--{{ block.settings.color }}" aria-hidden="true">
               {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
             </span>
-            <div class="kclub__trust-text">
+            <div>
               <strong>{{ block.settings.title }}</strong>
               {%- if block.settings.subtitle != blank -%}
                 <span>{{ block.settings.subtitle }}</span>
@@ -188,120 +209,108 @@
           </div>
         {%- endfor -%}
       </div>
-    </div>
 
+    </div>
   </div>
 
-  <!-- ═══ Footer: Kwispelbox branding ═════════════════════ -->
+  <!-- ═══ FOOTER BALK ════════════════════════════════════ -->
   <div class="kclub__footer">
-    <span>{{- 'icon-paw.svg' | inline_asset_content -}}</span>
+    <span class="kclub__footer-paw" aria-hidden="true">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
     <span class="kclub__footer-brand">{{ shop.name }}</span>
-    <span>{{- 'icon-paw.svg' | inline_asset_content -}}</span>
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" style="color:#e75480"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+    <span class="kclub__footer-paw" aria-hidden="true">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" style="color:#FFB8CD"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
   </div>
 
 </section>
 
 {% stylesheet %}
-/* ── Sectie ─────────────────────────────────────────────── */
-.kclub {
-  background: #F8EFDD;
-  overflow: hidden;
-}
-.kclub__sr-only {
-  position:absolute;width:1px;height:1px;
-  padding:0;margin:-1px;overflow:hidden;
-  clip:rect(0,0,0,0);white-space:nowrap;border:0;
-}
+.kclub { background: #F8EFDD; overflow: hidden; }
+.kclub__sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0 }
 
-/* ── Top: split layout ──────────────────────────────────── */
+/* ══ TOP ══════════════════════════════════════════════ */
 .kclub__top {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0;
+  gap: 32px;
+  padding: 60px 20px 48px;
   max-width: 1280px; margin: 0 auto;
-  padding: 64px 24px 48px;
 }
 @media(min-width: 900px) {
   .kclub__top {
-    grid-template-columns: 1.1fr 1fr;
-    gap: 60px;
-    padding: 80px 60px 60px;
+    grid-template-columns: 52% 44%;
+    gap: 40px;
+    padding: 72px 60px 56px;
     align-items: center;
   }
 }
 
-/* ── Copy links ─────────────────────────────────────────── */
-.kclub__copy {
-  display: flex; flex-direction: column; gap: 24px;
-}
+/* ── Copy links ──────────────────────────────────────── */
+.kclub__copy { display: flex; flex-direction: column; gap: 20px; }
 
 .kclub__eyebrow {
   display: inline-flex; align-items: center; gap: 7px;
   font-family: 'Karla', sans-serif;
-  font-size: .78rem; font-weight: 800;
+  font-size: .75rem; font-weight: 800;
   letter-spacing: .1em; text-transform: uppercase;
   color: #e75480;
 }
+.kclub__eyebrow svg { flex-shrink: 0; }
 
 .kclub__title {
   font-family: 'Lilita One', cursive;
-  font-size: clamp(2.2rem, 5vw, 3.6rem);
-  color: #3d2209; line-height: 1.05;
-  display: flex; flex-wrap: wrap; align-items: center;
-  gap: 4px 8px;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  line-height: 1.05; margin: 0;
 }
+.kclub__title-plain { color: #3d2209; }
 .kclub__title-accent { color: #e75480; }
-.kclub__title-paw { display:flex; align-items:center; }
-.kclub__title-paw svg { width: 36px; height: 36px; color: #F7A048; }
+.kclub__title-paw {
+  display: inline-flex; align-items: center;
+  vertical-align: middle; margin-left: 6px;
+}
+.kclub__title-paw svg { width: 32px; height: 32px; color: #F7A048; }
 
 .kclub__intro {
   font-family: 'Karla', sans-serif;
-  font-size: 1rem; color: #A88259; line-height: 1.75;
-  max-width: 46ch;
+  font-size: .95rem; color: #A88259; line-height: 1.75; max-width: 44ch;
 }
 
-/* ── Perks 2×2 ──────────────────────────────────────────── */
+/* Perks 2×2 */
 .kclub__perks {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
+  gap: 10px;
 }
 .kclub__perk {
-  display: flex; align-items: flex-start; gap: 12px;
-  background: rgba(255,255,255,.6);
+  display: flex; align-items: flex-start; gap: 10px;
+  background: rgba(255,255,255,.7);
   border: 1.5px solid #EDE2C9;
-  border-radius: 16px; padding: 14px;
+  border-radius: 16px; padding: 12px 14px;
 }
 .kclub__perk-icon {
-  width: 40px; height: 40px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  width: 38px; height: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.kclub__perk-icon svg { width: 18px; height: 18px; }
+.kclub__perk-icon svg { width: 17px; height: 17px; }
 .kclub__perk-icon--green  { background: #e8f5e2; color: #66AA44; }
 .kclub__perk-icon--pink   { background: #fff0f5; color: #e75480; }
 .kclub__perk-icon--orange { background: #fff0e4; color: #F7A048; }
 .kclub__perk-icon--yellow { background: #fffae0; color: #c49000; }
-
 .kclub__perk strong {
-  display: block;
-  font-family: 'Lilita One', cursive;
-  font-size: .9rem; color: #3d2209; margin-bottom: 3px;
+  display: block; font-family: 'Lilita One', cursive;
+  font-size: .88rem; color: #3d2209; margin-bottom: 2px;
 }
 .kclub__perk p {
   font-family: 'Karla', sans-serif;
-  font-size: .75rem; color: #A88259; line-height: 1.5; margin: 0;
+  font-size: .72rem; color: #A88259; line-height: 1.45; margin: 0;
 }
 
-/* ── Formulier ──────────────────────────────────────────── */
+/* Formulier */
 .kclub__form {
   display: flex; gap: 0;
   background: #fff;
   border: 2px solid #DAC9A1;
   border-radius: 999px;
-  overflow: hidden;
-  height: 56px;
+  overflow: hidden; height: 54px;
   transition: border-color 200ms, box-shadow 200ms;
 }
 .kclub__form:focus-within {
@@ -310,221 +319,219 @@
 }
 .kclub__input-wrap {
   display: flex; align-items: center; gap: 10px;
-  flex: 1; padding: 0 18px; min-width: 0;
+  flex: 1; padding: 0 16px; min-width: 0;
 }
-.kclub__input-icon { display:flex; color: #A88259; flex-shrink: 0; }
+.kclub__input-icon { display: flex; color: #A88259; flex-shrink: 0; }
 .kclub__input-icon svg { width: 16px; height: 16px; }
 .kclub__input {
-  flex: 1; border: none; outline: none;
-  font-family: 'Karla', sans-serif;
-  font-size: .95rem; color: #3d2209;
-  background: transparent; min-width: 0;
+  flex: 1; border: none; outline: none; background: transparent;
+  font-family: 'Karla', sans-serif; font-size: .9rem; color: #3d2209; min-width: 0;
 }
 .kclub__input::placeholder { color: #A88259; }
 .kclub__btn {
-  height: 100%;
-  padding: 0 24px;
+  height: 100%; padding: 0 22px;
   background: #66AA44; color: #fff;
-  font-family: 'Lilita One', cursive;
-  font-size: .95rem;
-  border: none; border-radius: 0 999px 999px 0;
-  cursor: pointer; display: flex; align-items: center;
-  gap: 8px; white-space: nowrap; flex-shrink: 0;
+  font-family: 'Lilita One', cursive; font-size: .92rem;
+  border: none; border-radius: 0 999px 999px 0; cursor: pointer;
+  display: flex; align-items: center; gap: 7px; white-space: nowrap; flex-shrink: 0;
   transition: background 160ms;
 }
 .kclub__btn:hover { background: #4d8833; }
 .kclub__btn svg { width: 16px; height: 16px; }
 
 .kclub__privacy {
-  display: flex; align-items: center; gap: 7px;
-  font-family: 'Karla', sans-serif;
-  font-size: .78rem; color: #A88259;
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'Karla', sans-serif; font-size: .75rem; color: #A88259;
 }
 .kclub__privacy svg { width: 12px; height: 12px; color: #A88259; flex-shrink: 0; }
 
-/* Success */
 .kclub__success {
-  display: flex; align-items: flex-start; gap: 14px;
+  display: flex; align-items: flex-start; gap: 12px;
   background: #e8f5e2; border: 1.5px solid #66AA44;
-  border-radius: 16px; padding: 18px 20px;
+  border-radius: 16px; padding: 16px 18px;
 }
-.kclub__success-icon { color: #66AA44; display: flex; flex-shrink: 0; }
-.kclub__success-icon svg { width: 24px; height: 24px; }
-.kclub__success strong {
-  font-family: 'Lilita One', cursive;
-  font-size: 1rem; color: #2d7a1a; display: block; margin-bottom: 4px;
-}
-.kclub__success p {
-  font-family: 'Karla', sans-serif;
-  font-size: .85rem; color: #2d7a1a; margin: 0;
+.kclub__success svg { width: 22px; height: 22px; flex-shrink: 0; }
+.kclub__success strong { display: block; font-family: 'Lilita One', cursive; color: #2d7a1a; margin-bottom: 3px; }
+.kclub__success p { font-family: 'Karla', sans-serif; font-size: .82rem; color: #2d7a1a; margin: 0; }
+
+/* ── Foto rechts ─────────────────────────────────────── */
+.kclub__img-col { position: relative; }
+
+.kclub__img-deco {
+  position: absolute;
+  top: -16px; left: -8px;
+  width: 40px; height: 40px;
+  z-index: 2; pointer-events: none;
 }
 
-/* ── Afbeelding rechts ──────────────────────────────────── */
 .kclub__img-wrap {
   position: relative;
-  display: flex; justify-content: center;
+  border-radius: 24px; overflow: hidden;
+  box-shadow: 0 16px 56px rgba(96,58,21,.16);
 }
 .kclub__img {
-  width: 100%;
-  border-radius: 32px;
-  box-shadow: 0 20px 60px rgba(96,58,21,.18);
-  display: block;
+  width: 100%; display: block;
+  aspect-ratio: 4/3; object-fit: cover;
 }
 .kclub__img-ph {
   width: 100%; aspect-ratio: 4/3;
-  background: #EDE2C9; border-radius: 32px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 12px; color: #A88259;
+  background: #EDE2C9; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 10px; color: #A88259;
 }
-.kclub__img-ph svg { width: 48px; height: 48px; }
 
 /* Speech bubble */
 .kclub__bubble {
   position: absolute;
-  top: 24px; right: -12px;
+  top: 20px; right: -8px;
   background: #fff;
-  border-radius: 20px 20px 20px 4px;
-  padding: 14px 16px;
-  box-shadow: 0 6px 24px rgba(96,58,21,.14);
-  border: 2px solid #FFD6E3;
+  border-radius: 16px 16px 16px 4px;
+  padding: 12px 14px;
+  box-shadow: 0 4px 20px rgba(96,58,21,.14);
+  border: 1.5px solid #EDE2C9;
   display: flex; flex-direction: column;
-  align-items: center; gap: 6px;
-  max-width: 110px; text-align: center;
-  z-index: 2;
+  align-items: center; gap: 5px;
+  max-width: 100px; text-align: center; z-index: 3;
 }
 .kclub__bubble span {
   font-family: 'Lilita One', cursive;
-  font-size: .8rem; color: #3d2209; line-height: 1.3;
+  font-size: .75rem; color: #3d2209; line-height: 1.3;
 }
-@media(max-width: 899px) {
-  .kclub__bubble { top: 12px; right: 12px; }
-}
+.kclub__bubble svg { width: 14px; height: 14px; }
+@media(max-width: 899px) { .kclub__bubble { right: 12px; top: 12px; } }
 
-/* ── Bottom: community + trust ──────────────────────────── */
+/* ══ BOTTOM ══════════════════════════════════════════ */
 .kclub__bottom {
   display: grid;
   grid-template-columns: 1fr;
   border-top: 1.5px solid #EDE2C9;
   background: rgba(255,255,255,.5);
 }
-@media(min-width: 900px) {
+@media(min-width: 768px) {
   .kclub__bottom { grid-template-columns: 1fr 1fr; }
 }
 
-/* Community */
+/* Community links */
 .kclub__community {
-  padding: 36px 24px;
-  display: flex; flex-direction: column; gap: 16px;
+  padding: 32px 20px;
+  display: flex; flex-direction: column; gap: 14px;
   border-right: 1.5px solid #EDE2C9;
 }
-@media(min-width: 1200px) { .kclub__community { padding: 36px 60px; } }
-@media(max-width: 899px)  { .kclub__community { border-right: none; border-bottom: 1.5px solid #EDE2C9; } }
+@media(min-width: 1200px) { .kclub__community { padding: 32px 60px 32px 60px; } }
+@media(max-width: 767px)  { .kclub__community { border-right: none; border-bottom: 1.5px solid #EDE2C9; } }
 
-.kclub__community-header {
-  display: flex; align-items: flex-start; gap: 12px;
+.kclub__community-head {
+  display: flex; align-items: flex-start; gap: 10px;
 }
-.kclub__community-header svg { color: #e75480; flex-shrink: 0; margin-top: 3px; }
-.kclub__community-header strong {
-  font-family: 'Lilita One', cursive;
-  font-size: 1.1rem; color: #3d2209; display: block; margin-bottom: 4px;
+.kclub__community-head > svg { margin-top: 3px; }
+.kclub__community-head strong {
+  display: block; font-family: 'Lilita One', cursive;
+  font-size: 1.05rem; color: #3d2209; margin-bottom: 3px;
 }
-.kclub__community-header p {
-  font-family: 'Karla', sans-serif;
-  font-size: .85rem; color: #A88259; margin: 0;
+.kclub__community-head p {
+  font-family: 'Karla', sans-serif; font-size: .82rem; color: #A88259; margin: 0;
 }
-.kclub__insta-pill {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: 'Karla', sans-serif;
-  font-size: .85rem; font-weight: 700;
-  color: #3d2209; background: #EDE2C9;
-  border-radius: 999px; padding: 8px 16px;
-  text-decoration: none; border: 1.5px solid #DAC9A1;
-  align-self: flex-start;
-  transition: background 160ms;
+
+.kclub__insta {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: 'Karla', sans-serif; font-size: .82rem; font-weight: 700;
+  color: #3d2209; background: #EDE2C9; border-radius: 999px;
+  padding: 7px 14px; text-decoration: none; border: 1.5px solid #DAC9A1;
+  align-self: flex-start; transition: background 160ms;
 }
-.kclub__insta-pill:hover { background: #DAC9A1; }
-.kclub__insta-pill svg { width: 16px; height: 16px; color: #A88259; }
+.kclub__insta:hover { background: #DAC9A1; }
+.kclub__insta svg { width: 15px; height: 15px; color: #A88259; }
 
 /* Polaroids */
 .kclub__polaroids {
-  display: flex; gap: 8px; align-items: flex-end;
+  display: flex; align-items: flex-end; gap: 6px;
+  position: relative;
 }
 .kclub__polaroid {
-  background: #fff;
-  padding: 6px 6px 20px;
-  border-radius: 6px;
+  background: #fff; padding: 5px 5px 18px;
+  border-radius: 4px;
   box-shadow: 0 3px 12px rgba(96,58,21,.12);
-  transform: rotate(-2deg);
+  flex: 1; max-width: 90px;
   transition: transform 200ms cubic-bezier(.34,1.56,.64,1);
-  flex: 1; max-width: 100px;
 }
-.kclub__polaroid:nth-child(2) { transform: rotate(1deg); }
-.kclub__polaroid:nth-child(3) { transform: rotate(-1deg); }
-.kclub__polaroid:nth-child(4) { transform: rotate(2deg); }
-.kclub__polaroid:hover { transform: rotate(0) scale(1.05) !important; }
-.kclub__polaroid-img {
-  width: 100%; aspect-ratio: 1;
-  object-fit: cover; border-radius: 4px; display: block;
-}
+.kclub__polaroid:hover { transform: scale(1.06) rotate(0deg) !important; }
+.kclub__polaroid--1 { transform: rotate(-3deg); }
+.kclub__polaroid--2 { transform: rotate(1.5deg); }
+.kclub__polaroid--3 { transform: rotate(-1deg); }
+.kclub__polaroid--4 { transform: rotate(2.5deg); }
+.kclub__polaroid-img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 2px; display: block; }
 .kclub__polaroid-ph {
-  width: 100%; aspect-ratio: 1;
-  background: #EDE2C9; border-radius: 4px;
-  display: flex; align-items: center; justify-content: center;
-  color: #DAC9A1;
+  width: 100%; aspect-ratio: 1; background: #EDE2C9;
+  display: flex; align-items: center; justify-content: center; color: #DAC9A1;
+  border-radius: 2px;
 }
+.kclub__polaroid-ph svg { width: 20px; height: 20px; }
+
+/* Zweefhart boven laatste polaroid */
+.kclub__polaroid-heart {
+  position: absolute;
+  top: -18px; right: 0;
+  width: 36px; height: 36px;
+  animation: kclub-float 2.5s ease-in-out infinite;
+}
+.kclub__polaroid-heart svg { width: 100%; height: 100%; }
+@keyframes kclub-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+@media(prefers-reduced-motion: reduce) { .kclub__polaroid-heart { animation: none; } }
+
 .kclub__hashtag {
   display: flex; align-items: center; gap: 6px;
-  font-family: 'Karla', sans-serif;
-  font-size: .85rem; font-weight: 700; color: #A88259;
+  font-family: 'Karla', sans-serif; font-size: .82rem; font-weight: 700; color: #A88259;
 }
 
 /* Trust rechts */
 .kclub__trust-col {
-  padding: 36px 24px;
-  display: flex; flex-direction: column; gap: 20px;
+  padding: 32px 20px;
+  display: flex; flex-direction: column; gap: 16px;
 }
-@media(min-width: 1200px) { .kclub__trust-col { padding: 36px 60px; } }
+@media(min-width: 1200px) { .kclub__trust-col { padding: 32px 60px; } }
 
 .kclub__trust-title {
   display: flex; align-items: center; gap: 8px;
-  font-family: 'Lilita One', cursive;
-  font-size: 1rem; color: #e75480;
+  font-family: 'Karla', sans-serif; font-size: .88rem; font-weight: 800;
+  color: #e75480; line-height: 1.4;
 }
-.kclub__trust-title svg { width: 16px; height: 16px; color: #F7A048; }
+.kclub__trust-title svg { width: 16px; height: 16px; flex-shrink: 0; }
 
 .kclub__trust-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  gap: 16px 12px;
 }
 .kclub__trust-item {
   display: flex; align-items: flex-start; gap: 10px;
 }
 .kclub__trust-icon {
-  width: 40px; height: 40px; border-radius: 50%;
+  width: 38px; height: 38px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.kclub__trust-icon svg { width: 18px; height: 18px; }
+.kclub__trust-icon svg { width: 17px; height: 17px; }
 .kclub__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
 .kclub__trust-icon--pink   { background: #fff0f5; color: #e75480; }
 .kclub__trust-icon--orange { background: #fff0e4; color: #F7A048; }
 .kclub__trust-icon--yellow { background: #fffae0; color: #c49000; }
-.kclub__trust-text { display: flex; flex-direction: column; gap: 2px; }
-.kclub__trust-text strong { font-family: 'Karla', sans-serif; font-size: .82rem; font-weight: 800; color: #3d2209; line-height: 1.3; }
-.kclub__trust-text span   { font-family: 'Karla', sans-serif; font-size: .72rem; color: #A88259; line-height: 1.4; }
+.kclub__trust-item > div { display: flex; flex-direction: column; gap: 2px; }
+.kclub__trust-item strong {
+  font-family: 'Karla', sans-serif; font-size: .82rem; font-weight: 800; color: #3d2209; line-height: 1.2;
+}
+.kclub__trust-item span { font-size: .72rem; color: #A88259; line-height: 1.35; }
 
-/* ── Footer branding ────────────────────────────────────── */
+/* ══ FOOTER BALK ════════════════════════════════════ */
 .kclub__footer {
-  display: flex; align-items: center; justify-content: center;
-  gap: 10px; padding: 20px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 18px 20px;
   border-top: 1.5px solid #EDE2C9;
   background: rgba(255,255,255,.4);
 }
-.kclub__footer svg { width: 16px; height: 16px; color: #A88259; }
+.kclub__footer-paw svg { width: 16px; height: 16px; color: #A88259; }
 .kclub__footer-brand {
-  font-family: 'Lilita One', cursive;
-  font-size: 1rem; color: #603A15;
+  font-family: 'Lilita One', cursive; font-size: .95rem; color: #603A15;
 }
 {% endstylesheet %}
 
@@ -535,76 +542,51 @@
   "limit": 1,
   "blocks": [
     {
-      "type": "perk",
-      "name": "Voordeel",
+      "type": "perk", "name": "Voordeel",
       "settings": [
-        {
-          "type": "select", "id": "icon", "label": "Icoon", "default": "gift",
-          "options": [
-            {"value":"gift","label":"Cadeau"},{"value":"bell","label":"Bel"},
-            {"value":"sparkles","label":"Sparkles"},{"value":"heart","label":"Hart"},
-            {"value":"paw","label":"Poot"},{"value":"star","label":"Ster"}
-          ]
-        },
-        {
-          "type": "select", "id": "color", "label": "Kleur", "default": "green",
-          "options": [
-            {"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},
-            {"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"}
-          ]
-        },
-        {"type":"text","id":"title",       "label":"Titel",       "default":"Exclusieve kortingen"},
-        {"type":"text","id":"description", "label":"Beschrijving","default":"Speciale deals alleen voor leden."}
+        { "type": "select", "id": "icon", "label": "Icoon", "default": "gift",
+          "options": [{"value":"gift","label":"Cadeau"},{"value":"bell","label":"Bel"},{"value":"sparkles","label":"Sparkles"},{"value":"heart","label":"Hart"},{"value":"paw","label":"Poot"},{"value":"star","label":"Ster"}] },
+        { "type": "select", "id": "color", "label": "Kleur", "default": "green",
+          "options": [{"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},{"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"}] },
+        { "type": "text", "id": "title", "label": "Titel", "default": "Exclusieve kortingen" },
+        { "type": "text", "id": "description", "label": "Beschrijving", "default": "Speciale deals alleen voor leden." }
       ]
     },
     {
-      "type": "trust",
-      "name": "Trust item",
+      "type": "trust", "name": "Trust item",
       "settings": [
-        {
-          "type": "select", "id": "icon", "label": "Icoon", "default": "shield",
-          "options": [
-            {"value":"shield","label":"Schild"},{"value":"gift","label":"Cadeau"},
-            {"value":"truck","label":"Vrachtwagen"},{"value":"lock","label":"Slot"},
-            {"value":"heart","label":"Hart"},{"value":"paw","label":"Poot"}
-          ]
-        },
-        {
-          "type": "select", "id": "color", "label": "Kleur", "default": "green",
-          "options": [
-            {"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},
-            {"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"}
-          ]
-        },
-        {"type":"text","id":"title",    "label":"Titel",    "default":"100% tevreden of geld terug"},
-        {"type":"text","id":"subtitle", "label":"Subtitel", "default":"Niet tevreden? Wij lossen het op."}
+        { "type": "select", "id": "icon", "label": "Icoon", "default": "shield",
+          "options": [{"value":"shield","label":"Schild"},{"value":"gift","label":"Cadeau"},{"value":"truck","label":"Vrachtwagen"},{"value":"lock","label":"Slot"},{"value":"heart","label":"Hart"},{"value":"paw","label":"Poot"}] },
+        { "type": "select", "id": "color", "label": "Kleur", "default": "green",
+          "options": [{"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},{"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"}] },
+        { "type": "text", "id": "title", "label": "Titel", "default": "100% tevreden of geld terug" },
+        { "type": "text", "id": "subtitle", "label": "Subtitel", "default": "Niet tevreden? Wij lossen het op." }
       ]
     },
     {
-      "type": "community_photo",
-      "name": "Community foto",
+      "type": "community_photo", "name": "Community foto",
       "settings": [
-        {"type":"image_picker","id":"image","label":"Foto"}
+        { "type": "image_picker", "id": "image", "label": "Foto" }
       ]
     }
   ],
   "settings": [
-    {"type":"text",        "id":"eyebrow",          "label":"Eyebrow",              "default":"Exclusief voor leden"},
-    {"type":"text",        "id":"title_line1",       "label":"Titel regel 1",        "default":"Word lid van de"},
-    {"type":"text",        "id":"title_line2",       "label":"Titel regel 2 (roze)", "default":"Kwispelclub"},
-    {"type":"textarea",    "id":"intro",             "label":"Intro tekst",          "default":"Ontvang als eerste nieuwe boxen, leuke verrassingen, exclusieve kortingen en handige tips voor een n\u00f3g gelukkige hond."},
-    {"type":"text",        "id":"input_placeholder", "label":"Input placeholder",    "default":"Jouw e-mailadres"},
-    {"type":"text",        "id":"btn_label",         "label":"Knop tekst",           "default":"Ja, ik word lid!"},
-    {"type":"text",        "id":"privacy_text",      "label":"Privacy tekst",        "default":"Geen spam, alleen leuke kwispels."},
-    {"type":"text",        "id":"success_title",     "label":"Success titel",        "default":"Welkom bij de Kwispelclub!"},
-    {"type":"text",        "id":"success_text",      "label":"Success tekst",        "default":"Je ontvangt binnenkort een bevestiging per e-mail."},
-    {"type":"image_picker","id":"hero_image",        "label":"Hoofdafbeelding"},
-    {"type":"text",        "id":"speech_bubble",     "label":"Speech bubble tekst",  "default":"Leuke dingen komen eraan!"},
-    {"type":"text",        "id":"community_title",   "label":"Community titel",      "default":"Deel, tag en inspireer!"},
-    {"type":"text",        "id":"community_sub",     "label":"Community subtitel",   "default":"Word onderdeel van onze Kwispelbox community."},
-    {"type":"text",        "id":"instagram_handle",  "label":"Instagram handle",     "default":"@kwispelbox.nl"},
-    {"type":"text",        "id":"hashtag",           "label":"Hashtag",              "default":"#kwispelbox"},
-    {"type":"text",        "id":"trust_title",       "label":"Trust titel",          "default":"Waarom meer dan 1.200 hondenfans ons vertrouwen"}
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Exclusief voor leden" },
+    { "type": "text", "id": "title_line1", "label": "Titel regel 1", "default": "Word lid van de" },
+    { "type": "text", "id": "title_line2", "label": "Titel regel 2 (roze)", "default": "Kwispelclub" },
+    { "type": "textarea", "id": "intro", "label": "Intro tekst", "default": "Ontvang als eerste nieuwe boxen, leuke verrassingen, exclusieve kortingen en handige tips voor een n\u00f3g gelukkige hond." },
+    { "type": "text", "id": "input_placeholder", "label": "Input placeholder", "default": "Jouw e-mailadres" },
+    { "type": "text", "id": "btn_label", "label": "Knop tekst", "default": "Ja, ik word lid!" },
+    { "type": "text", "id": "privacy_text", "label": "Privacy tekst", "default": "Geen spam, alleen leuke kwispels." },
+    { "type": "text", "id": "success_title", "label": "Success titel", "default": "Welkom bij de Kwispelclub!" },
+    { "type": "text", "id": "success_text", "label": "Success tekst", "default": "Je ontvangt binnenkort een bevestiging per e-mail." },
+    { "type": "image_picker", "id": "hero_image", "label": "Hoofdafbeelding rechts" },
+    { "type": "text", "id": "speech_bubble", "label": "Speech bubble tekst", "default": "Leuke dingen komen eraan!" },
+    { "type": "text", "id": "community_title", "label": "Community titel", "default": "Deel, tag en inspireer!" },
+    { "type": "text", "id": "community_sub", "label": "Community subtitel", "default": "Word onderdeel van onze Kwispelbox community." },
+    { "type": "text", "id": "instagram_handle", "label": "Instagram handle", "default": "@kwispelbox.nl" },
+    { "type": "text", "id": "hashtag", "label": "Hashtag", "default": "#kwispelbox" },
+    { "type": "text", "id": "trust_title", "label": "Trust titel", "default": "Waarom meer dan 1.200 hondenfans ons vertrouwen" }
   ],
   "presets": [{
     "name": "Kwispelclub nieuwsbrief",
