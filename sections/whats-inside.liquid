@@ -170,41 +170,31 @@
   text-align: center;
   padding: 0 20px;
   margin-bottom: 48px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 10px;
 }
 .inside__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
+  display: inline-flex; align-items: center; gap: 7px;
   font-family: 'Karla', sans-serif;
-  font-size: .8rem;
-  font-weight: 800;
-  letter-spacing: .08em;
-  text-transform: uppercase;
+  font-size: .8rem; font-weight: 800;
+  letter-spacing: .08em; text-transform: uppercase;
   color: #e75480;
 }
 .inside__eyebrow svg { flex-shrink: 0; }
 .inside__title {
   font-family: 'Lilita One', cursive;
   font-size: clamp(2rem, 5vw, 3.4rem);
-  color: #3d2209;
-  line-height: 1.05;
+  color: #3d2209; line-height: 1.05;
 }
 .inside__sub {
   font-family: 'Karla', sans-serif;
-  font-size: 1.05rem;
-  color: #A88259;
-  line-height: 1.65;
-  max-width: 48ch;
+  font-size: 1.05rem; color: #A88259;
+  line-height: 1.65; max-width: 48ch;
 }
 
 /* ── Hoofd grid ─────────────────────────────────────────── */
 .inside__wrap {
-  max-width: 1280px;
-  margin: 0 auto;
+  max-width: 1280px; margin: 0 auto;
   padding: 0 20px 60px;
   display: grid;
   grid-template-columns: 1fr;
@@ -213,141 +203,118 @@
 }
 @media(min-width: 900px) {
   .inside__wrap {
-    grid-template-columns: 1fr 1.2fr 1fr;
+    grid-template-columns: 1fr 1.15fr 1fr;
     padding: 0 40px 60px;
-    gap: 24px;
+    gap: 20px;
     align-items: start;
   }
 }
 
 /* ── Kolommen ───────────────────────────────────────────── */
-.inside__col {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
+.inside__col { display: flex; flex-direction: column; gap: 16px; }
 
-/* ── Content item ───────────────────────────────────────── */
+/* ── Item kaart ─────────────────────────────────────────── */
 .inside__item {
   background: #fff;
-  border-radius: 20px;
+  border-radius: 24px;
   overflow: hidden;
-  border: 1.5px solid #EDE2C9;
-  transition: transform 200ms cubic-bezier(.34,1.56,.64,1),
-              box-shadow 200ms ease;
+  box-shadow: 0 2px 12px rgba(96,58,21,.07);
+  border: none;
+  display: flex; flex-direction: column;
+  transition: transform 220ms cubic-bezier(.34,1.56,.64,1),
+              box-shadow 220ms ease;
 }
 .inside__item:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 28px rgba(96,58,21,.1);
+  box-shadow: 0 10px 32px rgba(96,58,21,.12);
 }
-/* Kleur per icon type */
-.inside__item--pink   { background: #fff8fa; border-color: #FFD6E3; }
-.inside__item--green  { background: #f6fdf2; border-color: #c8e6c0; }
-.inside__item--yellow { background: #fffdf0; border-color: #ffe9a0; }
-.inside__item--orange { background: #fff8f2; border-color: #ffd4b0; }
 
+/* Gekleurde tint per categorie */
+.inside__item--pink   { background: #fff8fa; }
+.inside__item--green  { background: #f6fdf2; }
+.inside__item--yellow { background: #fffdf0; }
+.inside__item--orange { background: #fff8f2; }
+
+/* ── Kaart header: icon + tekst ─────────────────────────── */
 .inside__item-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 18px 18px 14px;
+  display: flex; align-items: flex-start;
+  gap: 12px; padding: 18px 18px 14px;
 }
 .inside__item-icon {
-  width: 44px; height: 44px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .inside__item-icon svg { width: 20px; height: 20px; }
-.inside__item-icon--pink   { background: #fff0f5; color: #e75480; }
-.inside__item-icon--green  { background: #e8f5e2; color: #66AA44; }
-.inside__item-icon--yellow { background: #fffae0; color: #c49000; }
-.inside__item-icon--orange { background: #fff0e4; color: #F7A048; }
+.inside__item-icon--pink   { background: #ffd6e3; color: #c0394b; }
+.inside__item-icon--green  { background: #c8e6c0; color: #2d7a1a; }
+.inside__item-icon--yellow { background: #ffe9a0; color: #8a6200; }
+.inside__item-icon--orange { background: #ffd4b0; color: #b86a1e; }
 
 .inside__item-title {
   font-family: 'Lilita One', cursive;
-  font-size: 1.05rem;
-  color: #3d2209;
-  line-height: 1.2;
-  margin-bottom: 4px;
+  font-size: 1.1rem; color: #3d2209; margin-bottom: 4px; line-height: 1.2;
 }
 .inside__item-desc {
   font-family: 'Karla', sans-serif;
-  font-size: .8rem;
-  color: #A88259;
-  line-height: 1.6;
+  font-size: .8rem; color: #A88259; line-height: 1.6;
 }
+
+/* ── Kaart foto: groot, onderaan ─────────────────────────── */
 .inside__item-img-wrap {
   width: 100%;
   aspect-ratio: 4/3;
   overflow: hidden;
+  flex-shrink: 0;
 }
 .inside__item-img {
   width: 100%; height: 100%;
-  object-fit: cover;
+  object-fit: cover; display: block;
   transition: transform 400ms ease;
 }
 .inside__item:hover .inside__item-img { transform: scale(1.04); }
+
+/* Placeholder als geen foto */
+.inside__item-img-wrap:has(.inside__item-img) + .inside__item-footnote,
 .inside__item-footnote {
   font-family: 'Karla', sans-serif;
-  font-size: .7rem;
-  color: #C4A882;
-  padding: 8px 18px 14px;
-  font-style: italic;
+  font-size: .7rem; color: #C4A882;
+  padding: 8px 18px 14px; font-style: italic;
 }
 
-/* ── Midden: doos afbeelding ────────────────────────────── */
-.inside__center {
-  display: flex;
-  justify-content: center;
-}
+/* ── Midden: doos showcase ──────────────────────────────── */
+.inside__center { display: flex; justify-content: center; align-items: flex-start; }
 .inside__center-img-wrap {
-  position: relative;
-  width: 100%;
-  max-width: 480px;
+  position: relative; width: 100%; max-width: 480px;
 }
 .inside__center-img {
-  width: 100%;
-  border-radius: 24px;
-  box-shadow: 0 16px 56px rgba(96,58,21,.16);
-  display: block;
+  width: 100%; border-radius: 28px;
+  box-shadow: 0 20px 60px rgba(96,58,21,.18); display: block;
 }
 .inside__center-ph {
-  width: 100%;
-  aspect-ratio: 1;
-  background: #EDE2C9;
-  border-radius: 24px;
+  width: 100%; aspect-ratio: 1; background: #EDE2C9;
+  border-radius: 28px;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  gap: 12px; color: #A88259;
+  gap: 12px; color: #A88259; font-size: .875rem;
 }
 .inside__center-ph svg { width: 56px; height: 56px; }
 
 /* Cirkel badge */
 .inside__center-badge {
-  position: absolute;
-  top: 20px; right: -16px;
-  width: 110px; height: 110px;
-  background: #FFE071;
-  border-radius: 50%;
+  position: absolute; top: 16px; right: -12px;
+  width: 108px; height: 108px;
+  background: #FFE071; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  text-align: center;
-  padding: 16px;
+  text-align: center; padding: 14px;
   box-shadow: 0 6px 24px rgba(96,58,21,.15);
-  border: 3px solid #fff;
-  z-index: 2;
+  border: 3px solid #fff; z-index: 2;
 }
 .inside__center-badge span {
   font-family: 'Lilita One', cursive;
-  font-size: .8rem;
-  color: #603A15;
-  line-height: 1.3;
+  font-size: .8rem; color: #603A15; line-height: 1.3;
 }
 @media(max-width: 899px) {
-  .inside__center-badge {
-    top: 12px; right: 12px;
-    width: 80px; height: 80px;
-  }
+  .inside__center-badge { top: 12px; right: 12px; width: 84px; height: 84px; }
   .inside__center-badge span { font-size: .7rem; }
 }
 
@@ -358,60 +325,54 @@
 }
 .inside__trust-inner {
   max-width: 1280px; margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
+  padding: 0 24px;
+  display: flex; align-items: center; gap: 16px;
 }
-@media(min-width: 768px) {
-  .inside__trust-inner { padding: 0 40px; }
-}
-.inside__trust-item {
-  display: flex; align-items: center; gap: 12px;
-  padding: 16px 16px;
-  border-right: 1px solid #DAC9A1;
-}
-.inside__trust-item:last-child { border-right: none; }
+@media(min-width: 768px) { .inside__trust-inner { padding: 0 40px; } }
+
+/* Hond foto zijkant */
 .inside__trust-dog {
-  width: 80px; height: 80px; border-radius: 50%;
+  width: 88px; height: 88px; border-radius: 50%;
   overflow: hidden; flex-shrink: 0;
   border: 3px solid #fff;
   box-shadow: 0 4px 16px rgba(96,58,21,.15);
 }
-.inside__trust-dog img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-}
+.inside__trust-dog img { width: 100%; height: 100%; object-fit: cover; display: block; }
 @media(max-width: 767px) { .inside__trust-dog { display: none; } }
+
+/* Items */
 .inside__trust-items {
-  display: grid;
+  flex: 1; display: grid;
   grid-template-columns: repeat(2, 1fr);
-  flex: 1; gap: 0;
 }
 @media(min-width: 768px) {
   .inside__trust-items { grid-template-columns: repeat(4, 1fr); }
 }
+.inside__trust-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 20px 16px;
+  border-right: 1px solid #DAC9A1;
+}
+.inside__trust-item:last-child { border-right: none; }
+@media(max-width: 767px) {
+  .inside__trust-item:nth-child(even) { border-right: none; }
+  .inside__trust-item:nth-child(odd):not(:last-child) { border-right: 1px solid #DAC9A1; }
+}
 .inside__trust-icon {
   width: 44px; height: 44px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .inside__trust-icon svg { width: 20px; height: 20px; }
 .inside__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
 .inside__trust-icon--pink   { background: #fff0f5; color: #e75480; }
 .inside__trust-icon--orange { background: #fff0e4; color: #F7A048; }
 .inside__trust-icon--yellow { background: #fffae0; color: #c49000; }
-
-.inside__trust-text {
-  display: flex; flex-direction: column; gap: 2px;
-}
+.inside__trust-text { display: flex; flex-direction: column; gap: 2px; }
 .inside__trust-text strong {
   font-family: 'Karla', sans-serif;
   font-size: .85rem; font-weight: 800; color: #603A15; line-height: 1.2;
 }
-.inside__trust-text span {
-  font-size: .75rem; color: #A88259;
-}
-
+.inside__trust-text span { font-size: .75rem; color: #A88259; }
 {% endstylesheet %}
 
 {% schema %}
