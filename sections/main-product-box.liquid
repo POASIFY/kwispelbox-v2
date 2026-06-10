@@ -163,6 +163,13 @@
       <!-- Dog properties -->
       {%- render 'dog-properties' -%}
 
+      <!-- Delivery trust -->
+      <div class="pb__delivery">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#66AA44" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        {{ section.settings.delivery_text }}
+      </div>
+
+
       <!-- Cart form -->
       <form id="PbForm" action="/cart/add" method="post">
         <input type="hidden" name="id" id="PbVariantId" value="{{ current_variant.id }}">
@@ -178,13 +185,6 @@
           {%- endif -%}
         </button>
       </form>
-
-      <!-- Delivery trust -->
-      <div class="pb__delivery">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#66AA44" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-        {{ section.settings.delivery_text }}
-      </div>
-
     </div>
   </div>
 
@@ -745,7 +745,7 @@
     { "type": "text",     "id": "review_count",        "label": "Aantal reviews",             "default": "1.248" },
     { "type": "text",     "id": "discount_label",      "label": "Korting badge",              "default": "Bespaar tot 15%" },
     { "type": "text",     "id": "atc_label",           "label": "Knoptekst",                  "default": "Toevoegen aan winkelwagen" },
-    { "type": "text",     "id": "delivery_text",       "label": "Bezorging tekst",            "default": "Voor 22:00 besteld, morgen in huis" },
+    { "type": "text",     "id": "delivery_text",       "label": "Bezorging tekst",            "default": "Voor 15:00 besteld, morgen geleverd" },
     { "type": "text",     "id": "reviews_title",       "label": "Reviews sectie titel",       "default": "Wat andere hondenbaasjes zeggen" },
     { "type": "text",     "id": "social_proof_count",  "label": "Sociale bewijs getal",       "default": "Meer dan 1.200+ blije hondenfans" },
     { "type": "text",     "id": "social_proof_text",   "label": "Sociale bewijs subtekst",    "default": "en dat worden er elke dag meer!" }
@@ -759,7 +759,7 @@
       {"type":"feature","settings":{"text":"Geschikt voor alle hondenrassen"}},
       {"type":"trust","settings":{"icon":"heart","color":"pink","title":"Met liefde samengesteld","subtitle":"Elk item zorgvuldig geselecteerd."}},
       {"type":"trust","settings":{"icon":"award","color":"orange","title":"Kwaliteit voorop","subtitle":"Duurzame en veilige producten."}},
-      {"type":"trust","settings":{"icon":"truck","color":"green","title":"Snelle levering","subtitle":"Voor 22:00 besteld, morgen in huis."}},
+      {"type":"trust","settings":{"icon":"truck","color":"green","title":"Snelle levering","subtitle":"Voor 15:00 besteld, morgen geleverd."}},
       {"type":"trust","settings":{"icon":"lock","color":"yellow","title":"Veilig betalen","subtitle":"Betaal veilig en vertrouwd."}},
       {"type":"review","settings":{"author":"Lotte & Max","stars":5,"text":"Elke keer weer een feestje als de Kwispelbox binnenkomt. Max is er dol op!","dog_name":"Max – Golden Retriever"}},
       {"type":"review","settings":{"author":"Sanne & Bo","stars":5,"text":"Super leuke speeltjes en goede kwaliteit. Echt een aanrader!","dog_name":"Bo – Labrador"}},
