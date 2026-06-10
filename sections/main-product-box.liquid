@@ -122,12 +122,7 @@
             </li>
           {%- endfor -%}
         </ul>
-      {%- endif -%}
-          </div>
-
-          <div class="pb__sub-options" id="PbVariants">
-            {%- for variant in product.variants -%}
-              <label class="pb__sub-option{% if variant == current_variant %} is-selected{% endif %}"
+      {%- endif -%}"
                      data-variant-id="{{ variant.id }}"
                      data-price="{{ variant.price }}">
                 <input
