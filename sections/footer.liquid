@@ -1,84 +1,119 @@
 <footer class="kw-footer full-width" role="contentinfo">
 
-  <!-- Top: logo + kolommen ────────────────────────────── -->
-  <div class="kw-footer__top">
+  <!-- ═══ HOOFD FOOTER ════════════════════════════════════ -->
+  <div class="kw-footer__main">
     <div class="kw-footer__inner">
 
-      <!-- Brand kolom -->
-      <div class="kw-footer__brand">
-        <a href="{{ routes.root_url }}" class="kw-footer__logo" aria-label="{{ shop.name }}">
-          {%- if settings.logo != blank -%}
-            <img src="{{ settings.logo | image_url: width: 160 }}"
-                 alt="{{ shop.name }}" width="120" height="40" loading="lazy"
-                 class="kw-footer__logo-img">
-          {%- else -%}
-            <span class="kw-footer__logo-text">
-              {{ shop.name }}
-              <span class="kw-footer__logo-paw" aria-hidden="true">
-                {{- 'icon-paw.svg' | inline_asset_content -}}
-              </span>
-            </span>
-          {%- endif -%}
-        </a>
+      <!-- Links: brand + trust + social -->
+      <div class="kw-footer__brand-col">
 
+        <!-- Logo + hond -->
+        <div class="kw-footer__logo-wrap">
+          <!-- Hond SVG illustratie -->
+          <div class="kw-footer__dog" aria-hidden="true">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- oren -->
+              <ellipse cx="22" cy="28" rx="11" ry="14" fill="#8B5E3C" transform="rotate(-15 22 28)"/>
+              <ellipse cx="58" cy="28" rx="11" ry="14" fill="#8B5E3C" transform="rotate(15 58 28)"/>
+              <!-- hoofd -->
+              <ellipse cx="40" cy="42" rx="26" ry="24" fill="#C68642"/>
+              <!-- gezicht licht -->
+              <ellipse cx="40" cy="50" rx="16" ry="13" fill="#E8A96A"/>
+              <!-- ogen -->
+              <circle cx="31" cy="38" r="4.5" fill="#3d2209"/>
+              <circle cx="49" cy="38" r="4.5" fill="#3d2209"/>
+              <circle cx="32.5" cy="36.5" r="1.5" fill="white"/>
+              <circle cx="50.5" cy="36.5" r="1.5" fill="white"/>
+              <!-- neus -->
+              <ellipse cx="40" cy="46" rx="5" ry="3.5" fill="#3d2209"/>
+              <!-- tong -->
+              <ellipse cx="40" cy="56" rx="5" ry="6" fill="#e75480"/>
+              <line x1="40" y1="52" x2="40" y2="62" stroke="#c0394b" stroke-width="1.5" stroke-linecap="round"/>
+              <!-- wenkbrauwen -->
+              <path d="M27 33 Q31 30 35 33" stroke="#3d2209" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+              <path d="M45 33 Q49 30 53 33" stroke="#3d2209" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+            </svg>
+          </div>
+          <div class="kw-footer__logo-text-wrap">
+            <a href="{{ routes.root_url }}" class="kw-footer__logo" aria-label="{{ shop.name }}">
+              {%- if settings.logo != blank -%}
+                <img src="{{ settings.logo | image_url: width: 160 }}"
+                     alt="{{ shop.name }}" width="120" height="40" loading="lazy">
+              {%- else -%}
+                <span class="kw-footer__logo-text">{{ shop.name }}</span>
+              {%- endif -%}
+              <span class="kw-footer__logo-paw" aria-hidden="true">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
+            </a>
+            <!-- Decoratief hartje -->
+            <span class="kw-footer__logo-heart" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e75480" stroke-width="2" stroke-linecap="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            </span>
+          </div>
+        </div>
+
+        <!-- Tagline -->
         {%- if section.settings.tagline != blank -%}
           <p class="kw-footer__tagline">{{ section.settings.tagline }}</p>
         {%- endif -%}
 
-        <!-- Social links -->
+        <!-- Trust rijen -->
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'trust_item' -%}
+            <div class="kw-footer__trust-row" {{ block.shopify_attributes }}>
+              <span class="kw-footer__trust-icon kw-footer__trust-icon--{{ block.settings.color }}" aria-hidden="true">
+                {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+              </span>
+              <div>
+                <strong>{{ block.settings.title }}</strong>
+                {%- if block.settings.subtitle != blank -%}
+                  <span>{{ block.settings.subtitle }}</span>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+
+        <!-- Social icons -->
         <div class="kw-footer__social">
           {%- if section.settings.instagram_url != blank -%}
-            <a href="{{ section.settings.instagram_url }}"
-               class="kw-footer__social-link" rel="noopener" target="_blank"
-               aria-label="Instagram">
+            <a href="{{ section.settings.instagram_url }}" class="kw-footer__social-link" rel="noopener" target="_blank" aria-label="Instagram">
               {{- 'icon-instagram.svg' | inline_asset_content -}}
             </a>
           {%- endif -%}
-          {%- if section.settings.tiktok_url != blank -%}
-            <a href="{{ section.settings.tiktok_url }}"
-               class="kw-footer__social-link" rel="noopener" target="_blank"
-               aria-label="TikTok">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.31 6.31 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.27 8.27 0 004.84 1.54V6.73a4.85 4.85 0 01-1.07-.04z"/>
-              </svg>
+          {%- if section.settings.facebook_url != blank -%}
+            <a href="{{ section.settings.facebook_url }}" class="kw-footer__social-link" rel="noopener" target="_blank" aria-label="Facebook">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
             </a>
           {%- endif -%}
-          {%- if section.settings.facebook_url != blank -%}
-            <a href="{{ section.settings.facebook_url }}"
-               class="kw-footer__social-link" rel="noopener" target="_blank"
-               aria-label="Facebook">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-              </svg>
+          {%- if section.settings.tiktok_url != blank -%}
+            <a href="{{ section.settings.tiktok_url }}" class="kw-footer__social-link" rel="noopener" target="_blank" aria-label="TikTok">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.27 8.27 0 004.84 1.54V6.73a4.85 4.85 0 01-1.07-.04z"/></svg>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.email_url != blank -%}
+            <a href="mailto:{{ section.settings.email_url }}" class="kw-footer__social-link" aria-label="E-mail">
+              {{- 'icon-mail.svg' | inline_asset_content -}}
             </a>
           {%- endif -%}
         </div>
 
-        <!-- Trust badges -->
-        <div class="kw-footer__trust-badges">
-          <div class="kw-footer__trust-badge">
-            {{- 'icon-shield.svg' | inline_asset_content -}}
-            <span>Veilig betalen</span>
-          </div>
-          <div class="kw-footer__trust-badge">
-            {{- 'icon-truck.svg' | inline_asset_content -}}
-            <span>Snel geleverd</span>
-          </div>
-        </div>
       </div>
 
-      <!-- Nav kolommen via blocks -->
+      <!-- Midden: 3 nav kolommen -->
       {%- for block in section.blocks -%}
         {%- if block.type == 'nav_column' -%}
-          <div class="kw-footer__col" {{ block.shopify_attributes }}>
-            <h3 class="kw-footer__col-title">{{ block.settings.title }}</h3>
+          <div class="kw-footer__nav-col" {{ block.shopify_attributes }}>
+            <h3 class="kw-footer__nav-title">{{ block.settings.title }}</h3>
             {%- if block.settings.menu != blank -%}
               {%- assign footer_menu = linklists[block.settings.menu] -%}
-              <ul class="kw-footer__links" role="list">
+              <ul class="kw-footer__nav-list" role="list">
                 {%- for link in footer_menu.links -%}
-                  <li>
-                    <a href="{{ link.url }}" class="kw-footer__link">
+                  <li class="kw-footer__nav-item">
+                    <a href="{{ link.url }}" class="kw-footer__nav-link">
                       {{ link.title }}
+                      {%- if block.settings.popular_link == link.title -%}
+                        <span class="kw-footer__popular-badge">Populair</span>
+                      {%- endif -%}
                     </a>
                   </li>
                 {%- endfor -%}
@@ -88,32 +123,109 @@
         {%- endif -%}
       {%- endfor -%}
 
+      <!-- Rechts: mini nieuwsbrief kaartje -->
+      <div class="kw-footer__newsletter-col">
+        <div class="kw-footer__nl-card">
+          <!-- Mail icon met hartje -->
+          <div class="kw-footer__nl-icon" aria-hidden="true">
+            <span class="kw-footer__nl-icon-bg">
+              {{- 'icon-mail.svg' | inline_asset_content -}}
+            </span>
+            <span class="kw-footer__nl-icon-heart">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#e75480" stroke="none"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            </span>
+          </div>
+
+          <h3 class="kw-footer__nl-title">{{ section.settings.nl_title }}</h3>
+          <p class="kw-footer__nl-sub">{{ section.settings.nl_subtitle }}</p>
+
+          {%- form 'customer', id: 'FooterNewsletterForm' -%}
+            {%- if form.posted_successfully? -%}
+              <p class="kw-footer__nl-success">
+                {{- 'icon-check-circle.svg' | inline_asset_content -}}
+                Gelukt! Welkom bij de Kwispelclub.
+              </p>
+            {%- else -%}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <div class="kw-footer__nl-input-wrap">
+                <span class="kw-footer__nl-input-icon" aria-hidden="true">{{- 'icon-mail.svg' | inline_asset_content -}}</span>
+                <label for="FooterEmail" class="kw-footer__sr-only">E-mailadres</label>
+                <input type="email" id="FooterEmail" name="contact[email]"
+                       class="kw-footer__nl-input"
+                       placeholder="{{ section.settings.nl_placeholder }}"
+                       required autocomplete="email">
+              </div>
+              <button type="submit" class="kw-footer__nl-btn">
+                {{ section.settings.nl_btn }}
+                <span aria-hidden="true">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
+              </button>
+              <p class="kw-footer__nl-privacy">
+                {{- 'icon-lock.svg' | inline_asset_content -}}
+                {{ section.settings.nl_privacy }}
+              </p>
+            {%- endif -%}
+          {%- endform -%}
+
+          <!-- Decoratief hartje -->
+          <div class="kw-footer__nl-deco-heart" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFB8CD" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- Bottom bar ───────────────────────────────────────── -->
+  <!-- ═══ TRUST BALK ══════════════════════════════════════ -->
+  <div class="kw-footer__trust-bar">
+    <div class="kw-footer__trust-inner">
+
+      <div class="kw-footer__trust-items">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'trust_bar_item' -%}
+            <div class="kw-footer__trust-bar-item" {{ block.shopify_attributes }}>
+              <span class="kw-footer__trust-bar-icon kw-footer__trust-bar-icon--{{ block.settings.color }}" aria-hidden="true">
+                {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+              </span>
+              <div>
+                <strong>{{ block.settings.title }}</strong>
+                {%- if block.settings.subtitle != blank -%}
+                  <span>{{ block.settings.subtitle }}</span>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <!-- Verzending logos -->
+      <div class="kw-footer__shipping">
+        <span class="kw-footer__shipping-label">Wij verzenden met</span>
+        <div class="kw-footer__shipping-logos">
+          <span class="kw-footer__shipping-logo kw-footer__shipping-logo--postnl">PostNL</span>
+          <span class="kw-footer__shipping-logo kw-footer__shipping-logo--dhl">DHL</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ BOTTOM BAR ══════════════════════════════════════ -->
   <div class="kw-footer__bottom">
     <div class="kw-footer__bottom-inner">
 
-      <!-- Copyright -->
-      <p class="kw-footer__copy">
-        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}.
-        Alle rechten voorbehouden.
-      </p>
+      <p class="kw-footer__copy">&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}</p>
 
-      <!-- Legal links -->
       {%- if section.settings.legal_menu != blank -%}
         <nav class="kw-footer__legal" aria-label="Juridische links">
           {%- assign legal_nav = linklists[section.settings.legal_menu] -%}
           {%- for link in legal_nav.links -%}
-            <a href="{{ link.url }}" class="kw-footer__legal-link">
-              {{ link.title }}
-            </a>
+            <a href="{{ link.url }}" class="kw-footer__legal-link">{{ link.title }}</a>
+            {%- unless forloop.last -%}<span class="kw-footer__legal-sep" aria-hidden="true">|</span>{%- endunless -%}
           {%- endfor -%}
         </nav>
       {%- endif -%}
 
-      <!-- Betaalmethoden -->
       <div class="kw-footer__payments" aria-label="Betaalmethoden">
         {%- for type in shop.enabled_payment_types -%}
           {{ type | payment_type_svg_tag: class: 'kw-payment-icon' }}
@@ -126,15 +238,14 @@
 </footer>
 
 {% stylesheet %}
-/* ── Footer basis ───────────────────────────────────────── */
-.kw-footer {
-  background: #3d2209;
-  color: rgba(255,255,255,.65);
-  font-family: 'Karla', sans-serif;
-}
+.kw-footer__sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-/* ── Top sectie ─────────────────────────────────────────── */
-.kw-footer__top { padding: 60px 0 48px; }
+/* ── Hoofd footer ───────────────────────────────────────── */
+.kw-footer__main {
+  background: #F8EFDD;
+  padding: 56px 0 48px;
+  border-top: 3px dotted #DAC9A1;
+}
 .kw-footer__inner {
   max-width: 1280px; margin: 0 auto;
   padding: 0 20px;
@@ -142,110 +253,275 @@
   grid-template-columns: 1fr;
   gap: 40px;
 }
-@media(min-width: 768px) {
+@media(min-width: 900px) {
   .kw-footer__inner {
-    grid-template-columns: 1.6fr repeat(3, 1fr);
+    grid-template-columns: 1.4fr 1fr 1fr 1fr 1.3fr;
     gap: 32px;
     padding: 0 60px;
+    align-items: start;
   }
 }
 
 /* ── Brand kolom ────────────────────────────────────────── */
-.kw-footer__logo { display: inline-flex; text-decoration: none; margin-bottom: 16px; }
-.kw-footer__logo-img { height: 40px; width: auto; filter: brightness(0) invert(1); }
-.kw-footer__logo-text {
-  font-family: 'Lilita One', cursive;
-  font-size: 1.6rem; color: #F7A048;
-  display: flex; align-items: center; gap: 4px;
+.kw-footer__brand-col { display: flex; flex-direction: column; gap: 16px; }
+
+/* Logo + hond */
+.kw-footer__logo-wrap {
+  display: flex; align-items: center; gap: 12px;
 }
-.kw-footer__logo-paw svg { width: 18px; height: 18px; color: #F7A048; }
-.kw-footer__tagline {
-  font-size: .875rem; color: rgba(255,255,255,.4);
-  line-height: 1.65; max-width: 240px; margin-bottom: 20px;
+.kw-footer__dog {
+  width: 64px; height: 64px; flex-shrink: 0;
+}
+.kw-footer__logo-text-wrap {
+  display: flex; flex-direction: column; gap: 2px; position: relative;
+}
+.kw-footer__logo {
+  display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+}
+.kw-footer__logo-text {
+  font-family: 'Lilita One', cursive; font-size: 1.6rem; color: #3d2209; line-height: 1;
+}
+.kw-footer__logo-paw { display: flex; align-items: center; }
+.kw-footer__logo-paw svg { width: 20px; height: 20px; color: #F7A048; }
+.kw-footer__logo-heart {
+  position: absolute; top: -8px; right: -20px;
 }
 
-/* Social -->*/
-.kw-footer__social { display: flex; gap: 8px; margin-bottom: 24px; }
+/* Tagline */
+.kw-footer__tagline {
+  font-family: 'Karla', sans-serif;
+  font-size: .82rem; color: #A88259; line-height: 1.7; max-width: 240px;
+}
+
+/* Trust rijen */
+.kw-footer__trust-row {
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.kw-footer__trust-icon {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.kw-footer__trust-icon svg { width: 16px; height: 16px; }
+.kw-footer__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
+.kw-footer__trust-icon--pink   { background: #fff0f5; color: #e75480; }
+.kw-footer__trust-icon--orange { background: #fff0e4; color: #F7A048; }
+.kw-footer__trust-icon--yellow { background: #fffae0; color: #c49000; }
+.kw-footer__trust-row > div { display: flex; flex-direction: column; gap: 1px; }
+.kw-footer__trust-row strong {
+  font-family: 'Karla', sans-serif; font-size: .82rem; font-weight: 800; color: #3d2209;
+}
+.kw-footer__trust-row span {
+  font-family: 'Karla', sans-serif; font-size: .72rem; color: #A88259; line-height: 1.4;
+}
+
+/* Social */
+.kw-footer__social { display: flex; gap: 8px; margin-top: 4px; }
 .kw-footer__social-link {
-  width: 38px; height: 38px; border-radius: 50%;
-  background: rgba(255,255,255,.08);
-  color: rgba(255,255,255,.5);
+  width: 40px; height: 40px; border-radius: 50%;
+  background: #EDE2C9; color: #603A15;
   display: flex; align-items: center; justify-content: center;
-  text-decoration: none;
-  transition: background 160ms, color 160ms;
+  text-decoration: none; transition: background 160ms, color 160ms;
 }
 .kw-footer__social-link:hover { background: #F7A048; color: #fff; }
 .kw-footer__social-link svg { width: 18px; height: 18px; }
 
-/* Trust badges -->*/
-.kw-footer__trust-badges { display: flex; flex-direction: column; gap: 8px; }
-.kw-footer__trust-badge {
-  display: flex; align-items: center; gap: 8px;
-  font-size: .78rem; font-weight: 600;
-  color: rgba(255,255,255,.4);
-}
-.kw-footer__trust-badge svg { width: 14px; height: 14px; color: #66AA44; flex-shrink: 0; }
-
 /* ── Nav kolommen ───────────────────────────────────────── */
-.kw-footer__col { display: flex; flex-direction: column; gap: 16px; }
-.kw-footer__col-title {
-  font-family: 'Lilita One', cursive;
-  font-size: .78rem; font-weight: 700;
-  color: rgba(255,255,255,.9);
-  text-transform: uppercase; letter-spacing: .1em;
+.kw-footer__nav-col { display: flex; flex-direction: column; gap: 14px; }
+.kw-footer__nav-title {
+  font-family: 'Lilita One', cursive; font-size: .95rem; color: #3d2209;
 }
-.kw-footer__links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.kw-footer__link {
-  font-size: .875rem; color: rgba(255,255,255,.5);
-  text-decoration: none;
-  transition: color 140ms;
+.kw-footer__nav-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.kw-footer__nav-item { display: flex; align-items: center; gap: 6px; }
+.kw-footer__nav-link {
+  font-family: 'Karla', sans-serif; font-size: .85rem; color: #A88259;
+  text-decoration: none; transition: color 140ms;
+  display: flex; align-items: center; gap: 6px;
 }
-.kw-footer__link:hover { color: #F7A048; }
+.kw-footer__nav-link:hover { color: #F7A048; }
+.kw-footer__popular-badge {
+  font-family: 'Karla', sans-serif; font-size: .65rem; font-weight: 800;
+  background: #FFE5EE; color: #c0394b;
+  padding: 2px 8px; border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* ── Mini nieuwsbrief kaart ─────────────────────────────── */
+.kw-footer__newsletter-col { }
+.kw-footer__nl-card {
+  background: #fff;
+  border-radius: 20px; padding: 24px 20px;
+  border: 1.5px solid #EDE2C9;
+  display: flex; flex-direction: column; gap: 12px;
+  position: relative; overflow: visible;
+}
+
+/* Mail icon met hartje */
+.kw-footer__nl-icon {
+  position: relative; width: 52px; height: 52px; align-self: center;
+}
+.kw-footer__nl-icon-bg {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: #fff0e4; color: #F7A048;
+  display: flex; align-items: center; justify-content: center;
+}
+.kw-footer__nl-icon-bg svg { width: 22px; height: 22px; }
+.kw-footer__nl-icon-heart {
+  position: absolute; top: -4px; right: -4px;
+  background: #fff; border-radius: 50%;
+  width: 18px; height: 18px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.kw-footer__nl-title {
+  font-family: 'Lilita One', cursive; font-size: 1.1rem;
+  color: #3d2209; text-align: center; line-height: 1.2;
+}
+.kw-footer__nl-sub {
+  font-family: 'Karla', sans-serif; font-size: .78rem;
+  color: #A88259; line-height: 1.55; text-align: center;
+}
+
+.kw-footer__nl-input-wrap {
+  display: flex; align-items: center; gap: 8px;
+  background: #F8EFDD; border-radius: 999px;
+  padding: 10px 16px; border: 1.5px solid #DAC9A1;
+  transition: border-color 200ms;
+}
+.kw-footer__nl-input-wrap:focus-within { border-color: #66AA44; }
+.kw-footer__nl-input-icon { display: flex; color: #A88259; flex-shrink: 0; }
+.kw-footer__nl-input-icon svg { width: 14px; height: 14px; }
+.kw-footer__nl-input {
+  flex: 1; border: none; outline: none; background: transparent;
+  font-family: 'Karla', sans-serif; font-size: .82rem; color: #3d2209;
+  min-width: 0;
+}
+.kw-footer__nl-input::placeholder { color: #A88259; }
+
+.kw-footer__nl-btn {
+  width: 100%; padding: 12px;
+  background: #66AA44; color: #fff;
+  font-family: 'Lilita One', cursive; font-size: .95rem;
+  border: none; border-radius: 999px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  transition: background 160ms;
+}
+.kw-footer__nl-btn:hover { background: #4d8833; }
+.kw-footer__nl-btn svg { width: 16px; height: 16px; }
+
+.kw-footer__nl-privacy {
+  display: flex; align-items: center; gap: 5px;
+  font-family: 'Karla', sans-serif; font-size: .7rem; color: #A88259;
+  justify-content: center;
+}
+.kw-footer__nl-privacy svg { width: 11px; height: 11px; color: #A88259; flex-shrink: 0; }
+
+.kw-footer__nl-success {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Karla', sans-serif; font-size: .82rem;
+  color: #2d7a1a; text-align: center; justify-content: center;
+}
+.kw-footer__nl-success svg { width: 18px; height: 18px; color: #66AA44; flex-shrink: 0; }
+
+.kw-footer__nl-deco-heart {
+  position: absolute; bottom: -10px; right: 20px;
+}
+
+/* ── Trust balk ─────────────────────────────────────────── */
+.kw-footer__trust-bar {
+  background: #fff;
+  border-top: 1.5px solid #EDE2C9;
+}
+.kw-footer__trust-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 20px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+@media(min-width: 768px) { .kw-footer__trust-inner { padding: 0 60px; } }
+
+.kw-footer__trust-items {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  flex: 1;
+}
+@media(min-width: 768px) {
+  .kw-footer__trust-items { grid-template-columns: repeat(4, 1fr); }
+}
+.kw-footer__trust-bar-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 20px 16px; border-right: 1px solid #EDE2C9;
+}
+.kw-footer__trust-bar-item:last-child { border-right: none; }
+.kw-footer__trust-bar-icon {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.kw-footer__trust-bar-icon svg { width: 20px; height: 20px; }
+.kw-footer__trust-bar-icon--green  { background: #e8f5e2; color: #66AA44; }
+.kw-footer__trust-bar-icon--pink   { background: #fff0f5; color: #e75480; }
+.kw-footer__trust-bar-icon--orange { background: #fff0e4; color: #F7A048; }
+.kw-footer__trust-bar-icon--yellow { background: #fffae0; color: #c49000; }
+.kw-footer__trust-bar-item > div { display: flex; flex-direction: column; gap: 2px; }
+.kw-footer__trust-bar-item strong {
+  font-family: 'Karla', sans-serif; font-size: .85rem; font-weight: 800; color: #3d2209;
+}
+.kw-footer__trust-bar-item span {
+  font-family: 'Karla', sans-serif; font-size: .75rem; color: #A88259;
+}
+
+/* Verzending */
+.kw-footer__shipping {
+  display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0; padding: 20px 0;
+}
+.kw-footer__shipping-label {
+  font-family: 'Karla', sans-serif; font-size: .78rem; color: #A88259; white-space: nowrap;
+}
+.kw-footer__shipping-logos { display: flex; gap: 8px; align-items: center; }
+.kw-footer__shipping-logo {
+  height: 28px; padding: 0 12px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: Arial, sans-serif; font-weight: 900; font-size: .72rem;
+  letter-spacing: .05em;
+}
+.kw-footer__shipping-logo--postnl {
+  background: #FF6200; color: #fff;
+}
+.kw-footer__shipping-logo--dhl {
+  background: #FFCC00; color: #D40511;
+}
 
 /* ── Bottom bar ─────────────────────────────────────────── */
 .kw-footer__bottom {
-  border-top: 1px solid rgba(255,255,255,.08);
-  padding: 20px 0;
+  background: #F8EFDD;
+  border-top: 1px solid #EDE2C9;
+  padding: 16px 0;
 }
 .kw-footer__bottom-inner {
-  max-width: 1280px; margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 16px;
+  max-width: 1280px; margin: 0 auto; padding: 0 20px;
+  display: flex; flex-wrap: wrap;
+  align-items: center; gap: 12px;
   justify-content: space-between;
 }
 @media(min-width: 768px) { .kw-footer__bottom-inner { padding: 0 60px; } }
-
 .kw-footer__copy {
-  font-size: .75rem; color: rgba(255,255,255,.28);
+  font-family: 'Karla', sans-serif; font-size: .78rem; color: #A88259;
 }
-
 .kw-footer__legal {
-  display: flex; flex-wrap: wrap; gap: 16px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
 }
 .kw-footer__legal-link {
-  font-size: .75rem; color: rgba(255,255,255,.3);
+  font-family: 'Karla', sans-serif; font-size: .78rem; color: #A88259;
   text-decoration: none; transition: color 140ms;
 }
-.kw-footer__legal-link:hover { color: rgba(255,255,255,.7); }
-
+.kw-footer__legal-link:hover { color: #F7A048; }
+.kw-footer__legal-sep { color: #DAC9A1; font-size: .78rem; }
 .kw-footer__payments {
   display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
 }
 .kw-payment-icon {
-  height: 22px; width: auto;
-  opacity: 0.6; border-radius: 3px;
-  transition: opacity 140ms;
+  height: 24px; width: auto; border-radius: 4px;
+  opacity: .85; transition: opacity 140ms;
 }
 .kw-payment-icon:hover { opacity: 1; }
-
-/* ── Mobiel: kolommen uitklappen ────────────────────────── */
-@media(max-width: 767px) {
-  .kw-footer__top { padding: 40px 0 32px; }
-  .kw-footer__bottom-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
-}
 {% endstylesheet %}
 
 {% schema %}
@@ -254,27 +530,62 @@
   "tag": "footer",
   "blocks": [
     {
-      "type": "nav_column",
-      "name": "Navigatiekolom",
+      "type": "trust_item", "name": "Brand trust item",
       "settings": [
-        { "type": "text", "id": "title", "label": "Kolomtitel", "default": "Shop" },
-        { "type": "link_list", "id": "menu", "label": "Menu" }
+        { "type": "select", "id": "icon", "label": "Icoon", "default": "heart",
+          "options": [{"value":"heart","label":"Hart"},{"value":"shield","label":"Schild"},{"value":"truck","label":"Vrachtwagen"},{"value":"star","label":"Ster"},{"value":"paw","label":"Poot"},{"value":"gift","label":"Cadeau"}] },
+        { "type": "select", "id": "color", "label": "Kleur", "default": "green",
+          "options": [{"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},{"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"}] },
+        { "type": "text", "id": "title",    "label": "Titel",    "default": "Met liefde samengesteld" },
+        { "type": "text", "id": "subtitle", "label": "Subtitel", "default": "Elk item is zorgvuldig geselecteerd voor blije honden." }
+      ]
+    },
+    {
+      "type": "nav_column", "name": "Navigatiekolom",
+      "settings": [
+        { "type": "text",      "id": "title",        "label": "Kolomtitel",       "default": "Kwispelbox" },
+        { "type": "link_list", "id": "menu",         "label": "Menu" },
+        { "type": "text",      "id": "popular_link", "label": "Populair badge op link" }
+      ]
+    },
+    {
+      "type": "trust_bar_item", "name": "Trust balk item",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icoon", "default": "shield",
+          "options": [{"value":"shield","label":"Schild"},{"value":"gift","label":"Cadeau"},{"value":"truck","label":"Vrachtwagen"},{"value":"lock","label":"Slot"},{"value":"heart","label":"Hart"},{"value":"paw","label":"Poot"}] },
+        { "type": "select", "id": "color", "label": "Kleur", "default": "green",
+          "options": [{"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},{"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"}] },
+        { "type": "text", "id": "title",    "label": "Titel",    "default": "100% tevreden of geld terug" },
+        { "type": "text", "id": "subtitle", "label": "Subtitel", "default": "Niet tevreden? Wij lossen het op." }
       ]
     }
   ],
   "settings": [
-    { "type": "text",      "id": "tagline",        "label": "Tagline",           "default": "Meer kwispels per doos." },
-    { "type": "url",       "id": "instagram_url",  "label": "Instagram URL" },
-    { "type": "url",       "id": "tiktok_url",     "label": "TikTok URL" },
-    { "type": "url",       "id": "facebook_url",   "label": "Facebook URL" },
-    { "type": "link_list", "id": "legal_menu",     "label": "Juridisch menu" }
+    { "type": "text",      "id": "tagline",       "label": "Tagline",                "default": "Waar honden dol zijn op verrassingen. Elke Kwispelbox zit boordevol liefde, speelplezier en kwalitatieve producten." },
+    { "type": "url",       "id": "instagram_url", "label": "Instagram URL" },
+    { "type": "url",       "id": "facebook_url",  "label": "Facebook URL" },
+    { "type": "url",       "id": "tiktok_url",    "label": "TikTok URL" },
+    { "type": "text",      "id": "email_url",     "label": "E-mailadres" },
+    { "type": "text",      "id": "nl_title",      "label": "Newsletter titel",       "default": "Blijf op de hoogte!" },
+    { "type": "textarea",  "id": "nl_subtitle",   "label": "Newsletter subtitel",    "default": "Ontvang exclusieve kortingen, leuke nieuwtjes en handige tips voor jou en je hond." },
+    { "type": "text",      "id": "nl_placeholder","label": "Input placeholder",      "default": "Jouw e-mailadres" },
+    { "type": "text",      "id": "nl_btn",        "label": "Knoptekst",              "default": "Ja, ik meld me aan!" },
+    { "type": "text",      "id": "nl_privacy",    "label": "Privacy tekst",          "default": "Geen spam, alleen leuke kwispels." },
+    { "type": "link_list", "id": "legal_menu",    "label": "Juridisch menu" }
   ],
   "presets": [{
     "name": "Footer",
     "blocks": [
-      { "type": "nav_column", "settings": { "title": "Shop" } },
-      { "type": "nav_column", "settings": { "title": "Klantenservice" } },
-      { "type": "nav_column", "settings": { "title": "Over Kwispelbox" } }
+      {"type":"trust_item","settings":{"icon":"heart","color":"green","title":"Met liefde samengesteld","subtitle":"Elk item is zorgvuldig geselecteerd voor blije honden."}},
+      {"type":"trust_item","settings":{"icon":"shield","color":"pink","title":"Kwaliteit voorop","subtitle":"Duurzame en veilige producten waar wij 100% achter staan."}},
+      {"type":"trust_item","settings":{"icon":"truck","color":"orange","title":"Snelle levering","subtitle":"Voor 22:00 besteld, morgen in huis."}},
+      {"type":"nav_column","settings":{"title":"Kwispelbox","popular_link":"Onze boxen"}},
+      {"type":"nav_column","settings":{"title":"Klantenservice"}},
+      {"type":"nav_column","settings":{"title":"Over ons"}},
+      {"type":"trust_bar_item","settings":{"icon":"shield","color":"green","title":"100% tevreden of geld terug","subtitle":"Niet tevreden? Wij lossen het op."}},
+      {"type":"trust_bar_item","settings":{"icon":"gift","color":"pink","title":"Zorgvuldig ingepakt","subtitle":"Met liefde en aandacht voor elke hond."}},
+      {"type":"trust_bar_item","settings":{"icon":"truck","color":"orange","title":"Snelle levering","subtitle":"Voor 22:00 besteld, morgen in huis."}},
+      {"type":"trust_bar_item","settings":{"icon":"lock","color":"yellow","title":"Veilig betalen","subtitle":"Betaal veilig en vertrouwd."}}
     ]
   }]
 }
