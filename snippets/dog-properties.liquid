@@ -1,0 +1,71 @@
+{%- comment -%}
+  Kwispelbox hond-eigenschappen — line item properties
+  Gebruik: {% render 'dog-properties' %}
+{%- endcomment -%}
+
+<div class="dog-props">
+
+  <div class="dog-prop" data-prop="leeftijd">
+    <p class="dog-prop__label">
+      Leeftijd van je hond
+      <span class="dog-prop__req" aria-hidden="true">*</span>
+    </p>
+    <div class="dog-prop__pills" role="group">
+      {%- for optie in "Puppy,Volwassen,Senior" | split: "," -%}
+        <label class="dog-prop__pill">
+          <input type="radio" name="properties[Leeftijd van je hond]"
+                 value="{{ optie }}" class="dog-prop__radio" required>
+          <span>{{ optie }}</span>
+        </label>
+      {%- endfor -%}
+    </div>
+    <p class="dog-prop__error" hidden>Kies de leeftijd van je hond</p>
+  </div>
+
+  <div class="dog-prop" data-prop="formaat">
+    <p class="dog-prop__label">
+      Formaat van je hond
+      <span class="dog-prop__req" aria-hidden="true">*</span>
+    </p>
+    <div class="dog-prop__pills" role="group">
+      {%- for optie in "Klein,Middel,Groot" | split: "," -%}
+        <label class="dog-prop__pill">
+          <input type="radio" name="properties[Formaat van je hond]"
+                 value="{{ optie }}" class="dog-prop__radio" required>
+          <span>{{ optie }}</span>
+        </label>
+      {%- endfor -%}
+    </div>
+    <p class="dog-prop__error" hidden>Kies het formaat van je hond</p>
+  </div>
+
+</div>
+
+{% stylesheet %}
+.dog-props { display:flex; flex-direction:column; gap:16px; }
+.dog-prop__label {
+  font-family:'Karla',sans-serif; font-size:.82rem; font-weight:800;
+  color:#3d2209; margin-bottom:8px; display:flex; align-items:center; gap:3px;
+}
+.dog-prop__req { color:#F7A048; }
+.dog-prop__pills { display:flex; flex-wrap:wrap; gap:8px; }
+.dog-prop__radio { position:absolute; opacity:0; width:0; height:0; }
+.dog-prop__pill {
+  cursor:pointer; display:inline-flex;
+}
+.dog-prop__pill span {
+  display:inline-flex; align-items:center; padding:8px 18px;
+  border:2px solid #DAC9A1; border-radius:999px;
+  font-family:'Karla',sans-serif; font-size:.82rem; font-weight:700;
+  color:#A88259; background:#fff;
+  transition:all 150ms;
+}
+.dog-prop__pill:hover span { border-color:#66AA44; color:#66AA44; background:#e8f5e2; }
+.dog-prop__radio:checked + span { background:#66AA44; border-color:#66AA44; color:#fff; }
+.dog-prop__radio:focus-visible + span { outline:3px solid #66AA44; outline-offset:2px; }
+.dog-prop__error {
+  font-size:.72rem; color:#c0392b; margin-top:4px;
+  display:flex; align-items:center; gap:4px;
+}
+.dog-prop--invalid span { border-color:#e05252 !important; }
+{% endstylesheet %}

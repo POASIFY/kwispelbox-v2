@@ -1,0 +1,775 @@
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<div class="pb full-width" data-product-id="{{ product.id }}">
+
+  <!-- ══ ABOVE THE FOLD ══════════════════════════════════ -->
+  <div class="pb__fold">
+
+    <!-- Links: galerij ──────────────────────────────────── -->
+    <div class="pb__gallery">
+      <div class="pb__gallery-main" id="PbGalleryMain">
+
+        {%- if product.images.size > 0 -%}
+          {%- for image in product.images -%}
+            <div class="pb__slide{% if forloop.first %} is-active{% endif %}"
+                 id="PbSlide{{ forloop.index }}">
+              <img
+                src="{{ image | image_url: width: 900 }}"
+                srcset="{{ image | image_url: width: 500 }} 500w,
+                        {{ image | image_url: width: 900 }} 900w"
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                alt="{{ image.alt | default: product.title | escape }}"
+                width="900"
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                fetchpriority="{% if forloop.first %}high{% else %}auto{% endif %}"
+                class="pb__slide-img"
+              >
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          <div class="pb__slide is-active">
+            <div class="pb__slide-ph">
+              {{- 'icon-box.svg' | inline_asset_content -}}
+              <span>Voeg productfoto toe</span>
+            </div>
+          </div>
+        {%- endif -%}
+
+        <!-- Prev / Next pijlen -->
+        {%- if product.images.size > 1 -%}
+          <button class="pb__gallery-arrow pb__gallery-arrow--prev" id="PbPrev" type="button" aria-label="Vorige afbeelding">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <button class="pb__gallery-arrow pb__gallery-arrow--next" id="PbNext" type="button" aria-label="Volgende afbeelding">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        {%- endif -%}
+
+        <!-- Badge: Meest gekozen -->
+        {%- if section.settings.badge_text != blank -%}
+          <div class="pb__badge-popular">
+            {{- 'icon-star.svg' | inline_asset_content -}}
+            {{ section.settings.badge_text }}
+          </div>
+        {%- endif -%}
+
+        <!-- Cirkel badge: Geselecteerd met liefde -->
+        {%- if section.settings.circle_badge != blank -%}
+          <div class="pb__circle-badge" aria-hidden="true">
+            <span>{{ section.settings.circle_badge }}</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#e75480" stroke="none"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          </div>
+        {%- endif -%}
+
+      </div>
+
+      <!-- Thumbnails -->
+      {%- if product.images.size > 1 -%}
+        <div class="pb__thumbs">
+          {%- for image in product.images limit: 5 -%}
+            <button class="pb__thumb{% if forloop.first %} is-active{% endif %}"
+                    data-slide="{{ forloop.index }}" type="button"
+                    aria-label="Afbeelding {{ forloop.index }}">
+              <img src="{{ image | image_url: width: 160 }}"
+                   alt="{{ image.alt | default: product.title }}"
+                   width="160" loading="lazy">
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <!-- Rechts: product info ─────────────────────────────── -->
+    <div class="pb__info">
+
+      <!-- Eyebrow -->
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="pb__eyebrow">
+          {{ section.settings.eyebrow }}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFE071" stroke="none" aria-hidden="true"><path d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"/></svg>
+        </p>
+      {%- endif -%}
+
+      <!-- Titel -->
+      <h1 class="pb__title">{{ product.title }}</h1>
+
+      <!-- Sterren / reviews -->
+      <div class="pb__reviews">
+        <div class="pb__stars" aria-label="{{ section.settings.review_score }} sterren">
+          {%- for i in (1..5) -%}
+            {{- 'icon-star.svg' | inline_asset_content -}}
+          {%- endfor -%}
+        </div>
+        <span class="pb__review-score">{{ section.settings.review_score }}</span>
+        <span class="pb__review-count">({{ section.settings.review_count }} reviews)</span>
+      </div>
+
+      <!-- Samenvatting -->
+      {%- if product.metafields.custom.summary != blank -%}
+        <p class="pb__summary">{{ product.metafields.custom.summary }}</p>
+      {%- elsif product.description != blank -%}
+        <p class="pb__summary">{{ product.description | strip_html | truncate: 160 }}</p>
+      {%- endif -%}
+
+      <!-- Features checkmarks -->
+      {%- assign feature_blocks = section.blocks | where: 'type', 'feature' -%}
+      {%- if feature_blocks.size > 0 -%}
+        <ul class="pb__features">
+          {%- for block in feature_blocks -%}
+            <li {{ block.shopify_attributes }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#66AA44" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+              <span>{{ block.settings.text }}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      <!-- Abonnement selector -->
+      {%- if product.variants.size > 0 -%}
+        <div class="pb__subscription">
+          <div class="pb__sub-header">
+            <span class="pb__sub-title">Kies je abonnement</span>
+            {%- if section.settings.discount_label != blank -%}
+              <span class="pb__sub-savings">{{ section.settings.discount_label }}</span>
+            {%- endif -%}
+          </div>
+
+          <div class="pb__sub-options" id="PbVariants">
+            {%- for variant in product.variants -%}
+              <label class="pb__sub-option{% if variant == current_variant %} is-selected{% endif %}"
+                     data-variant-id="{{ variant.id }}"
+                     data-price="{{ variant.price }}">
+                <input
+                  type="radio"
+                  name="pb_variant"
+                  value="{{ variant.id }}"
+                  class="pb__sub-radio"
+                  {% if variant == current_variant %}checked{% endif %}
+                  {% unless variant.available %}disabled{% endunless %}
+                >
+                <span class="pb__sub-radio-dot" aria-hidden="true"></span>
+                <div class="pb__sub-option-body">
+                  <span class="pb__sub-option-name">
+                    {{ variant.title }}
+                    {%- if variant.metafields.custom.discount_badge != blank -%}
+                      <span class="pb__sub-discount-badge">{{ variant.metafields.custom.discount_badge }}</span>
+                    {%- endif -%}
+                  </span>
+                  {%- if variant.metafields.custom.subtitle != blank -%}
+                    <span class="pb__sub-option-sub">{{ variant.metafields.custom.subtitle }}</span>
+                  {%- endif -%}
+                </div>
+                <div class="pb__sub-option-price">
+                  <span class="pb__sub-price">{{ variant.price | money }}</span>
+                  <span class="pb__sub-per">/ per box</span>
+                </div>
+              </label>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      <!-- Dog properties -->
+      {%- render 'dog-properties' -%}
+
+      <!-- Cart form -->
+      <form id="PbForm" action="/cart/add" method="post">
+        <input type="hidden" name="id" id="PbVariantId" value="{{ current_variant.id }}">
+        <input type="hidden" name="quantity" value="1">
+
+        <button type="submit" class="pb__atc" id="PbAtc"
+                {% unless current_variant.available %}disabled{% endunless %}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          {%- if current_variant.available -%}
+            {{ section.settings.atc_label }}
+          {%- else -%}
+            Uitverkocht
+          {%- endif -%}
+        </button>
+      </form>
+
+      <!-- Delivery trust -->
+      <div class="pb__delivery">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#66AA44" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        {{ section.settings.delivery_text }}
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ TRUST STRIP ════════════════════════════════════ -->
+  {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
+  {%- if trust_blocks.size > 0 -%}
+    <div class="pb__trust-strip">
+      {%- for block in trust_blocks -%}
+        <div class="pb__trust-item" {{ block.shopify_attributes }}>
+          <span class="pb__trust-icon pb__trust-icon--{{ block.settings.color }}" aria-hidden="true">
+            {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+          </span>
+          <div>
+            <strong>{{ block.settings.title }}</strong>
+            {%- if block.settings.subtitle != blank -%}
+              <span>{{ block.settings.subtitle }}</span>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  <!-- ══ REVIEWS ════════════════════════════════════════ -->
+  {%- assign review_blocks = section.blocks | where: 'type', 'review' -%}
+  {%- if review_blocks.size > 0 -%}
+    <div class="pb__reviews-section">
+      <div class="pb__reviews-inner">
+
+        <h2 class="pb__reviews-title">
+          {{ section.settings.reviews_title }}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e75480" stroke-width="2" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        </h2>
+
+        <div class="pb__reviews-grid">
+          {%- for block in review_blocks -%}
+            <div class="pb__review-card" {{ block.shopify_attributes }}>
+              <div class="pb__review-top">
+                <div class="pb__review-avatar-wrap">
+                  {%- if block.settings.avatar != blank -%}
+                    <img src="{{ block.settings.avatar | image_url: width: 100 }}"
+                         alt="{{ block.settings.author }}" width="52" height="52"
+                         loading="lazy" class="pb__review-avatar">
+                  {%- else -%}
+                    <div class="pb__review-avatar-ph">{{ block.settings.author | slice: 0, 1 | upcase }}</div>
+                  {%- endif -%}
+                </div>
+                <div>
+                  <strong class="pb__review-author">{{ block.settings.author }}</strong>
+                  <div class="pb__review-stars">
+                    {%- for i in (1..block.settings.stars) -%}
+                      {{- 'icon-star.svg' | inline_asset_content -}}
+                    {%- endfor -%}
+                  </div>
+                </div>
+              </div>
+              <p class="pb__review-text">{{ block.settings.text }}</p>
+              {%- if block.settings.dog_name != blank -%}
+                <p class="pb__review-dog">
+                  {{- 'icon-paw.svg' | inline_asset_content -}}
+                  {{ block.settings.dog_name }}
+                </p>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+
+          <!-- Sociale bewijs teller -->
+          <div class="pb__review-cta">
+            <span class="pb__review-cta-icon" aria-hidden="true">
+              {{- 'icon-paw.svg' | inline_asset_content -}}
+            </span>
+            <strong>{{ section.settings.social_proof_count }}</strong>
+            <p>{{ section.settings.social_proof_text }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+</div>
+
+{% stylesheet %}
+/* ══ Wrapper ══════════════════════════════════════════════ */
+.pb { background: #fff; }
+
+/* ══ Above the fold grid ══════════════════════════════════ */
+.pb__fold {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 20px 48px;
+}
+@media(min-width: 1024px) {
+  .pb__fold {
+    grid-template-columns: 1.1fr 1fr;
+    gap: 56px;
+    padding: 48px 60px;
+    align-items: start;
+  }
+}
+
+/* ══ Gallery ══════════════════════════════════════════════ */
+.pb__gallery-main {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #F8EFDD;
+  aspect-ratio: 1;
+}
+.pb__slide { display: none; width: 100%; height: 100%; }
+.pb__slide.is-active { display: block; }
+.pb__slide-img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+.pb__slide-ph {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px; color: #A88259;
+}
+.pb__slide-ph svg { width: 56px; height: 56px; }
+
+/* Pijlen */
+.pb__gallery-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,.92); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #3d2209; box-shadow: 0 2px 12px rgba(96,58,21,.15);
+  transition: all 160ms; z-index: 3;
+}
+.pb__gallery-arrow:hover { background: #fff; box-shadow: 0 4px 20px rgba(96,58,21,.2); }
+.pb__gallery-arrow--prev { left: 12px; }
+.pb__gallery-arrow--next { right: 12px; }
+
+/* Badges op foto */
+.pb__badge-popular {
+  position: absolute; top: 14px; left: 14px;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #66AA44; color: #fff;
+  font-family: 'Karla', sans-serif; font-size: .78rem; font-weight: 800;
+  padding: 7px 14px; border-radius: 999px;
+  box-shadow: 0 3px 10px rgba(102,170,68,.3); z-index: 2;
+}
+.pb__badge-popular svg { width: 13px; height: 13px; color: #FFE071; flex-shrink: 0; }
+
+.pb__circle-badge {
+  position: absolute; top: 14px; right: 14px;
+  width: 88px; height: 88px;
+  background: #fff; border-radius: 50%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; gap: 4px; padding: 12px;
+  box-shadow: 0 4px 20px rgba(96,58,21,.15); z-index: 2;
+}
+.pb__circle-badge span {
+  font-family: 'Lilita One', cursive;
+  font-size: .7rem; color: #3d2209; line-height: 1.2;
+}
+
+/* Thumbnails */
+.pb__thumbs {
+  display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;
+}
+.pb__thumb {
+  width: 80px; height: 80px;
+  border-radius: 12px; overflow: hidden;
+  border: 2.5px solid #EDE2C9;
+  cursor: pointer; padding: 0; background: none;
+  transition: border-color 150ms, transform 200ms;
+}
+.pb__thumb.is-active { border-color: #66AA44; }
+.pb__thumb:hover { transform: scale(1.05); }
+.pb__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ══ Product info ═════════════════════════════════════════ */
+.pb__info {
+  display: flex; flex-direction: column; gap: 18px;
+}
+@media(min-width: 1024px) {
+  .pb__info { position: sticky; top: 20px; }
+}
+
+.pb__eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Karla', sans-serif;
+  font-size: .75rem; font-weight: 800;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: #F7A048;
+}
+.pb__eyebrow svg { flex-shrink: 0; }
+
+.pb__title {
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  color: #3d2209; line-height: 1.05; margin: 0;
+}
+
+/* Sterren */
+.pb__reviews {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.pb__stars { display: flex; gap: 2px; color: #F7A048; }
+.pb__stars svg { width: 18px; height: 18px; }
+.pb__review-score {
+  font-family: 'Karla', sans-serif; font-weight: 800;
+  font-size: .88rem; color: #3d2209;
+}
+.pb__review-count {
+  font-family: 'Karla', sans-serif; font-size: .82rem; color: #A88259;
+}
+
+.pb__summary {
+  font-family: 'Karla', sans-serif;
+  font-size: .9rem; color: #A88259; line-height: 1.75;
+}
+
+/* Features */
+.pb__features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.pb__features li {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Karla', sans-serif; font-size: .88rem;
+  font-weight: 700; color: #3d2209;
+}
+.pb__features svg { flex-shrink: 0; }
+
+/* ══ Abonnement selector ══════════════════════════════════ */
+.pb__subscription { display: flex; flex-direction: column; gap: 12px; }
+
+.pb__sub-header {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 8px;
+}
+.pb__sub-title {
+  font-family: 'Lilita One', cursive;
+  font-size: 1rem; color: #3d2209;
+}
+.pb__sub-savings {
+  font-family: 'Karla', sans-serif; font-size: .72rem; font-weight: 800;
+  background: #FFE5EE; color: #c0394b;
+  padding: 4px 10px; border-radius: 999px;
+  text-transform: uppercase; letter-spacing: .05em;
+}
+
+.pb__sub-options { display: flex; flex-direction: column; gap: 8px; }
+
+.pb__sub-option {
+  display: flex; align-items: center; gap: 12px;
+  border: 2px solid #EDE2C9; border-radius: 14px;
+  padding: 14px 16px; cursor: pointer;
+  transition: border-color 160ms, background 160ms;
+  position: relative;
+}
+.pb__sub-option:hover { border-color: #66AA44; }
+.pb__sub-option.is-selected { border-color: #66AA44; background: #f6fdf2; }
+
+.pb__sub-radio { position: absolute; opacity: 0; width: 0; height: 0; }
+.pb__sub-radio-dot {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2.5px solid #DAC9A1; flex-shrink: 0;
+  transition: all 160ms;
+  display: flex; align-items: center; justify-content: center;
+}
+.pb__sub-option.is-selected .pb__sub-radio-dot {
+  border-color: #66AA44; background: #66AA44;
+}
+.pb__sub-option.is-selected .pb__sub-radio-dot::after {
+  content: '';
+  width: 8px; height: 8px; border-radius: 50%; background: #fff;
+}
+
+.pb__sub-option-body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.pb__sub-option-name {
+  font-family: 'Karla', sans-serif; font-size: .88rem;
+  font-weight: 800; color: #3d2209;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.pb__sub-discount-badge {
+  font-size: .68rem; font-weight: 800;
+  background: #FFE5EE; color: #c0394b;
+  padding: 2px 8px; border-radius: 999px;
+}
+.pb__sub-option-sub {
+  font-family: 'Karla', sans-serif; font-size: .75rem; color: #A88259;
+}
+
+.pb__sub-option-price {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 1px; flex-shrink: 0;
+}
+.pb__sub-price {
+  font-family: 'Lilita One', cursive; font-size: 1.1rem; color: #3d2209;
+}
+.pb__sub-per {
+  font-family: 'Karla', sans-serif; font-size: .68rem; color: #A88259;
+}
+
+/* ══ ATC knop ═════════════════════════════════════════════ */
+.pb__atc {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 18px 24px;
+  background: #66AA44; color: #fff;
+  font-family: 'Lilita One', cursive; font-size: 1.1rem;
+  border: none; border-radius: 16px; cursor: pointer;
+  box-shadow: 0 6px 24px rgba(102,170,68,.35);
+  transition: background 160ms, transform 200ms cubic-bezier(.34,1.56,.64,1), box-shadow 160ms;
+}
+.pb__atc:hover { background: #4d8833; transform: translateY(-2px); box-shadow: 0 10px 32px rgba(102,170,68,.4); }
+.pb__atc:disabled { background: #DAC9A1; cursor: not-allowed; box-shadow: none; transform: none; }
+.pb__atc svg { flex-shrink: 0; }
+
+/* Delivery strip */
+.pb__delivery {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: 'Karla', sans-serif; font-size: .82rem; font-weight: 700;
+  color: #66AA44; background: #e8f5e2;
+  border: 1.5px solid #c8e6c0; border-radius: 10px;
+  padding: 10px 16px;
+}
+.pb__delivery svg { flex-shrink: 0; }
+
+/* ══ Trust strip ══════════════════════════════════════════ */
+.pb__trust-strip {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  border-top: 1.5px solid #EDE2C9;
+  background: #F8EFDD;
+}
+@media(min-width: 768px) { .pb__trust-strip { grid-template-columns: repeat(4, 1fr); } }
+
+.pb__trust-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 20px 16px; border-right: 1px solid #EDE2C9;
+}
+.pb__trust-item:nth-child(2n) { border-right: none; }
+.pb__trust-item:last-child    { border-right: none; }
+@media(min-width: 768px) {
+  .pb__trust-item:nth-child(2n) { border-right: 1px solid #EDE2C9; }
+  .pb__trust-item:last-child    { border-right: none; }
+}
+.pb__trust-icon {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.pb__trust-icon svg { width: 20px; height: 20px; }
+.pb__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
+.pb__trust-icon--pink   { background: #fff0f5; color: #e75480; }
+.pb__trust-icon--orange { background: #fff0e4; color: #F7A048; }
+.pb__trust-icon--yellow { background: #fffae0; color: #c49000; }
+.pb__trust-item > div { display: flex; flex-direction: column; gap: 2px; }
+.pb__trust-item strong { font-family: 'Karla', sans-serif; font-size: .82rem; font-weight: 800; color: #3d2209; }
+.pb__trust-item span   { font-family: 'Karla', sans-serif; font-size: .72rem; color: #A88259; }
+
+/* ══ Reviews sectie ═══════════════════════════════════════ */
+.pb__reviews-section { background: #F8EFDD; padding: 56px 0; }
+.pb__reviews-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 20px;
+}
+@media(min-width: 768px) { .pb__reviews-inner { padding: 0 60px; } }
+
+.pb__reviews-title {
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  color: #3d2209; margin-bottom: 28px;
+  display: flex; align-items: center; gap: 10px;
+}
+
+.pb__reviews-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media(min-width: 640px) { .pb__reviews-grid { grid-template-columns: repeat(2, 1fr); } }
+@media(min-width: 1024px) { .pb__reviews-grid { grid-template-columns: repeat(3, 1fr) 1fr; } }
+
+.pb__review-card {
+  background: #fff; border-radius: 20px;
+  padding: 20px; display: flex; flex-direction: column; gap: 12px;
+  border: 1.5px solid #EDE2C9;
+  box-shadow: 0 2px 12px rgba(96,58,21,.06);
+  transition: transform 220ms cubic-bezier(.34,1.56,.64,1);
+}
+.pb__review-card:hover { transform: translateY(-4px); }
+
+.pb__review-top { display: flex; align-items: flex-start; gap: 12px; }
+.pb__review-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  object-fit: cover; flex-shrink: 0;
+  border: 2.5px solid #EDE2C9;
+}
+.pb__review-avatar-ph {
+  width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+  background: #e8f5e2; color: #66AA44;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Lilita One', cursive; font-size: 1.2rem;
+}
+.pb__review-author {
+  display: block; font-family: 'Karla', sans-serif;
+  font-size: .88rem; font-weight: 800; color: #3d2209;
+}
+.pb__review-stars { display: flex; gap: 2px; color: #F7A048; margin-top: 3px; }
+.pb__review-stars svg { width: 14px; height: 14px; }
+
+.pb__review-text {
+  font-family: 'Karla', sans-serif;
+  font-size: .82rem; color: #A88259; line-height: 1.7;
+  flex: 1;
+}
+.pb__review-dog {
+  display: flex; align-items: center; gap: 5px;
+  font-family: 'Karla', sans-serif; font-size: .72rem;
+  color: #A88259; font-style: italic;
+}
+.pb__review-dog svg { width: 12px; height: 12px; color: #F7A048; flex-shrink: 0; }
+
+/* Social proof tegel */
+.pb__review-cta {
+  background: #FFE5EE; border-radius: 20px;
+  padding: 28px 20px;
+  display: flex; flex-direction: column;
+  align-items: flex-start; justify-content: center;
+  gap: 8px;
+}
+.pb__review-cta-icon svg { width: 28px; height: 28px; color: #e75480; }
+.pb__review-cta strong {
+  font-family: 'Lilita One', cursive; font-size: 1.5rem; color: #e75480;
+  line-height: 1;
+}
+.pb__review-cta p {
+  font-family: 'Karla', sans-serif; font-size: .78rem; color: #c0394b;
+  line-height: 1.4;
+}
+{% endstylesheet %}
+
+<script>
+(function() {
+  // ── Gallery ─────────────────────────────────────────────
+  var slides = document.querySelectorAll('.pb__slide');
+  var thumbs = document.querySelectorAll('.pb__thumb');
+  var currentIdx = 1;
+
+  function goTo(idx) {
+    currentIdx = Math.max(1, Math.min(idx, slides.length));
+    slides.forEach(function(s) { s.classList.remove('is-active'); });
+    thumbs.forEach(function(t) { t.classList.remove('is-active'); });
+    var slide = document.getElementById('PbSlide' + currentIdx);
+    if (slide) slide.classList.add('is-active');
+    if (thumbs[currentIdx - 1]) thumbs[currentIdx - 1].classList.add('is-active');
+  }
+
+  thumbs.forEach(function(btn) {
+    btn.addEventListener('click', function() { goTo(parseInt(this.dataset.slide)); });
+  });
+
+  var prev = document.getElementById('PbPrev');
+  var next = document.getElementById('PbNext');
+  if (prev) prev.addEventListener('click', function() { goTo(currentIdx - 1); });
+  if (next) next.addEventListener('click', function() { goTo(currentIdx + 1); });
+
+  // ── Variant selector ────────────────────────────────────
+  var options = document.querySelectorAll('.pb__sub-option');
+  var variantInput = document.getElementById('PbVariantId');
+
+  options.forEach(function(opt) {
+    opt.addEventListener('click', function() {
+      options.forEach(function(o) { o.classList.remove('is-selected'); });
+      this.classList.add('is-selected');
+      var id = this.dataset.variantId;
+      if (variantInput) variantInput.value = id;
+      var radio = this.querySelector('.pb__sub-radio');
+      if (radio) radio.checked = true;
+    });
+  });
+
+  // ── Dog properties validatie ────────────────────────────
+  var form = document.getElementById('PbForm');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      var valid = true;
+      ['leeftijd', 'formaat'].forEach(function(prop) {
+        var group = document.querySelector('[data-prop="' + prop + '"]');
+        if (!group) return;
+        var checked = group.querySelector('input:checked');
+        var error   = group.querySelector('.dog-prop__error');
+        if (!checked) {
+          valid = false;
+          group.classList.add('dog-prop--invalid');
+          if (error) error.hidden = false;
+        } else {
+          group.classList.remove('dog-prop--invalid');
+          if (error) error.hidden = true;
+        }
+      });
+      if (!valid) {
+        e.preventDefault();
+        var first = document.querySelector('.dog-prop--invalid');
+        if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  }
+
+  document.querySelectorAll('.dog-prop__radio').forEach(function(r) {
+    r.addEventListener('change', function() {
+      var g = this.closest('[data-prop]');
+      if (g) {
+        g.classList.remove('dog-prop--invalid');
+        var e = g.querySelector('.dog-prop__error');
+        if (e) e.hidden = true;
+      }
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Productpagina box",
+  "tag": "div",
+  "blocks": [
+    {
+      "type": "feature", "name": "Kenmerk",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Tekst", "default": "5 speeltjes (extra sterk & veilig)" }
+      ]
+    },
+    {
+      "type": "trust", "name": "Trust item",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icoon", "default": "heart",
+          "options": [{"value":"heart","label":"Hart"},{"value":"shield","label":"Schild"},{"value":"truck","label":"Vrachtwagen"},{"value":"lock","label":"Slot"},{"value":"gift","label":"Cadeau"},{"value":"paw","label":"Poot"},{"value":"award","label":"Award"}] },
+        { "type": "select", "id": "color", "label": "Kleur", "default": "green",
+          "options": [{"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},{"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"}] },
+        { "type": "text", "id": "title",    "label": "Titel",    "default": "Met liefde samengesteld" },
+        { "type": "text", "id": "subtitle", "label": "Subtitel", "default": "Elk item zorgvuldig geselecteerd." }
+      ]
+    },
+    {
+      "type": "review", "name": "Review",
+      "settings": [
+        { "type": "image_picker", "id": "avatar",    "label": "Profielfoto" },
+        { "type": "text",         "id": "author",    "label": "Naam", "default": "Lotte & Max" },
+        { "type": "range",        "id": "stars",     "label": "Sterren", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "textarea",     "id": "text",      "label": "Review tekst", "default": "Elke keer weer een feestje als de Kwispelbox binnenkomt. Max is er dol op!" },
+        { "type": "text",         "id": "dog_name",  "label": "Naam + ras hond", "default": "Max – Golden Retriever" }
+      ]
+    }
+  ],
+  "settings": [
+    { "type": "text",     "id": "eyebrow",             "label": "Eyebrow",                   "default": "Onze populairste box" },
+    { "type": "text",     "id": "badge_text",          "label": "Foto badge (Meest gekozen)", "default": "Meest gekozen" },
+    { "type": "text",     "id": "circle_badge",        "label": "Cirkel badge op foto",       "default": "Geselecteerd met liefde" },
+    { "type": "text",     "id": "review_score",        "label": "Review score",               "default": "4,8/5" },
+    { "type": "text",     "id": "review_count",        "label": "Aantal reviews",             "default": "1.248" },
+    { "type": "text",     "id": "discount_label",      "label": "Korting badge",              "default": "Bespaar tot 15%" },
+    { "type": "text",     "id": "atc_label",           "label": "Knoptekst",                  "default": "Toevoegen aan winkelwagen" },
+    { "type": "text",     "id": "delivery_text",       "label": "Bezorging tekst",            "default": "Voor 22:00 besteld, morgen in huis" },
+    { "type": "text",     "id": "reviews_title",       "label": "Reviews sectie titel",       "default": "Wat andere hondenbaasjes zeggen" },
+    { "type": "text",     "id": "social_proof_count",  "label": "Sociale bewijs getal",       "default": "Meer dan 1.200+ blije hondenfans" },
+    { "type": "text",     "id": "social_proof_text",   "label": "Sociale bewijs subtekst",    "default": "en dat worden er elke dag meer!" }
+  ],
+  "presets": [{
+    "name": "Productpagina box",
+    "blocks": [
+      {"type":"feature","settings":{"text":"5 speeltjes (extra sterk & veilig)"}},
+      {"type":"feature","settings":{"text":"1 natuurlijke snack"}},
+      {"type":"feature","settings":{"text":"Leuke extra's & seizoensverrassingen"}},
+      {"type":"feature","settings":{"text":"Geschikt voor alle hondenrassen"}},
+      {"type":"trust","settings":{"icon":"heart","color":"pink","title":"Met liefde samengesteld","subtitle":"Elk item zorgvuldig geselecteerd."}},
+      {"type":"trust","settings":{"icon":"award","color":"orange","title":"Kwaliteit voorop","subtitle":"Duurzame en veilige producten."}},
+      {"type":"trust","settings":{"icon":"truck","color":"green","title":"Snelle levering","subtitle":"Voor 22:00 besteld, morgen in huis."}},
+      {"type":"trust","settings":{"icon":"lock","color":"yellow","title":"Veilig betalen","subtitle":"Betaal veilig en vertrouwd."}},
+      {"type":"review","settings":{"author":"Lotte & Max","stars":5,"text":"Elke keer weer een feestje als de Kwispelbox binnenkomt. Max is er dol op!","dog_name":"Max – Golden Retriever"}},
+      {"type":"review","settings":{"author":"Sanne & Bo","stars":5,"text":"Super leuke speeltjes en goede kwaliteit. Echt een aanrader!","dog_name":"Bo – Labrador"}},
+      {"type":"review","settings":{"author":"Emma & Teddy","stars":5,"text":"Teddy speelt nergens anders meer mee. Vooral het knuffeltje is favoriet!","dog_name":"Teddy – Cockapoo"}}
+    ]
+  }]
+}
+{% endschema %}
