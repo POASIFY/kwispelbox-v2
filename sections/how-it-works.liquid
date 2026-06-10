@@ -59,9 +59,15 @@
             {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
           </div>
 
+          <!-- Mobiel icon (zichtbaar naast tekst op mobiel) -->
+          <div class="hiw__mob-icon hiw__mob-icon--{{ block.settings.color }}" aria-hidden="true">
+            {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+          </div>
+
           <!-- Tekst -->
           <div class="hiw__text">
             <h3 class="hiw__step-title hiw__step-title--{{ block.settings.color }}">
+              <span class="hiw__step-num-inline">{{ forloop.index }}.</span>
               {{ block.settings.title }}
             </h3>
             <p class="hiw__step-desc">{{ block.settings.description }}</p>
@@ -109,6 +115,26 @@
           </div>
         {%- endif -%}
 
+      </div>
+    </div>
+  {%- endif -%}
+
+  <!-- Bottom tagline strip ──────────────────────────────── -->
+  {%- if section.settings.tagline_title != blank -%}
+    <div class="hiw__tagline">
+      <span class="hiw__tagline-icon" aria-hidden="true">
+        {{- 'icon-sparkles.svg' | inline_asset_content -}}
+      </span>
+      <div class="hiw__tagline-text">
+        <strong>{{ section.settings.tagline_title }}</strong>
+        <p>
+          {{ section.settings.tagline_desc_prefix }}
+          <span class="hiw__tagline-accent">{{ section.settings.tagline_desc_accent }}</span>
+          {{ section.settings.tagline_desc_suffix }}
+        </p>
+      </div>
+      <div class="hiw__tagline-btn" aria-hidden="true">
+        {{- 'icon-heart.svg' | inline_asset_content -}}
       </div>
     </div>
   {%- endif -%}
@@ -360,6 +386,193 @@
 .hiw__trust-text span {
   font-size: .75rem; color: #A88259;
 }
+
+/* ══════════════════════════════════════════════════════════
+   MOBIELE LAYOUT — how-it-works
+══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+
+  .hiw { padding: 48px 0 0; }
+
+  /* Header */
+  .hiw__header { margin-bottom: 32px; }
+  .hiw__title  { font-size: clamp(2rem, 8vw, 2.8rem); }
+
+  /* Stappen: verticaal gestapeld, geen horizontale scroll */
+  .hiw__steps-wrap {
+    overflow-x: visible;
+    padding: 0 16px 0;
+  }
+  .hiw__steps {
+    display: flex;
+    flex-direction: column;
+    min-width: unset;
+    padding: 0;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  /* Stap kaart */
+  .hiw__step {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    align-items: start;
+    background: #fff;
+    border-radius: 20px;
+    border: 1.5px solid #EDE2C9;
+    overflow: hidden;
+    min-width: unset;
+    width: 100%;
+    text-align: left;
+    padding: 0;
+    margin-bottom: 0;
+  }
+
+  /* Verberg desktop elementen */
+  .hiw__step-top { display: none; }
+  .hiw__icon     { display: none; }
+
+  /* Linker kolom: icon-cirkel + tekst */
+  .hiw__text {
+    grid-column: 1;
+    grid-row: 1;
+    padding: 20px 16px 20px 20px;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: flex-start;
+  }
+
+  /* Icon boven de tekst in linker kolom */
+  .hiw__text::before {
+    content: '';
+    display: none;
+  }
+
+  /* Mobiel icon: toon als eerste element in text kolom */
+  .hiw__mob-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+  }
+  .hiw__mob-icon svg { width: 26px; height: 26px; }
+  .hiw__mob-icon { display: none; }
+  @media(max-width:767px){
+    .hiw__mob-icon { display: flex; }
+    .hiw__mob-icon--green  { background: #e8f5e2; color: #66AA44; }
+    .hiw__mob-icon--orange { background: #fff0e4; color: #F7A048; }
+    .hiw__mob-icon--pink   { background: #fff0f5; color: #e75480; }
+    .hiw__mob-icon--yellow { background: #fffae0; color: #c49000; }
+  }
+
+  /* Inline nummer in titel */
+  .hiw__step-num-inline {
+    display: inline;
+    margin-right: 2px;
+  }
+
+  .hiw__step-title {
+    font-size: 1.05rem;
+    line-height: 1.25;
+  }
+  .hiw__step-desc {
+    font-size: .8rem;
+    line-height: 1.55;
+  }
+
+  /* Rechter kolom: foto */
+  .hiw__img-wrap {
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 180px;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+  }
+  .hiw__img {
+    width: 100%; height: 100%;
+    min-height: 180px;
+    object-fit: cover;
+    border-radius: 0;
+  }
+  .hiw__img-ph {
+    min-height: 180px;
+    background: #EDE2C9;
+    border-radius: 0;
+  }
+
+  /* Connector tussen stappen */
+  .hiw__connector-mob {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 8px 0 8px 28px;
+    gap: 3px;
+  }
+  .hiw__connector-mob-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: #DAC9A1;
+    margin-left: 10px;
+  }
+  .hiw__connector-mob-paw {
+    display: flex; align-items: center;
+    color: #DAC9A1;
+  }
+  .hiw__connector-mob-paw svg { width: 20px; height: 20px; }
+  .hiw__connector-mob-dot2 {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: #DAC9A1;
+    margin-left: 10px;
+  }
+}
+
+/* ── Bottom tagline strip ───────────────────────────────── */
+.hiw__tagline {
+  display: none;
+  align-items: center;
+  gap: 14px;
+  padding: 24px 20px;
+  background: #FFF0F5;
+  border-top: 1.5px solid #FFD6E3;
+  margin-top: 24px;
+}
+@media(max-width: 767px) { .hiw__tagline { display: flex; } }
+
+.hiw__tagline-icon {
+  width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: #c0394b;
+}
+.hiw__tagline-icon svg { width: 28px; height: 28px; }
+
+.hiw__tagline-text { flex: 1; }
+.hiw__tagline-text strong {
+  display: block;
+  font-family: 'Lilita One', cursive;
+  font-size: 1rem; color: #3d2209; margin-bottom: 4px;
+}
+.hiw__tagline-text p {
+  font-family: 'Karla', sans-serif;
+  font-size: .82rem; color: #A88259; line-height: 1.5; margin: 0;
+}
+.hiw__tagline-accent { color: #e75480; font-weight: 700; }
+
+.hiw__tagline-btn {
+  width: 52px; height: 52px;
+  background: #FFB8CD;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: #c0394b;
+}
+.hiw__tagline-btn svg { width: 22px; height: 22px; }
 {% endstylesheet %}
 
 {% schema %}
@@ -423,7 +636,11 @@
     {"type":"text",        "id":"subtitle_prefix",  "label":"Subtitel prefix",  "default":"Van keuze tot kwispelgeluk in "},
     {"type":"text",        "id":"subtitle_accent",  "label":"Subtitel accent",  "default":"4 simpele stappen."},
     {"type":"image_picker","id":"trust_img_left",   "label":"Foto links (trust)"},
-    {"type":"image_picker","id":"trust_img_right",  "label":"Foto rechts (trust)"}
+    {"type":"image_picker","id":"trust_img_right",  "label":"Foto rechts (trust)"},
+    {"type":"text","id":"tagline_title","label":"Tagline titel","default":"Elke box = een nieuw avontuur"},
+    {"type":"text","id":"tagline_desc_prefix","label":"Tagline tekst (begin)","default":"Elke maand een unieke verrassing, met zorg samengesteld voor jouw "},
+    {"type":"text","id":"tagline_desc_accent","label":"Tagline tekst (accent)","default":"beste vriend."},
+    {"type":"text","id":"tagline_desc_suffix","label":"Tagline tekst (einde)"}
   ],
   "presets": [{
     "name": "Hoe werkt het",
