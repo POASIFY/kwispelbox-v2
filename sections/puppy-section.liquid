@@ -158,25 +158,23 @@
 
 {% stylesheet %}
 /* ── Sectie ─────────────────────────────────────────────── */
-.puppy {
-  background: #FFF5F8;
-  overflow: hidden;
-}
+.puppy { background: #FFF5F8; overflow: hidden; }
 
-/* ── Hoofd blok ─────────────────────────────────────────── */
+/* ── Hoofd blok: grote foto links + content rechts ──────── */
 .puppy__main {
   display: grid;
   grid-template-columns: 1fr;
 }
 @media(min-width: 900px) {
-  .puppy__main { grid-template-columns: 1fr 1fr; min-height: 640px; }
+  .puppy__main { grid-template-columns: 1fr 1fr; min-height: 600px; }
 }
 
 /* ── Grote afbeelding links ─────────────────────────────── */
 .puppy__hero-img-wrap {
   position: relative;
   overflow: hidden;
-  min-height: 300px;
+  min-height: 340px;
+  background: #FFE5EE;
 }
 .puppy__hero-img {
   width: 100%; height: 100%;
@@ -184,47 +182,43 @@
   display: block;
 }
 @media(min-width: 900px) {
-  .puppy__hero-img {
-    border-radius: 0 40px 40px 0;
-  }
+  .puppy__hero-img-wrap { border-radius: 0 40px 40px 0; min-height: 100%; }
 }
 .puppy__hero-ph {
-  width: 100%; height: 100%; min-height: 300px;
-  background: #FFE5EE;
+  width: 100%; height: 100%; min-height: 340px;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  gap: 12px; color: #FFB8CD;
+  gap: 12px; color: #FFB8CD; font-size: .875rem;
 }
+.puppy__hero-ph svg { width: 40px; height: 40px; }
 
 /* ── Content rechts ─────────────────────────────────────── */
 .puppy__content {
   padding: 48px 24px;
-  display: flex; flex-direction: column; gap: 20px;
-  justify-content: center;
+  display: flex; flex-direction: column;
+  gap: 20px; justify-content: center;
 }
-@media(min-width: 900px) {
-  .puppy__content { padding: 64px 60px 64px 48px; }
-}
+@media(min-width: 900px) { .puppy__content { padding: 60px 56px 60px 48px; } }
 
 .puppy__eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
+  display: inline-flex; align-items: center; gap: 7px;
   font-family: 'Karla', sans-serif;
-  font-size: .78rem; font-weight: 800;
+  font-size: .75rem; font-weight: 800;
   letter-spacing: .1em; text-transform: uppercase;
   color: #e75480;
 }
-.puppy__eyebrow svg { width: 14px; height: 14px; color: #F7A048; flex-shrink: 0; }
+.puppy__eyebrow svg { width: 13px; height: 13px; color: #F7A048; flex-shrink: 0; }
 
 .puppy__title {
   font-family: 'Lilita One', cursive;
-  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-size: clamp(2rem, 4.5vw, 3rem);
   color: #3d2209; line-height: 1.05;
 }
 
 .puppy__intro {
   font-family: 'Karla', sans-serif;
-  font-size: 1rem; color: #A88259; line-height: 1.75;
-  max-width: 46ch;
+  font-size: .95rem; color: #A88259;
+  line-height: 1.75; max-width: 46ch;
 }
 
 /* ── Benefits + side image ──────────────────────────────── */
@@ -232,53 +226,67 @@
   display: flex; gap: 20px; align-items: flex-start;
 }
 .puppy__benefits {
-  display: flex; flex-direction: column; gap: 16px; flex: 1;
+  display: flex; flex-direction: column; gap: 10px; flex: 1;
 }
+
+/* Benefit rij: horizontale kaart */
 .puppy__benefit {
-  display: flex; align-items: flex-start; gap: 14px;
-  background: rgba(255,255,255,.7);
+  display: flex; align-items: center; gap: 14px;
+  background: #fff;
   border: 1.5px solid #FFD6E3;
-  border-radius: 16px; padding: 14px 16px;
+  border-radius: 16px;
+  padding: 14px 16px;
+  transition: transform 200ms cubic-bezier(.34,1.56,.64,1),
+              box-shadow 200ms;
 }
+.puppy__benefit:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px rgba(231,84,128,.1);
+}
+
 .puppy__benefit-icon {
-  width: 44px; height: 44px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 48px; height: 48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
 }
-.puppy__benefit-icon svg { width: 20px; height: 20px; }
-.puppy__benefit-icon--pink   { background: #fff0f5; color: #e75480; }
-.puppy__benefit-icon--green  { background: #e8f5e2; color: #66AA44; }
-.puppy__benefit-icon--yellow { background: #fffae0; color: #c49000; }
+.puppy__benefit-icon svg { width: 22px; height: 22px; }
+.puppy__benefit-icon--pink   { background: #ffd6e3; color: #e75480; }
+.puppy__benefit-icon--green  { background: #d4f0c8; color: #2d7a1a; }
+.puppy__benefit-icon--yellow { background: #ffe9a0; color: #8a6200; }
+.puppy__benefit-icon--orange { background: #ffd4b0; color: #b86a1e; }
+
+.puppy__benefit-text { flex: 1; min-width: 0; }
 .puppy__benefit-text strong {
   display: block;
   font-family: 'Lilita One', cursive;
-  font-size: .95rem; color: #3d2209; margin-bottom: 3px;
+  font-size: 1rem; color: #3d2209; margin-bottom: 2px;
 }
 .puppy__benefit-text p {
   font-family: 'Karla', sans-serif;
-  font-size: .8rem; color: #A88259; line-height: 1.55; margin: 0;
+  font-size: .8rem; color: #A88259; line-height: 1.5; margin: 0;
 }
 
-/* Side image */
+/* Side image rechts van benefits */
 .puppy__side-img-wrap {
-  width: 140px; flex-shrink: 0; position: relative;
-  display: none;
+  width: 130px; flex-shrink: 0;
+  display: none; flex-direction: column; align-items: center; gap: 8px;
 }
-@media(min-width: 1100px) { .puppy__side-img-wrap { display: block; } }
+@media(min-width: 1050px) { .puppy__side-img-wrap { display: flex; } }
+
 .puppy__side-img {
   width: 100%; border-radius: 20px;
-  box-shadow: 0 8px 28px rgba(96,58,21,.12); display: block;
+  box-shadow: 0 6px 24px rgba(96,58,21,.12);
+  display: block;
 }
 .puppy__side-badge {
-  position: absolute; bottom: -10px; left: 50%;
-  transform: translateX(-50%);
-  background: #FFB8CD; color: #7a1a35;
+  background: #FFE5EE; color: #c0394b;
   font-family: 'Karla', sans-serif;
   font-size: .68rem; font-weight: 700;
-  white-space: nowrap;
-  padding: 5px 12px; border-radius: 999px;
-  display: flex; align-items: center; gap: 5px;
-  border: 2px solid #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  text-align: center; line-height: 1.4;
+  padding: 7px 10px; border-radius: 12px;
+  border: 1.5px solid #FFB8CD;
+  display: flex; align-items: center; gap: 4px;
+  width: 100%;
 }
 .puppy__side-badge svg { width: 10px; height: 10px; color: #e75480; flex-shrink: 0; }
 
@@ -289,7 +297,8 @@
   border-bottom: 1.5px solid #FFD6E3;
 }
 .puppy__favs-inner {
-  max-width: 1280px; margin: 0 auto; padding: 0 20px;
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 20px;
   display: flex; align-items: stretch; gap: 0;
   overflow-x: auto; -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -297,72 +306,75 @@
 .puppy__favs-inner::-webkit-scrollbar { display: none; }
 @media(min-width: 1200px) { .puppy__favs-inner { padding: 0 40px; overflow-x: visible; } }
 
+/* CTA links */
 .puppy__favs-cta {
   display: flex; flex-direction: column;
   justify-content: center; gap: 10px;
-  padding: 28px 32px 28px 0;
-  min-width: 220px; flex-shrink: 0;
+  padding: 24px 28px 24px 0;
+  min-width: 200px; flex-shrink: 0;
   border-right: 1.5px solid #FFD6E3;
 }
 .puppy__favs-cta-icon {
-  width: 44px; height: 44px;
-  background: #e8f5e2; color: #66AA44;
-  border-radius: 50%;
+  width: 44px; height: 44px; background: #e8f5e2;
+  color: #66AA44; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
 }
 .puppy__favs-cta-icon svg { width: 20px; height: 20px; }
-.puppy__favs-cta-text { display: flex; flex-direction: column; gap: 3px; }
 .puppy__favs-cta-text strong {
   font-family: 'Lilita One', cursive;
-  font-size: 1.1rem; color: #3d2209;
+  font-size: 1.05rem; color: #3d2209; display: block; margin-bottom: 3px;
 }
 .puppy__favs-cta-text span {
   font-family: 'Karla', sans-serif;
-  font-size: .8rem; color: #A88259; line-height: 1.4;
+  font-size: .78rem; color: #A88259; line-height: 1.4; display: block; margin-bottom: 10px;
 }
 .puppy__cta {
   display: inline-flex; align-items: center; gap: 7px;
-  font-family: 'Lilita One', cursive; font-size: .9rem;
+  font-family: 'Lilita One', cursive; font-size: .88rem;
   background: #FFB8CD; color: #7a1a35;
-  padding: 11px 20px; border-radius: 999px;
+  padding: 10px 18px; border-radius: 999px;
   text-decoration: none; white-space: nowrap;
-  border: none; cursor: pointer;
-  transition: background 160ms, transform 200ms cubic-bezier(.34,1.56,.64,1);
   align-self: flex-start;
+  transition: background 160ms, transform 200ms cubic-bezier(.34,1.56,.64,1);
 }
 .puppy__cta:hover { background: #f09ab2; transform: translateY(-2px); }
+.puppy__cta svg { width: 14px; height: 14px; }
 
 /* Product items */
 .puppy__product {
   display: flex; flex-direction: column; gap: 8px;
-  padding: 24px 24px;
+  padding: 20px 24px;
   border-right: 1.5px solid #FFD6E3;
-  min-width: 160px; flex-shrink: 0;
+  min-width: 150px; flex-shrink: 0; align-items: center; text-align: center;
 }
 .puppy__product:last-child { border-right: none; }
+
 .puppy__product-img-wrap {
-  width: 100%; height: 100px; overflow: hidden;
-  border-radius: 14px; background: #FFF5F8;
+  width: 90px; height: 90px; overflow: hidden;
+  border-radius: 50%; background: #FFF5F8;
+  border: 2px solid #FFD6E3;
+  flex-shrink: 0;
 }
 .puppy__product-img {
   width: 100%; height: 100%;
-  object-fit: contain; display: block;
+  object-fit: cover; display: block;
   transition: transform 300ms ease;
 }
-.puppy__product:hover .puppy__product-img { transform: scale(1.08); }
+.puppy__product:hover .puppy__product-img { transform: scale(1.1); }
 .puppy__product-img-ph {
-  width: 100%; height: 100px; border-radius: 14px;
-  background: #FFE5EE; display: flex;
-  align-items: center; justify-content: center; color: #FFB8CD;
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  color: #FFB8CD; background: #FFF0F5;
 }
-.puppy__product-img-ph svg { width: 32px; height: 32px; }
+.puppy__product-img-ph svg { width: 28px; height: 28px; }
+
 .puppy__product-title {
   font-family: 'Lilita One', cursive;
-  font-size: .9rem; color: #3d2209; line-height: 1.2;
+  font-size: .88rem; color: #3d2209; line-height: 1.2;
 }
 .puppy__product-desc {
   font-family: 'Karla', sans-serif;
-  font-size: .75rem; color: #A88259; line-height: 1.5;
+  font-size: .72rem; color: #A88259; line-height: 1.45;
 }
 
 /* ── Trust strip ────────────────────────────────────────── */
@@ -376,7 +388,7 @@
 }
 .puppy__trust-item {
   display: flex; align-items: center; gap: 12px;
-  padding: 20px 16px; border-right: 1px solid #FFD6E3;
+  padding: 18px 16px; border-right: 1px solid #FFD6E3;
 }
 .puppy__trust-item:nth-child(2n) { border-right: none; }
 .puppy__trust-item:last-child    { border-right: none; }
@@ -385,17 +397,17 @@
   .puppy__trust-item:last-child    { border-right: none; }
 }
 .puppy__trust-icon {
-  width: 44px; height: 44px; border-radius: 50%;
+  width: 40px; height: 40px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.puppy__trust-icon svg { width: 20px; height: 20px; }
+.puppy__trust-icon svg { width: 18px; height: 18px; }
 .puppy__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
 .puppy__trust-icon--pink   { background: #fff0f5; color: #e75480; }
 .puppy__trust-icon--orange { background: #fff0e4; color: #F7A048; }
 .puppy__trust-icon--yellow { background: #fffae0; color: #c49000; }
-.puppy__trust-text { display: flex; flex-direction: column; gap: 2px; }
-.puppy__trust-text strong { font-family: 'Karla', sans-serif; font-size: .85rem; font-weight: 800; color: #3d2209; }
-.puppy__trust-text span   { font-size: .75rem; color: #A88259; }
+.puppy__trust-text { display: flex; flex-direction: column; gap: 1px; }
+.puppy__trust-text strong { font-family: 'Karla', sans-serif; font-size: .82rem; font-weight: 800; color: #3d2209; }
+.puppy__trust-text span   { font-size: .72rem; color: #A88259; }
 {% endstylesheet %}
 
 {% schema %}
