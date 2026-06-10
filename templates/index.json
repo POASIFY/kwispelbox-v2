@@ -201,6 +201,9 @@
     },
     "how-it-works": {
       "type": "how-it-works"
+    },
+    "whats-inside": {
+      "type": "whats-inside"
     }
   },
   "order": [
@@ -208,6 +211,7 @@
     "trust-bar",
     "product-boxes",
     "why-kwispelbox",
-    "how-it-works"
+    "how-it-works",
+    "whats-inside"
   ]
 }
