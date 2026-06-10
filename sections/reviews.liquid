@@ -153,7 +153,8 @@
   text-align: center;
   padding: 0 20px;
   margin-bottom: 52px;
-  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 12px;
 }
 .reviews__eyebrow {
   display: inline-flex; align-items: center; gap: 7px;
@@ -164,7 +165,7 @@
 }
 .reviews__title {
   font-family: 'Lilita One', cursive;
-  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
   color: #3d2209; line-height: 1;
 }
 .reviews__sub {
@@ -177,15 +178,15 @@
 /* ── Grid ───────────────────────────────────────────────── */
 .reviews__grid {
   max-width: 1280px; margin: 0 auto;
-  padding: 0 20px 64px;
+  padding: 0 20px 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: 20px;
 }
 @media(min-width: 768px) {
   .reviews__grid {
     grid-template-columns: repeat(3, 1fr);
-    padding: 0 40px 64px;
+    padding: 0 40px 0;
   }
 }
 
@@ -196,94 +197,97 @@
   overflow: hidden;
   border: 1.5px solid #EDE2C9;
   display: flex; flex-direction: column;
-  transition: transform 250ms cubic-bezier(.34,1.56,.64,1), box-shadow 250ms ease;
+  transition: transform 250ms cubic-bezier(.34,1.56,.64,1),
+              box-shadow 250ms ease;
 }
 .rcard:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(96,58,21,.12);
+  box-shadow: 0 16px 48px rgba(96,58,21,.12);
 }
 
-/* Top: auteur */
+/* ── Auteur blok ────────────────────────────────────────── */
 .rcard__top {
-  display: flex; align-items: flex-start; gap: 14px;
-  padding: 20px 20px 0;
+  display: flex; align-items: flex-start;
+  gap: 14px; padding: 20px 20px 0;
 }
-.rcard__avatar-wrap {
-  position: relative; flex-shrink: 0;
-}
+
+/* Avatar: groot en prominent */
+.rcard__avatar-wrap { position: relative; flex-shrink: 0; }
 .rcard__avatar {
-  width: 68px; height: 68px;
+  width: 80px; height: 80px;
   border-radius: 50%; object-fit: cover;
   border: 3px solid #F8EFDD;
+  display: block;
 }
 .rcard__avatar-ph {
-  width: 68px; height: 68px;
+  width: 80px; height: 80px;
   border-radius: 50%; background: #EDE2C9;
   display: flex; align-items: center; justify-content: center;
   color: #A88259;
 }
-.rcard__avatar-ph svg { width: 28px; height: 28px; }
+.rcard__avatar-ph svg { width: 32px; height: 32px; }
 
+/* Verified badge op avatar */
 .rcard__verified-badge {
-  position: absolute; bottom: -2px; right: -2px;
-  width: 22px; height: 22px;
+  position: absolute; bottom: 0; right: 0;
+  width: 24px; height: 24px;
   background: #66AA44; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  border: 2px solid #fff;
-  color: #fff;
+  border: 2.5px solid #fff; color: #fff;
 }
 .rcard__verified-badge svg { width: 12px; height: 12px; }
 
+/* Naam + ras + box badge */
 .rcard__author {
-  display: flex; flex-direction: column; gap: 4px;
-  padding-top: 2px;
+  display: flex; flex-direction: column;
+  gap: 4px; padding-top: 4px; flex: 1;
 }
 .rcard__dog-name {
   font-family: 'Lilita One', cursive;
-  font-size: 1.1rem; color: #3d2209;
+  font-size: 1.2rem; color: #3d2209; line-height: 1;
 }
 .rcard__breed {
   font-family: 'Karla', sans-serif;
-  font-size: .8rem; color: #A88259;
+  font-size: .82rem; color: #A88259;
 }
 .rcard__box {
-  display: inline-block;
+  display: inline-flex; align-items: center;
   font-family: 'Karla', sans-serif;
-  font-size: .72rem; font-weight: 800;
-  padding: 3px 10px; border-radius: 999px;
+  font-size: .75rem; font-weight: 800;
+  padding: 4px 12px; border-radius: 999px;
+  align-self: flex-start; margin-top: 2px;
 }
-.rcard__box--pink   { background: #fff0f5; color: #c0394b; }
-.rcard__box--orange { background: #fff0e4; color: #d9823a; }
-.rcard__box--green  { background: #e8f5e2; color: #2d7a1a; }
+.rcard__box--pink   { background: #ffe0ec; color: #c0394b; }
+.rcard__box--orange { background: #ffe5cc; color: #b86a1e; }
+.rcard__box--green  { background: #d4f0c8; color: #2d7a1a; }
 
-/* Sterren */
+/* ── Sterren ─────────────────────────────────────────────── */
 .rcard__stars {
-  display: flex; gap: 2px;
+  display: flex; gap: 3px;
   padding: 16px 20px 0;
   color: #F7A048;
 }
-.rcard__stars svg { width: 18px; height: 18px; }
+.rcard__stars svg { width: 22px; height: 22px; }
 
-/* Body */
+/* ── Review tekst ────────────────────────────────────────── */
 .rcard__body {
-  padding: 12px 20px 20px;
+  padding: 10px 20px 20px;
   flex: 1;
 }
 .rcard__review-title {
   font-family: 'Lilita One', cursive;
   font-size: 1.05rem; color: #3d2209;
-  line-height: 1.2; margin-bottom: 8px;
+  line-height: 1.25; margin-bottom: 8px;
 }
 .rcard__review-text {
   font-family: 'Karla', sans-serif;
-  font-size: .875rem; color: #A88259;
-  line-height: 1.7;
+  font-size: .875rem; color: #A88259; line-height: 1.7;
 }
 
-/* Foto */
+/* ── Grote foto onderaan ─────────────────────────────────── */
 .rcard__photo-wrap {
   position: relative; flex-shrink: 0;
-  overflow: hidden;
+  overflow: hidden; margin-top: auto;
 }
 .rcard__photo {
   width: 100%; aspect-ratio: 3/2;
@@ -292,49 +296,69 @@
 }
 .rcard:hover .rcard__photo { transform: scale(1.04); }
 
+/* Geverifieerde aankoop badge */
 .rcard__photo-badge {
   position: absolute; bottom: 12px; left: 12px;
   display: inline-flex; align-items: center; gap: 6px;
   font-family: 'Karla', sans-serif;
-  font-size: .72rem; font-weight: 700;
-  color: #fff;
-  background: rgba(61,34,9,.55);
+  font-size: .72rem; font-weight: 700; color: #fff;
+  background: rgba(40,120,40,.75);
   backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border-radius: 999px; padding: 5px 12px;
-  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 999px; padding: 6px 14px;
+  border: 1px solid rgba(255,255,255,.25);
 }
-.rcard__photo-badge svg { width: 13px; height: 13px; color: #66AA44; flex-shrink: 0; }
+.rcard__photo-badge svg { width: 13px; height: 13px; color: #8aff8a; flex-shrink: 0; }
 
+/* Hart knop */
 .rcard__heart {
   position: absolute; bottom: 12px; right: 12px;
-  width: 36px; height: 36px;
-  background: rgba(255,255,255,.85);
+  width: 38px; height: 38px;
+  background: rgba(255,255,255,.88);
   border: none; border-radius: 50%; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   color: #e75480;
   transition: transform 200ms cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
 }
 .rcard__heart:hover { transform: scale(1.2); }
 .rcard__heart svg { width: 16px; height: 16px; }
 
-/* ── Trust strip ────────────────────────────────────────── */
+/* ── Trust strip ─────────────────────────────────────────── */
 .reviews__trust {
   background: #fff;
   border-top: 1.5px solid #EDE2C9;
+  margin-top: 60px;
+  position: relative;
 }
+
+/* Decoratief hartje rechts */
+.reviews__trust::after {
+  content: '';
+  position: absolute;
+  top: 50%; right: 24px;
+  transform: translateY(-50%);
+  width: 20px; height: 20px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFB8CD'%3E%3Cpath d='M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z'/%3E%3C/svg%3E") center/contain no-repeat;
+  pointer-events: none;
+}
+
 .reviews__trust-inner {
-  max-width: 1280px; margin: 0 auto; padding: 0 20px;
-  display: grid; grid-template-columns: repeat(2, 1fr);
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 }
 @media(min-width: 768px) {
   .reviews__trust-inner {
-    grid-template-columns: repeat(4, 1fr); padding: 0 60px;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 0 60px;
   }
 }
+
+/* Trust item: grote teller + icon */
 .reviews__trust-item {
   display: flex; align-items: center; gap: 14px;
-  padding: 22px 16px;
+  padding: 24px 16px;
   border-right: 1px solid #EDE2C9;
 }
 .reviews__trust-item:nth-child(2n) { border-right: none; }
@@ -343,34 +367,34 @@
   .reviews__trust-item:nth-child(2n) { border-right: 1px solid #EDE2C9; }
   .reviews__trust-item:last-child    { border-right: none; }
 }
+
 .reviews__trust-icon {
   width: 52px; height: 52px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
 }
-.reviews__trust-icon svg { width: 22px; height: 22px; }
+.reviews__trust-icon svg { width: 24px; height: 24px; }
 .reviews__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
 .reviews__trust-icon--pink   { background: #fff0f5; color: #e75480; }
 .reviews__trust-icon--orange { background: #fff0e4; color: #F7A048; }
 .reviews__trust-icon--yellow { background: #fffae0; color: #c49000; }
 
 .reviews__trust-text {
-  display: flex; flex-direction: column; gap: 3px;
+  display: flex; flex-direction: column; gap: 2px;
 }
 .reviews__trust-text strong {
   font-family: 'Lilita One', cursive;
-  font-size: 1.1rem; color: #3d2209; line-height: 1.1;
+  font-size: 1.4rem; color: #3d2209; line-height: 1;
 }
 .reviews__trust-text span {
   font-family: 'Karla', sans-serif;
   font-size: .78rem; color: #A88259; line-height: 1.4;
 }
 .reviews__trust-stars {
-  display: flex; align-items: center; gap: 3px;
-  font-family: 'Karla', sans-serif;
-  font-size: .75rem; color: #A88259; margin-top: 2px;
+  display: flex; align-items: center; gap: 2px; margin-top: 3px;
 }
-.reviews__trust-stars svg { width: 12px; height: 12px; color: #F7A048; flex-shrink: 0; }
-
+.reviews__trust-stars svg { width: 12px; height: 12px; color: #F7A048; }
+.reviews__trust-stars-label { font-size: .72rem; color: #A88259; margin-left: 3px; }
 {% endstylesheet %}
 
 
