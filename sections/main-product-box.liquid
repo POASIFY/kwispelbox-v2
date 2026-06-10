@@ -139,21 +139,6 @@
                   {% unless variant.available %}disabled{% endunless %}
                 >
                 <span class="pb__sub-radio-dot" aria-hidden="true"></span>
-                <div class="pb__sub-option-body">
-                  <span class="pb__sub-option-name">
-                    {{ variant.title }}
-                    {%- if variant.metafields.custom.discount_badge != blank -%}
-                      <span class="pb__sub-discount-badge">{{ variant.metafields.custom.discount_badge }}</span>
-                    {%- endif -%}
-                  </span>
-                  {%- if variant.metafields.custom.subtitle != blank -%}
-                    <span class="pb__sub-option-sub">{{ variant.metafields.custom.subtitle }}</span>
-                  {%- endif -%}
-                </div>
-                <div class="pb__sub-option-price">
-                  <span class="pb__sub-price">{{ variant.price | money }}</span>
-                  <span class="pb__sub-per">/ per box</span>
-                </div>
               </label>
             {%- endfor -%}
           </div>
@@ -418,75 +403,13 @@
 }
 .pb__features svg { flex-shrink: 0; }
 
-/* ══ Abonnement selector ══════════════════════════════════ */
-.pb__subscription { display: flex; flex-direction: column; gap: 12px; }
 
-.pb__sub-header {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 8px;
-}
-.pb__sub-title {
-  font-family: 'Lilita One', cursive;
-  font-size: 1rem; color: #3d2209;
-}
-.pb__sub-savings {
-  font-family: 'Karla', sans-serif; font-size: .72rem; font-weight: 800;
-  background: #FFE5EE; color: #c0394b;
-  padding: 4px 10px; border-radius: 999px;
-  text-transform: uppercase; letter-spacing: .05em;
-}
 
-.pb__sub-options { display: flex; flex-direction: column; gap: 8px; }
 
-.pb__sub-option {
-  display: flex; align-items: center; gap: 12px;
-  border: 2px solid #EDE2C9; border-radius: 14px;
-  padding: 14px 16px; cursor: pointer;
-  transition: border-color 160ms, background 160ms;
-  position: relative;
-}
-.pb__sub-option:hover { border-color: #66AA44; }
-.pb__sub-option.is-selected { border-color: #66AA44; background: #f6fdf2; }
 
-.pb__sub-radio { position: absolute; opacity: 0; width: 0; height: 0; }
-.pb__sub-radio-dot {
-  width: 20px; height: 20px; border-radius: 50%;
-  border: 2.5px solid #DAC9A1; flex-shrink: 0;
-  transition: all 160ms;
-  display: flex; align-items: center; justify-content: center;
-}
-.pb__sub-option.is-selected .pb__sub-radio-dot {
-  border-color: #66AA44; background: #66AA44;
-}
-.pb__sub-option.is-selected .pb__sub-radio-dot::after {
-  content: '';
-  width: 8px; height: 8px; border-radius: 50%; background: #fff;
-}
 
-.pb__sub-option-body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-.pb__sub-option-name {
-  font-family: 'Karla', sans-serif; font-size: .88rem;
-  font-weight: 800; color: #3d2209;
-  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-}
-.pb__sub-discount-badge {
-  font-size: .68rem; font-weight: 800;
-  background: #FFE5EE; color: #c0394b;
-  padding: 2px 8px; border-radius: 999px;
-}
-.pb__sub-option-sub {
-  font-family: 'Karla', sans-serif; font-size: .75rem; color: #A88259;
-}
 
-.pb__sub-option-price {
-  display: flex; flex-direction: column; align-items: flex-end; gap: 1px; flex-shrink: 0;
-}
-.pb__sub-price {
-  font-family: 'Lilita One', cursive; font-size: 1.1rem; color: #3d2209;
-}
-.pb__sub-per {
-  font-family: 'Karla', sans-serif; font-size: .68rem; color: #A88259;
-}
+
 
 /* ══ ATC knop ═════════════════════════════════════════════ */
 .pb__atc {
