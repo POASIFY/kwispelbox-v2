@@ -24,9 +24,17 @@
           <div class="hiw__step-top">
             {%- unless forloop.first -%}
               <div class="hiw__connector" aria-hidden="true">
-                <span class="hiw__connector-line"></span>
+                <svg class="hiw__connector-wave" viewBox="0 0 120 14" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M0,7 Q10,1 20,7 Q30,13 40,7 Q50,1 60,7 Q70,13 80,7 Q90,1 100,7 Q110,13 120,7"
+                        fill="none" stroke="#C4A882" stroke-width="1.8"
+                        stroke-dasharray="5 3" stroke-linecap="round"/>
+                </svg>
                 <span class="hiw__connector-paw">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
-                <span class="hiw__connector-line"></span>
+                <svg class="hiw__connector-wave" viewBox="0 0 120 14" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M0,7 Q10,1 20,7 Q30,13 40,7 Q50,1 60,7 Q70,13 80,7 Q90,1 100,7 Q110,13 120,7"
+                        fill="none" stroke="#C4A882" stroke-width="1.8"
+                        stroke-dasharray="5 3" stroke-linecap="round"/>
+                </svg>
               </div>
             {%- endunless -%}
             <div class="hiw__num hiw__num--{{ block.settings.color }}">
@@ -200,16 +208,14 @@
   justify-content: center;
   gap: 8px;
 }
-/* Gestippelde lijn links en rechts van poot */
-.hiw__connector-line {
+.hiw__connector-wave {
   flex: 1;
-  height: 2px;
-  border-top: 2.5px dashed #C4A882;
-  border-radius: 2px;
+  height: 14px;
+  overflow: visible;
 }
 .hiw__connector-paw {
   display: flex; align-items: center;
-  flex-shrink: 0;
+  flex-shrink: 0; margin: 0 6px;
 }
 .hiw__connector-paw svg {
   width: 16px; height: 16px;
