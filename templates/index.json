@@ -213,6 +213,9 @@
     },
     "puppy-section": {
       "type": "puppy-section"
+    },
+    "newsletter": {
+      "type": "newsletter"
     }
   },
   "order": [
@@ -224,6 +227,7 @@
     "whats-inside",
     "social-proof",
     "reviews",
-    "puppy-section"
+    "puppy-section",
+    "newsletter"
   ]
 }

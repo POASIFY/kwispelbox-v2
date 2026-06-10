@@ -1,0 +1,625 @@
+{%- form 'customer', id: 'KwispelclubForm', class: 'newsletter-form' -%}
+{%- assign form_posted = form.posted_successfully? -%}
+{%- endform -%}
+
+<section class="kclub">
+
+  <!-- ═══ TOP: Copy + Afbeelding ══════════════════════════ -->
+  <div class="kclub__top">
+
+    <!-- Links: copy + perks + formulier -->
+    <div class="kclub__copy">
+
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="kclub__eyebrow">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          {{ section.settings.eyebrow }}
+        </p>
+      {%- endif -%}
+
+      <h2 class="kclub__title">
+        {{ section.settings.title_line1 }}
+        <span class="kclub__title-accent">{{ section.settings.title_line2 }}</span>
+        <span class="kclub__title-paw" aria-hidden="true">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
+      </h2>
+
+      {%- if section.settings.intro != blank -%}
+        <p class="kclub__intro">{{ section.settings.intro }}</p>
+      {%- endif -%}
+
+      <!-- Perks 2×2 -->
+      {%- assign perk_blocks = section.blocks | where: 'type', 'perk' -%}
+      {%- if perk_blocks.size > 0 -%}
+        <div class="kclub__perks">
+          {%- for block in perk_blocks -%}
+            <div class="kclub__perk" {{ block.shopify_attributes }}>
+              <span class="kclub__perk-icon kclub__perk-icon--{{ block.settings.color }}" aria-hidden="true">
+                {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+              </span>
+              <div>
+                <strong>{{ block.settings.title }}</strong>
+                <p>{{ block.settings.description }}</p>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      <!-- Email formulier -->
+      {%- if form_posted -%}
+        <div class="kclub__success" role="alert">
+          <span class="kclub__success-icon">{{- 'icon-check-circle.svg' | inline_asset_content -}}</span>
+          <div>
+            <strong>{{ section.settings.success_title }}</strong>
+            <p>{{ section.settings.success_text }}</p>
+          </div>
+        </div>
+      {%- else -%}
+        {%- form 'customer', id: 'KwispelclubForm' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter,kwispelclub">
+          <div class="kclub__form">
+            <div class="kclub__input-wrap">
+              <span class="kclub__input-icon" aria-hidden="true">
+                {{- 'icon-mail.svg' | inline_asset_content -}}
+              </span>
+              <label for="KwispelclubEmail" class="kclub__sr-only">E-mailadres</label>
+              <input
+                type="email"
+                id="KwispelclubEmail"
+                name="contact[email]"
+                class="kclub__input"
+                placeholder="{{ section.settings.input_placeholder }}"
+                required
+                autocomplete="email"
+              >
+            </div>
+            <button type="submit" class="kclub__btn">
+              {{ section.settings.btn_label }}
+              <span aria-hidden="true">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
+            </button>
+          </div>
+          <p class="kclub__privacy">
+            {{- 'icon-lock.svg' | inline_asset_content -}}
+            {{ section.settings.privacy_text }}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" style="color:#e75480;flex-shrink:0"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          </p>
+        {%- endform -%}
+      {%- endif -%}
+
+    </div>
+
+    <!-- Rechts: grote afbeelding -->
+    <div class="kclub__img-wrap">
+      {%- if section.settings.hero_image != blank -%}
+        <img
+          src="{{ section.settings.hero_image | image_url: width: 800 }}"
+          srcset="{{ section.settings.hero_image | image_url: width: 500 }} 500w,
+                  {{ section.settings.hero_image | image_url: width: 800 }} 800w"
+          sizes="(max-width: 767px) 100vw, 45vw"
+          alt="{{ section.settings.hero_image.alt | default: 'Kwispelclub' | escape }}"
+          width="800"
+          height="{{ 800 | divided_by: section.settings.hero_image.aspect_ratio | round }}"
+          loading="lazy"
+          class="kclub__img"
+        >
+      {%- else -%}
+        <div class="kclub__img-ph">
+          {{- 'icon-paw.svg' | inline_asset_content -}}
+          <span>Voeg afbeelding toe</span>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.speech_bubble != blank -%}
+        <div class="kclub__bubble" aria-hidden="true">
+          <span>{{ section.settings.speech_bubble }}</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="color:#e75480"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        </div>
+      {%- endif -%}
+    </div>
+
+  </div>
+
+  <!-- ═══ BOTTOM: Community + Trust ══════════════════════ -->
+  <div class="kclub__bottom">
+
+    <!-- Links: community -->
+    <div class="kclub__community">
+      <div class="kclub__community-header">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" style="color:#e75480"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        <div>
+          <strong>{{ section.settings.community_title }}</strong>
+          <p>{{ section.settings.community_sub }}</p>
+        </div>
+      </div>
+
+      {%- if section.settings.instagram_handle != blank -%}
+        <a href="https://instagram.com/{{ section.settings.instagram_handle | remove: '@' }}"
+           class="kclub__insta-pill" rel="noopener" target="_blank">
+          {{- 'icon-instagram.svg' | inline_asset_content -}}
+          {{ section.settings.instagram_handle }}
+        </a>
+      {%- endif -%}
+
+      <!-- Polaroid grid -->
+      {%- assign photo_blocks = section.blocks | where: 'type', 'community_photo' -%}
+      {%- if photo_blocks.size > 0 -%}
+        <div class="kclub__polaroids">
+          {%- for block in photo_blocks -%}
+            <div class="kclub__polaroid" {{ block.shopify_attributes }}>
+              {%- if block.settings.image != blank -%}
+                <img src="{{ block.settings.image | image_url: width: 200 }}"
+                     alt="" width="200" height="200"
+                     loading="lazy" class="kclub__polaroid-img">
+              {%- else -%}
+                <div class="kclub__polaroid-ph">{{- 'icon-paw.svg' | inline_asset_content -}}</div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.hashtag != blank -%}
+        <p class="kclub__hashtag">
+          {{ section.settings.hashtag }}
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" style="color:#e75480"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        </p>
+      {%- endif -%}
+    </div>
+
+    <!-- Rechts: trust items -->
+    <div class="kclub__trust-col">
+      <p class="kclub__trust-title">
+        {{- 'icon-paw.svg' | inline_asset_content -}}
+        {{ section.settings.trust_title }}
+      </p>
+      <div class="kclub__trust-grid">
+        {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
+        {%- for block in trust_blocks -%}
+          <div class="kclub__trust-item" {{ block.shopify_attributes }}>
+            <span class="kclub__trust-icon kclub__trust-icon--{{ block.settings.color }}" aria-hidden="true">
+              {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+            </span>
+            <div class="kclub__trust-text">
+              <strong>{{ block.settings.title }}</strong>
+              {%- if block.settings.subtitle != blank -%}
+                <span>{{ block.settings.subtitle }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ Footer: Kwispelbox branding ═════════════════════ -->
+  <div class="kclub__footer">
+    <span>{{- 'icon-paw.svg' | inline_asset_content -}}</span>
+    <span class="kclub__footer-brand">{{ shop.name }}</span>
+    <span>{{- 'icon-paw.svg' | inline_asset_content -}}</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" style="color:#e75480"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+  </div>
+
+</section>
+
+{% stylesheet %}
+/* ── Sectie ─────────────────────────────────────────────── */
+.kclub {
+  background: #F8EFDD;
+  overflow: hidden;
+}
+.kclub__sr-only {
+  position:absolute;width:1px;height:1px;
+  padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+
+/* ── Top: split layout ──────────────────────────────────── */
+.kclub__top {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  max-width: 1280px; margin: 0 auto;
+  padding: 64px 24px 48px;
+}
+@media(min-width: 900px) {
+  .kclub__top {
+    grid-template-columns: 1.1fr 1fr;
+    gap: 60px;
+    padding: 80px 60px 60px;
+    align-items: center;
+  }
+}
+
+/* ── Copy links ─────────────────────────────────────────── */
+.kclub__copy {
+  display: flex; flex-direction: column; gap: 24px;
+}
+
+.kclub__eyebrow {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: 'Karla', sans-serif;
+  font-size: .78rem; font-weight: 800;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: #e75480;
+}
+
+.kclub__title {
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  color: #3d2209; line-height: 1.05;
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 4px 8px;
+}
+.kclub__title-accent { color: #e75480; }
+.kclub__title-paw { display:flex; align-items:center; }
+.kclub__title-paw svg { width: 36px; height: 36px; color: #F7A048; }
+
+.kclub__intro {
+  font-family: 'Karla', sans-serif;
+  font-size: 1rem; color: #A88259; line-height: 1.75;
+  max-width: 46ch;
+}
+
+/* ── Perks 2×2 ──────────────────────────────────────────── */
+.kclub__perks {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.kclub__perk {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: rgba(255,255,255,.6);
+  border: 1.5px solid #EDE2C9;
+  border-radius: 16px; padding: 14px;
+}
+.kclub__perk-icon {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.kclub__perk-icon svg { width: 18px; height: 18px; }
+.kclub__perk-icon--green  { background: #e8f5e2; color: #66AA44; }
+.kclub__perk-icon--pink   { background: #fff0f5; color: #e75480; }
+.kclub__perk-icon--orange { background: #fff0e4; color: #F7A048; }
+.kclub__perk-icon--yellow { background: #fffae0; color: #c49000; }
+
+.kclub__perk strong {
+  display: block;
+  font-family: 'Lilita One', cursive;
+  font-size: .9rem; color: #3d2209; margin-bottom: 3px;
+}
+.kclub__perk p {
+  font-family: 'Karla', sans-serif;
+  font-size: .75rem; color: #A88259; line-height: 1.5; margin: 0;
+}
+
+/* ── Formulier ──────────────────────────────────────────── */
+.kclub__form {
+  display: flex; gap: 0;
+  background: #fff;
+  border: 2px solid #DAC9A1;
+  border-radius: 999px;
+  overflow: hidden;
+  height: 56px;
+  transition: border-color 200ms, box-shadow 200ms;
+}
+.kclub__form:focus-within {
+  border-color: #66AA44;
+  box-shadow: 0 0 0 4px rgba(102,170,68,.12);
+}
+.kclub__input-wrap {
+  display: flex; align-items: center; gap: 10px;
+  flex: 1; padding: 0 18px; min-width: 0;
+}
+.kclub__input-icon { display:flex; color: #A88259; flex-shrink: 0; }
+.kclub__input-icon svg { width: 16px; height: 16px; }
+.kclub__input {
+  flex: 1; border: none; outline: none;
+  font-family: 'Karla', sans-serif;
+  font-size: .95rem; color: #3d2209;
+  background: transparent; min-width: 0;
+}
+.kclub__input::placeholder { color: #A88259; }
+.kclub__btn {
+  height: 100%;
+  padding: 0 24px;
+  background: #66AA44; color: #fff;
+  font-family: 'Lilita One', cursive;
+  font-size: .95rem;
+  border: none; border-radius: 0 999px 999px 0;
+  cursor: pointer; display: flex; align-items: center;
+  gap: 8px; white-space: nowrap; flex-shrink: 0;
+  transition: background 160ms;
+}
+.kclub__btn:hover { background: #4d8833; }
+.kclub__btn svg { width: 16px; height: 16px; }
+
+.kclub__privacy {
+  display: flex; align-items: center; gap: 7px;
+  font-family: 'Karla', sans-serif;
+  font-size: .78rem; color: #A88259;
+}
+.kclub__privacy svg { width: 12px; height: 12px; color: #A88259; flex-shrink: 0; }
+
+/* Success */
+.kclub__success {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: #e8f5e2; border: 1.5px solid #66AA44;
+  border-radius: 16px; padding: 18px 20px;
+}
+.kclub__success-icon { color: #66AA44; display: flex; flex-shrink: 0; }
+.kclub__success-icon svg { width: 24px; height: 24px; }
+.kclub__success strong {
+  font-family: 'Lilita One', cursive;
+  font-size: 1rem; color: #2d7a1a; display: block; margin-bottom: 4px;
+}
+.kclub__success p {
+  font-family: 'Karla', sans-serif;
+  font-size: .85rem; color: #2d7a1a; margin: 0;
+}
+
+/* ── Afbeelding rechts ──────────────────────────────────── */
+.kclub__img-wrap {
+  position: relative;
+  display: flex; justify-content: center;
+}
+.kclub__img {
+  width: 100%;
+  border-radius: 32px;
+  box-shadow: 0 20px 60px rgba(96,58,21,.18);
+  display: block;
+}
+.kclub__img-ph {
+  width: 100%; aspect-ratio: 4/3;
+  background: #EDE2C9; border-radius: 32px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px; color: #A88259;
+}
+.kclub__img-ph svg { width: 48px; height: 48px; }
+
+/* Speech bubble */
+.kclub__bubble {
+  position: absolute;
+  top: 24px; right: -12px;
+  background: #fff;
+  border-radius: 20px 20px 20px 4px;
+  padding: 14px 16px;
+  box-shadow: 0 6px 24px rgba(96,58,21,.14);
+  border: 2px solid #FFD6E3;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+  max-width: 110px; text-align: center;
+  z-index: 2;
+}
+.kclub__bubble span {
+  font-family: 'Lilita One', cursive;
+  font-size: .8rem; color: #3d2209; line-height: 1.3;
+}
+@media(max-width: 899px) {
+  .kclub__bubble { top: 12px; right: 12px; }
+}
+
+/* ── Bottom: community + trust ──────────────────────────── */
+.kclub__bottom {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-top: 1.5px solid #EDE2C9;
+  background: rgba(255,255,255,.5);
+}
+@media(min-width: 900px) {
+  .kclub__bottom { grid-template-columns: 1fr 1fr; }
+}
+
+/* Community */
+.kclub__community {
+  padding: 36px 24px;
+  display: flex; flex-direction: column; gap: 16px;
+  border-right: 1.5px solid #EDE2C9;
+}
+@media(min-width: 1200px) { .kclub__community { padding: 36px 60px; } }
+@media(max-width: 899px)  { .kclub__community { border-right: none; border-bottom: 1.5px solid #EDE2C9; } }
+
+.kclub__community-header {
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.kclub__community-header svg { color: #e75480; flex-shrink: 0; margin-top: 3px; }
+.kclub__community-header strong {
+  font-family: 'Lilita One', cursive;
+  font-size: 1.1rem; color: #3d2209; display: block; margin-bottom: 4px;
+}
+.kclub__community-header p {
+  font-family: 'Karla', sans-serif;
+  font-size: .85rem; color: #A88259; margin: 0;
+}
+.kclub__insta-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Karla', sans-serif;
+  font-size: .85rem; font-weight: 700;
+  color: #3d2209; background: #EDE2C9;
+  border-radius: 999px; padding: 8px 16px;
+  text-decoration: none; border: 1.5px solid #DAC9A1;
+  align-self: flex-start;
+  transition: background 160ms;
+}
+.kclub__insta-pill:hover { background: #DAC9A1; }
+.kclub__insta-pill svg { width: 16px; height: 16px; color: #A88259; }
+
+/* Polaroids */
+.kclub__polaroids {
+  display: flex; gap: 8px; align-items: flex-end;
+}
+.kclub__polaroid {
+  background: #fff;
+  padding: 6px 6px 20px;
+  border-radius: 6px;
+  box-shadow: 0 3px 12px rgba(96,58,21,.12);
+  transform: rotate(-2deg);
+  transition: transform 200ms cubic-bezier(.34,1.56,.64,1);
+  flex: 1; max-width: 100px;
+}
+.kclub__polaroid:nth-child(2) { transform: rotate(1deg); }
+.kclub__polaroid:nth-child(3) { transform: rotate(-1deg); }
+.kclub__polaroid:nth-child(4) { transform: rotate(2deg); }
+.kclub__polaroid:hover { transform: rotate(0) scale(1.05) !important; }
+.kclub__polaroid-img {
+  width: 100%; aspect-ratio: 1;
+  object-fit: cover; border-radius: 4px; display: block;
+}
+.kclub__polaroid-ph {
+  width: 100%; aspect-ratio: 1;
+  background: #EDE2C9; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  color: #DAC9A1;
+}
+.kclub__hashtag {
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'Karla', sans-serif;
+  font-size: .85rem; font-weight: 700; color: #A88259;
+}
+
+/* Trust rechts */
+.kclub__trust-col {
+  padding: 36px 24px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+@media(min-width: 1200px) { .kclub__trust-col { padding: 36px 60px; } }
+
+.kclub__trust-title {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Lilita One', cursive;
+  font-size: 1rem; color: #e75480;
+}
+.kclub__trust-title svg { width: 16px; height: 16px; color: #F7A048; }
+
+.kclub__trust-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.kclub__trust-item {
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.kclub__trust-icon {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.kclub__trust-icon svg { width: 18px; height: 18px; }
+.kclub__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
+.kclub__trust-icon--pink   { background: #fff0f5; color: #e75480; }
+.kclub__trust-icon--orange { background: #fff0e4; color: #F7A048; }
+.kclub__trust-icon--yellow { background: #fffae0; color: #c49000; }
+.kclub__trust-text { display: flex; flex-direction: column; gap: 2px; }
+.kclub__trust-text strong { font-family: 'Karla', sans-serif; font-size: .82rem; font-weight: 800; color: #3d2209; line-height: 1.3; }
+.kclub__trust-text span   { font-family: 'Karla', sans-serif; font-size: .72rem; color: #A88259; line-height: 1.4; }
+
+/* ── Footer branding ────────────────────────────────────── */
+.kclub__footer {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; padding: 20px;
+  border-top: 1.5px solid #EDE2C9;
+  background: rgba(255,255,255,.4);
+}
+.kclub__footer svg { width: 16px; height: 16px; color: #A88259; }
+.kclub__footer-brand {
+  font-family: 'Lilita One', cursive;
+  font-size: 1rem; color: #603A15;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Kwispelclub nieuwsbrief",
+  "tag": "section",
+  "limit": 1,
+  "blocks": [
+    {
+      "type": "perk",
+      "name": "Voordeel",
+      "settings": [
+        {
+          "type": "select", "id": "icon", "label": "Icoon", "default": "gift",
+          "options": [
+            {"value":"gift","label":"Cadeau"},{"value":"bell","label":"Bel"},
+            {"value":"sparkles","label":"Sparkles"},{"value":"heart","label":"Hart"},
+            {"value":"paw","label":"Poot"},{"value":"star","label":"Ster"}
+          ]
+        },
+        {
+          "type": "select", "id": "color", "label": "Kleur", "default": "green",
+          "options": [
+            {"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},
+            {"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"}
+          ]
+        },
+        {"type":"text","id":"title",       "label":"Titel",       "default":"Exclusieve kortingen"},
+        {"type":"text","id":"description", "label":"Beschrijving","default":"Speciale deals alleen voor leden."}
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "select", "id": "icon", "label": "Icoon", "default": "shield",
+          "options": [
+            {"value":"shield","label":"Schild"},{"value":"gift","label":"Cadeau"},
+            {"value":"truck","label":"Vrachtwagen"},{"value":"lock","label":"Slot"},
+            {"value":"heart","label":"Hart"},{"value":"paw","label":"Poot"}
+          ]
+        },
+        {
+          "type": "select", "id": "color", "label": "Kleur", "default": "green",
+          "options": [
+            {"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},
+            {"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"}
+          ]
+        },
+        {"type":"text","id":"title",    "label":"Titel",    "default":"100% tevreden of geld terug"},
+        {"type":"text","id":"subtitle", "label":"Subtitel", "default":"Niet tevreden? Wij lossen het op."}
+      ]
+    },
+    {
+      "type": "community_photo",
+      "name": "Community foto",
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Foto"}
+      ]
+    }
+  ],
+  "settings": [
+    {"type":"text",        "id":"eyebrow",          "label":"Eyebrow",              "default":"Exclusief voor leden"},
+    {"type":"text",        "id":"title_line1",       "label":"Titel regel 1",        "default":"Word lid van de"},
+    {"type":"text",        "id":"title_line2",       "label":"Titel regel 2 (roze)", "default":"Kwispelclub"},
+    {"type":"textarea",    "id":"intro",             "label":"Intro tekst",          "default":"Ontvang als eerste nieuwe boxen, leuke verrassingen, exclusieve kortingen en handige tips voor een n\u00f3g gelukkige hond."},
+    {"type":"text",        "id":"input_placeholder", "label":"Input placeholder",    "default":"Jouw e-mailadres"},
+    {"type":"text",        "id":"btn_label",         "label":"Knop tekst",           "default":"Ja, ik word lid!"},
+    {"type":"text",        "id":"privacy_text",      "label":"Privacy tekst",        "default":"Geen spam, alleen leuke kwispels."},
+    {"type":"text",        "id":"success_title",     "label":"Success titel",        "default":"Welkom bij de Kwispelclub!"},
+    {"type":"text",        "id":"success_text",      "label":"Success tekst",        "default":"Je ontvangt binnenkort een bevestiging per e-mail."},
+    {"type":"image_picker","id":"hero_image",        "label":"Hoofdafbeelding"},
+    {"type":"text",        "id":"speech_bubble",     "label":"Speech bubble tekst",  "default":"Leuke dingen komen eraan!"},
+    {"type":"text",        "id":"community_title",   "label":"Community titel",      "default":"Deel, tag en inspireer!"},
+    {"type":"text",        "id":"community_sub",     "label":"Community subtitel",   "default":"Word onderdeel van onze Kwispelbox community."},
+    {"type":"text",        "id":"instagram_handle",  "label":"Instagram handle",     "default":"@kwispelbox.nl"},
+    {"type":"text",        "id":"hashtag",           "label":"Hashtag",              "default":"#kwispelbox"},
+    {"type":"text",        "id":"trust_title",       "label":"Trust titel",          "default":"Waarom meer dan 1.200 hondenfans ons vertrouwen"}
+  ],
+  "presets": [{
+    "name": "Kwispelclub nieuwsbrief",
+    "blocks": [
+      {"type":"perk","settings":{"icon":"gift","color":"green","title":"Exclusieve kortingen","description":"Speciale deals alleen voor leden."}},
+      {"type":"perk","settings":{"icon":"bell","color":"pink","title":"Als eerste op de hoogte","description":"Nieuwe boxen en collecties."}},
+      {"type":"perk","settings":{"icon":"sparkles","color":"orange","title":"Extra verrassingen","description":"Leuke extra's en seizoenscadeaus."}},
+      {"type":"perk","settings":{"icon":"heart","color":"yellow","title":"Tips & inspiratie","description":"Voor een gezonde, blije en actieve hond."}},
+      {"type":"trust","settings":{"icon":"shield","color":"green","title":"100% tevreden of geld terug","subtitle":"Niet tevreden? Wij lossen het op."}},
+      {"type":"trust","settings":{"icon":"gift","color":"pink","title":"Zorgvuldig ingepakt","subtitle":"Met liefde en aandacht voor elke hond."}},
+      {"type":"trust","settings":{"icon":"truck","color":"orange","title":"Snelle levering","subtitle":"Voor 22:00 besteld, morgen in huis."}},
+      {"type":"trust","settings":{"icon":"lock","color":"yellow","title":"Veilig betalen","subtitle":"Betaal veilig en vertrouwd."}},
+      {"type":"community_photo"},{"type":"community_photo"},
+      {"type":"community_photo"},{"type":"community_photo"}
+    ]
+  }]
+}
+{% endschema %}
