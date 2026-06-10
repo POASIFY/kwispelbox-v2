@@ -4,6 +4,13 @@
   <div class="kw-header__top">
     <div class="kw-header__inner">
 
+      <!-- Hamburger — alleen mobiel, staat links -->
+      <button type="button" class="kw-icon-btn kw-menu-btn"
+              aria-expanded="false" aria-controls="KwDrawer"
+              aria-label="{{ 'header.menu_open' | t }}">
+        {{- 'icon-menu.svg' | inline_asset_content -}}
+      </button>
+
       <a href="{{ routes.root_url }}" class="kw-logo" aria-label="{{ shop.name }}">
         {%- if settings.logo != blank -%}
           <img src="{{ settings.logo | image_url: width: 220 }}"
@@ -48,11 +55,6 @@
             <span class="kw-cart-btn__badge" data-cart-count>{{- cart.item_count -}}</span>
           {%- endif -%}
         </a>
-        <button type="button" class="kw-icon-btn kw-menu-btn"
-                aria-expanded="false" aria-controls="KwDrawer"
-                aria-label="{{ 'header.menu_open' | t }}">
-          {{- 'icon-menu.svg' | inline_asset_content -}}
-        </button>
       </div>
 
     </div>
@@ -224,19 +226,19 @@
   max-width:1280px;margin:0 auto;padding:12px 20px;
   display:grid;
   grid-template-columns: 44px 1fr auto;
-  align-items:center;gap:12px;
+  align-items:center;gap:8px;
 }
 @media(min-width:768px){
   .kw-header__inner{
     display:flex;
     gap:16px;
   }
+  .kw-menu-btn{ display:none!important; }
 }
 @media(min-width:1200px){.kw-header__inner{padding:12px 60px}}
 
 /* Logo */
 .kw-logo{text-decoration:none;flex-shrink:0;display:flex;align-items:center;justify-content:center}
-@media(max-width:767px){.kw-logo{justify-content:center}}
 .kw-logo img{height:48px;width:auto}
 .kw-logo__text{font-family:'Lilita One',cursive;font-size:1.8rem;color:#F7A048;line-height:1;white-space:nowrap;display:flex;align-items:center;gap:3px}
 .kw-logo__paw{display:flex;align-items:flex-end;margin-bottom:4px}
@@ -355,10 +357,10 @@
   .kw-search-mob{display:none}
   .kw-shortcuts{display:none}
   .kw-nav{display:block}
-  .kw-menu-btn{display:none!important}
   .kw-actions{margin-left:0}
   .kw-account-btn{display:flex}
   .kw-cart-btn__label{display:inline}
+  .kw-cart-btn{height:48px;width:auto;padding:0 20px;border-radius:999px}
   .kw-cart-btn__badge{position:absolute;top:-6px;right:-6px}
 }
 @media(max-width:767px){
