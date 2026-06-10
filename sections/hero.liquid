@@ -111,8 +111,13 @@
   <div class="hero__wave" aria-hidden="true">
     <svg viewBox="0 0 1440 60" preserveAspectRatio="none"
          xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z"
+      {%- comment -%}Desktop: beige wave, mobiel: groen wave{%- endcomment -%}
+      <path class="hero__wave-path-desktop"
+            d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z"
             fill="#F8EFDD"/>
+      <path class="hero__wave-path-mobile"
+            d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z"
+            fill="#66AA44"/>
     </svg>
   </div>
 

@@ -5,31 +5,32 @@
     "announcement": {
       "type": "announcement-bar",
       "blocks": {
-        "msg1": {
-          "type": "announcement",
-          "settings": {
-            "text": "Gratis verzending vanaf €75 · Voor 22:00 besteld = morgen in huis"
-          }
-        },
-        "msg2": {
-          "type": "announcement",
-          "settings": {
-            "text": "Al meer dan 1.200 blije honden 🐾"
-          }
-        },
-        "msg3": {
-          "type": "announcement",
-          "settings": {
-            "text": "100% tevredenheidsgarantie · Niet goed? Geld terug"
-          }
-        }
+        "msg1": { "type": "announcement", "settings": { "icon": "truck",   "text": "Gratis verzending vanaf \u20ac75" } },
+        "msg2": { "type": "announcement", "settings": { "icon": "star",    "text": "Meer dan 1.200 blije honden" } },
+        "msg3": { "type": "announcement", "settings": { "icon": "gift",    "text": "Elke box voelt als een cadeautje" } },
+        "msg4": { "type": "announcement", "settings": { "icon": "heart",   "text": "Uitstekend beoordeeld \u2605\u2605\u2605\u2605\u2605 4.9/5" } }
       },
-      "block_order": ["msg1", "msg2", "msg3"]
+      "block_order": ["msg1","msg2","msg3","msg4"]
     },
     "header": {
       "type": "header",
-      "settings": {}
+      "settings": {
+        "search_placeholder": "Zoek naar speeltjes, boxen..."
+      },
+      "blocks": {
+        "nav1": { "type": "nav_item",  "settings": { "title": "Boxen",       "icon": "box",    "color": "green",  "show_chevron": true  } },
+        "nav2": { "type": "nav_item",  "settings": { "title": "Speeltjes",   "icon": "toy",    "color": "orange", "show_chevron": true  } },
+        "nav3": { "type": "nav_item",  "settings": { "title": "Voor puppy\u2019s", "icon": "puppy",  "color": "green",  "show_chevron": true  } },
+        "nav4": { "type": "nav_item",  "settings": { "title": "Cadeaus",     "icon": "gift",   "color": "pink",   "show_chevron": true  } },
+        "nav5": { "type": "nav_item",  "settings": { "title": "Bestsellers", "icon": "star",   "color": "yellow", "show_chevron": false } },
+        "sc1":  { "type": "shortcut",  "settings": { "title": "Mini Box",    "icon": "box",    "color": "green"  } },
+        "sc2":  { "type": "shortcut",  "settings": { "title": "Happy Box",   "icon": "box",    "color": "orange" } },
+        "sc3":  { "type": "shortcut",  "settings": { "title": "Mega Box",    "icon": "box",    "color": "brown"  } },
+        "sc4":  { "type": "shortcut",  "settings": { "title": "Puppy",       "icon": "puppy",  "color": "green"  } },
+        "sc5":  { "type": "shortcut",  "settings": { "title": "Knuffels",    "icon": "toy",    "color": "pink"   } }
+      },
+      "block_order": ["nav1","nav2","nav3","nav4","nav5","sc1","sc2","sc3","sc4","sc5"]
     }
   },
-  "order": ["announcement", "header"]
+  "order": ["announcement","header"]
 }
