@@ -15,8 +15,7 @@
                  id="PbSlide{{ forloop.index }}">
               <img
                 src="{{ image | image_url: width: 900 }}"
-                srcset="{{ image | image_url: width: 500 }} 500w,
-                        {{ image | image_url: width: 900 }} 900w"
+                srcset="{{ image | image_url: width: 500 }} 500w, {{ image | image_url: width: 900 }} 900w"
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 alt="{{ image.alt | default: product.title | escape }}"
                 width="900"
@@ -35,17 +34,15 @@
           </div>
         {%- endif -%}
 
-        <!-- Prev / Next pijlen -->
         {%- if product.images.size > 1 -%}
-          <button class="pb__gallery-arrow pb__gallery-arrow--prev" id="PbPrev" type="button" aria-label="Vorige afbeelding">
+          <button class="pb__gallery-arrow pb__gallery-arrow--prev" id="PbPrev" type="button" aria-label="Vorige">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
           </button>
-          <button class="pb__gallery-arrow pb__gallery-arrow--next" id="PbNext" type="button" aria-label="Volgende afbeelding">
+          <button class="pb__gallery-arrow pb__gallery-arrow--next" id="PbNext" type="button" aria-label="Volgende">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
           </button>
         {%- endif -%}
 
-        <!-- Badge: Meest gekozen -->
         {%- if section.settings.badge_text != blank -%}
           <div class="pb__badge-popular">
             {{- 'icon-star.svg' | inline_asset_content -}}
@@ -53,7 +50,6 @@
           </div>
         {%- endif -%}
 
-        <!-- Cirkel badge: Geselecteerd met liefde -->
         {%- if section.settings.circle_badge != blank -%}
           <div class="pb__circle-badge" aria-hidden="true">
             <span>{{ section.settings.circle_badge }}</span>
@@ -63,7 +59,6 @@
 
       </div>
 
-      <!-- Thumbnails -->
       {%- if product.images.size > 1 -%}
         <div class="pb__thumbs">
           {%- for image in product.images limit: 5 -%}
@@ -82,7 +77,6 @@
     <!-- Rechts: product info ─────────────────────────────── -->
     <div class="pb__info">
 
-      <!-- Eyebrow -->
       {%- if section.settings.eyebrow != blank -%}
         <p class="pb__eyebrow">
           {{ section.settings.eyebrow }}
@@ -90,28 +84,22 @@
         </p>
       {%- endif -%}
 
-      <!-- Titel -->
       <h1 class="pb__title">{{ product.title }}</h1>
 
-      <!-- Sterren / reviews -->
       <div class="pb__reviews">
-        <div class="pb__stars" aria-label="{{ section.settings.review_score }} sterren">
-          {%- for i in (1..5) -%}
-            {{- 'icon-star.svg' | inline_asset_content -}}
-          {%- endfor -%}
+        <div class="pb__stars">
+          {%- for i in (1..5) -%}{{- 'icon-star.svg' | inline_asset_content -}}{%- endfor -%}
         </div>
         <span class="pb__review-score">{{ section.settings.review_score }}</span>
         <span class="pb__review-count">({{ section.settings.review_count }} reviews)</span>
       </div>
 
-      <!-- Samenvatting -->
       {%- if product.metafields.custom.summary != blank -%}
         <p class="pb__summary">{{ product.metafields.custom.summary }}</p>
       {%- elsif product.description != blank -%}
-        <p class="pb__summary">{{ product.description | strip_html | truncate: 160 }}</p>
+        <p class="pb__summary">{{ product.description | strip_html | truncate: 200 }}</p>
       {%- endif -%}
 
-      <!-- Features checkmarks -->
       {%- assign feature_blocks = section.blocks | where: 'type', 'feature' -%}
       {%- if feature_blocks.size > 0 -%}
         <ul class="pb__features">
@@ -122,39 +110,20 @@
             </li>
           {%- endfor -%}
         </ul>
-      {%- endif -%}"
-                     data-variant-id="{{ variant.id }}"
-                     data-price="{{ variant.price }}">
-                <input
-                  type="radio"
-                  name="pb_variant"
-                  value="{{ variant.id }}"
-                  class="pb__sub-radio"
-                  {% if variant == current_variant %}checked{% endif %}
-                  {% unless variant.available %}disabled{% endunless %}
-                >
-                <span class="pb__sub-radio-dot" aria-hidden="true"></span>
-              </label>
-            {%- endfor -%}
-          </div>
-        </div>
       {%- endif -%}
 
-      <!-- Dog properties -->
       {%- render 'dog-properties' -%}
 
-      <!-- Delivery trust -->
+      <!-- Delivery boven ATC -->
       <div class="pb__delivery">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#66AA44" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
         {{ section.settings.delivery_text }}
       </div>
 
-
-      <!-- Cart form -->
+      <!-- ATC -->
       <form id="PbForm" action="/cart/add" method="post">
         <input type="hidden" name="id" id="PbVariantId" value="{{ current_variant.id }}">
         <input type="hidden" name="quantity" value="1">
-
         <button type="submit" class="pb__atc" id="PbAtc"
                 {% unless current_variant.available %}disabled{% endunless %}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
@@ -165,86 +134,9 @@
           {%- endif -%}
         </button>
       </form>
+
     </div>
   </div>
-
-  <!-- ══ TRUST STRIP ════════════════════════════════════ -->
-  {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
-  {%- if trust_blocks.size > 0 -%}
-    <div class="pb__trust-strip">
-      {%- for block in trust_blocks -%}
-        <div class="pb__trust-item" {{ block.shopify_attributes }}>
-          <span class="pb__trust-icon pb__trust-icon--{{ block.settings.color }}" aria-hidden="true">
-            {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
-          </span>
-          <div>
-            <strong>{{ block.settings.title }}</strong>
-            {%- if block.settings.subtitle != blank -%}
-              <span>{{ block.settings.subtitle }}</span>
-            {%- endif -%}
-          </div>
-        </div>
-      {%- endfor -%}
-    </div>
-  {%- endif -%}
-
-  <!-- ══ REVIEWS ════════════════════════════════════════ -->
-  {%- assign review_blocks = section.blocks | where: 'type', 'review' -%}
-  {%- if review_blocks.size > 0 -%}
-    <div class="pb__reviews-section">
-      <div class="pb__reviews-inner">
-
-        <h2 class="pb__reviews-title">
-          {{ section.settings.reviews_title }}
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e75480" stroke-width="2" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-        </h2>
-
-        <div class="pb__reviews-grid">
-          {%- for block in review_blocks -%}
-            <div class="pb__review-card" {{ block.shopify_attributes }}>
-              <div class="pb__review-top">
-                <div class="pb__review-avatar-wrap">
-                  {%- if block.settings.avatar != blank -%}
-                    <img src="{{ block.settings.avatar | image_url: width: 100 }}"
-                         alt="{{ block.settings.author }}" width="52" height="52"
-                         loading="lazy" class="pb__review-avatar">
-                  {%- else -%}
-                    <div class="pb__review-avatar-ph">{{ block.settings.author | slice: 0, 1 | upcase }}</div>
-                  {%- endif -%}
-                </div>
-                <div>
-                  <strong class="pb__review-author">{{ block.settings.author }}</strong>
-                  <div class="pb__review-stars">
-                    {%- for i in (1..block.settings.stars) -%}
-                      {{- 'icon-star.svg' | inline_asset_content -}}
-                    {%- endfor -%}
-                  </div>
-                </div>
-              </div>
-              <p class="pb__review-text">{{ block.settings.text }}</p>
-              {%- if block.settings.dog_name != blank -%}
-                <p class="pb__review-dog">
-                  {{- 'icon-paw.svg' | inline_asset_content -}}
-                  {{ block.settings.dog_name }}
-                </p>
-              {%- endif -%}
-            </div>
-          {%- endfor -%}
-
-          <!-- Sociale bewijs teller -->
-          <div class="pb__review-cta">
-            <span class="pb__review-cta-icon" aria-hidden="true">
-              {{- 'icon-paw.svg' | inline_asset_content -}}
-            </span>
-            <strong>{{ section.settings.social_proof_count }}</strong>
-            <p>{{ section.settings.social_proof_text }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  {%- endif -%}
-
-</div>
 
 {% stylesheet %}
 /* ══ Wrapper ══════════════════════════════════════════════ */
