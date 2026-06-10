@@ -207,6 +207,9 @@
     },
     "social-proof": {
       "type": "social-proof"
+    },
+    "reviews": {
+      "type": "reviews"
     }
   },
   "order": [
@@ -216,6 +219,7 @@
     "why-kwispelbox",
     "how-it-works",
     "whats-inside",
-    "social-proof"
+    "social-proof",
+    "reviews"
   ]
 }
