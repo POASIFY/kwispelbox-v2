@@ -59,6 +59,7 @@
             <span class="kw-service-btn__icon">{{- 'icon-shield.svg' | inline_asset_content -}}</span>
             <span class="kw-service-btn__labels">
               <span class="kw-service-btn__title">Klantenservice</span>
+              <span class="kw-service-btn__sub">Hulp &amp; contact</span>
             </span>
           </a>
         {%- endif -%}
@@ -66,7 +67,8 @@
           <a href="{{ routes.account_url }}" class="kw-account-btn" aria-label="Mijn account">
             <span class="kw-account-btn__icon">{{- 'icon-account.svg' | inline_asset_content -}}</span>
             <span class="kw-account-btn__labels">
-              <span class="kw-account-btn__title">Account</span>
+              <span class="kw-account-btn__title">Mijn account</span>
+              <span class="kw-account-btn__sub">Inloggen / Registreren</span>
             </span>
           </a>
         {%- endif -%}
@@ -381,14 +383,14 @@
 .kw-account-btn__icon{display:flex;color:#603A15}
 .kw-account-btn__icon svg{width:24px;height:24px}
 .kw-account-btn__labels{display:flex;flex-direction:column;gap:1px}
-.kw-account-btn__title{font-family:'Karla',sans-serif;font-size:.92rem;font-weight:700;color:#603A15;line-height:1.2}
+.kw-account-btn__title{font-family:'Karla',sans-serif;font-size:.82rem;font-weight:700;color:#603A15;line-height:1.2}
 .kw-account-btn__sub{font-family:'Karla',sans-serif;font-size:.7rem;color:#A88259;line-height:1.2}
 .kw-service-btn{display:none;align-items:center;gap:10px;text-decoration:none;color:#603A15;padding:6px 12px;border-radius:12px;transition:background 160ms}
 .kw-service-btn:hover{background:#F8EFDD}
 .kw-service-btn__icon{display:flex;color:#66AA44}
 .kw-service-btn__icon svg{width:24px;height:24px}
 .kw-service-btn__labels{display:flex;flex-direction:column;gap:1px}
-.kw-service-btn__title{font-family:'Karla',sans-serif;font-size:.92rem;font-weight:700;color:#603A15;line-height:1.2}
+.kw-service-btn__title{font-family:'Karla',sans-serif;font-size:.82rem;font-weight:700;color:#603A15;line-height:1.2}
 .kw-service-btn__sub{font-family:'Karla',sans-serif;font-size:.7rem;color:#A88259;line-height:1.2}
 .kw-cart-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;width:44px;padding:0;background:#66AA44;color:#fff;border-radius:50%;text-decoration:none;font-family:'Lilita One',cursive;font-size:.95rem;position:relative;flex-shrink:0;transition:background 160ms,transform 200ms cubic-bezier(.34,1.56,.64,1)}
 @media(min-width:768px){
@@ -452,29 +454,23 @@
 .kw-nav__link.is-active{color:#F7A048}
 
 /* Pill nav link */
-.kw-nav__link--pill{height:36px;margin:6px 0;padding:0 14px;border-radius:999px;background:#F8EFDD;color:#603A15;font-weight:700}
+.kw-nav__link--pill{height:38px;margin:5px 0;padding:0 16px;border-radius:999px;background:#fff;border:1.5px solid #EDE2C9;color:#3d2209;font-weight:700;gap:8px;transition:border-color 160ms,background 160ms}
 .kw-nav__link--pill::after{display:none}
-.kw-nav__link--pill:hover{background:#EDE2C9;color:#603A15;transform:none}
-.kw-nav__link--pill.is-active{background:#F7A048;color:#fff}
-/* Gekleurde pill-varianten voor hiërarchie */
-.kw-nav__link--pill-green{background:#66AA44;color:#fff;font-size:.95rem}
-.kw-nav__link--pill-green:hover{background:#4d8833}
-.kw-nav__link--pill-pink{background:#fff0f5;color:#c0396a}
-.kw-nav__link--pill-pink:hover{background:#ffe0ec}
-.kw-nav__link--pill-yellow{background:#fffae0;color:#a07a00}
-.kw-nav__link--pill-yellow:hover{background:#fff3c4}
-.kw-nav__link--pill-orange{background:#fff0e4;color:#c4651e}
-.kw-nav__link--pill-orange:hover{background:#ffe2cc}
-/* brown blijft neutraal crème (geen override nodig) */
-.kw-nav__pill-icon{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.kw-nav__pill-icon svg{width:13px;height:13px}
-/* binnen gekleurde pills: witte icon-tegel voor contrast */
-.kw-nav__link--pill-green .kw-nav__pill-icon,
-.kw-nav__link--pill-pink .kw-nav__pill-icon,
-.kw-nav__link--pill-yellow .kw-nav__pill-icon,
-.kw-nav__link--pill-orange .kw-nav__pill-icon{background:#fff}
-.kw-nav__chevron{display:flex;align-items:center}
-.kw-nav__chevron svg{width:11px;height:11px}
+.kw-nav__link--pill:hover{background:#FBF6EC;border-color:#DAC9A1;color:#3d2209;transform:none}
+.kw-nav__link--pill.is-active{border-color:#66AA44;background:#f3faef}
+/* Icoon krijgt de merkkleur (lijn-stijl, geen tegel) */
+.kw-nav__pill-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:none}
+.kw-nav__pill-icon svg{width:18px;height:18px}
+.kw-nav__pill-icon--green{color:#66AA44;background:none}
+.kw-nav__pill-icon--orange{color:#F7A048;background:none}
+.kw-nav__pill-icon--pink{color:#e75480;background:none}
+.kw-nav__pill-icon--yellow{color:#e0a800;background:none}
+.kw-nav__pill-icon--brown{color:#A88259;background:none}
+/* Boxen (hoofdproduct) subtiel uitgelicht: groene rand + lichte tint */
+.kw-nav__link--pill-green{border-color:#bfe0a8;background:#f3faef}
+.kw-nav__link--pill-green:hover{border-color:#66AA44;background:#e8f5e2}
+.kw-nav__chevron{display:flex;align-items:center;color:#A88259}
+.kw-nav__chevron svg{width:13px;height:13px}
 
 /* Dropdown */
 .kw-dropdown{position:absolute;top:calc(100% + 4px);left:0;min-width:200px;background:#fff;border:1.5px solid #DAC9A1;border-radius:16px;box-shadow:0 4px 20px rgba(96,58,21,.12);padding:8px;list-style:none;z-index:10;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity 200ms,visibility 200ms,transform 200ms}
