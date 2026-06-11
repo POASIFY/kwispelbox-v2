@@ -45,6 +45,15 @@
       </form>
 
       <div class="kw-actions">
+        {%- if section.settings.service_url != blank -%}
+          <a href="{{ section.settings.service_url }}" class="kw-service-btn" aria-label="Klantenservice">
+            <span class="kw-service-btn__icon">{{- 'icon-shield.svg' | inline_asset_content -}}</span>
+            <span class="kw-service-btn__labels">
+              <span class="kw-service-btn__title">Klantenservice</span>
+              <span class="kw-service-btn__sub">Hulp &amp; contact</span>
+            </span>
+          </a>
+        {%- endif -%}
         {%- if shop.customer_accounts_enabled -%}
           <a href="{{ routes.account_url }}" class="kw-account-btn" aria-label="Mijn account">
             <span class="kw-account-btn__icon">{{- 'icon-account.svg' | inline_asset_content -}}</span>
@@ -254,13 +263,15 @@
           <li><a href="{{ routes.account_url }}" class="kw-drawer__minilink">
             <span aria-hidden="true">{{- 'icon-account.svg' | inline_asset_content -}}</span>Mijn account
           </a></li>
-          <li><a href="{{ routes.account_url }}" class="kw-drawer__minilink">
-            <span aria-hidden="true">{{- 'icon-box.svg' | inline_asset_content -}}</span>Mijn bestellingen
+        {%- endif -%}
+        {%- if section.settings.service_url != blank -%}
+          <li><a href="{{ section.settings.service_url }}" class="kw-drawer__minilink">
+            <span aria-hidden="true">{{- 'icon-shield.svg' | inline_asset_content -}}</span>Klantenservice
           </a></li>
         {%- endif -%}
         {%- if section.settings.faq_url != blank -%}
           <li><a href="{{ section.settings.faq_url }}" class="kw-drawer__minilink">
-            <span aria-hidden="true">{{- 'icon-shield.svg' | inline_asset_content -}}</span>Veelgestelde vragen
+            <span aria-hidden="true">{{- 'icon-bell.svg' | inline_asset_content -}}</span>Veelgestelde vragen
           </a></li>
         {%- endif -%}
         {%- if section.settings.contact_url != blank -%}
@@ -365,6 +376,13 @@
 .kw-account-btn__labels{display:flex;flex-direction:column;gap:1px}
 .kw-account-btn__title{font-family:'Karla',sans-serif;font-size:.8rem;font-weight:700;color:#603A15;line-height:1.2}
 .kw-account-btn__sub{font-family:'Karla',sans-serif;font-size:.7rem;color:#A88259;line-height:1.2}
+.kw-service-btn{display:none;align-items:center;gap:10px;text-decoration:none;color:#603A15;padding:6px 12px;border-radius:12px;transition:background 160ms}
+.kw-service-btn:hover{background:#F8EFDD}
+.kw-service-btn__icon{display:flex;color:#66AA44}
+.kw-service-btn__icon svg{width:24px;height:24px}
+.kw-service-btn__labels{display:flex;flex-direction:column;gap:1px}
+.kw-service-btn__title{font-family:'Karla',sans-serif;font-size:.8rem;font-weight:700;color:#603A15;line-height:1.2}
+.kw-service-btn__sub{font-family:'Karla',sans-serif;font-size:.7rem;color:#A88259;line-height:1.2}
 .kw-cart-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;width:44px;padding:0;background:#66AA44;color:#fff;border-radius:50%;text-decoration:none;font-family:'Lilita One',cursive;font-size:.95rem;position:relative;flex-shrink:0;transition:background 160ms,transform 200ms cubic-bezier(.34,1.56,.64,1)}
 @media(min-width:768px){
   .kw-cart-btn{height:48px;width:auto;padding:0 20px;border-radius:999px}
@@ -460,12 +478,14 @@
   .kw-nav{display:block}
   .kw-actions{margin-left:0}
   .kw-account-btn{display:flex}
+  .kw-service-btn{display:flex}
   .kw-cart-btn__label{display:inline}
   .kw-cart-btn{height:48px;width:auto;padding:0 20px;border-radius:999px}
   .kw-cart-btn__badge{position:absolute;top:-6px;right:-6px}
 }
 @media(max-width:767px){
   .kw-account-btn{display:none!important}
+  .kw-service-btn{display:none!important}
   .kw-cart-btn__label{display:none!important}
   .kw-cart-btn{
     background:transparent!important;
@@ -792,6 +812,7 @@
     { "type": "url", "id": "club_url", "label": "Link" },
 
     { "type": "header", "content": "Extra links" },
+    { "type": "url", "id": "service_url", "label": "Klantenservice" },
     { "type": "url", "id": "faq_url", "label": "Veelgestelde vragen" },
     { "type": "url", "id": "contact_url", "label": "Contact" },
 
