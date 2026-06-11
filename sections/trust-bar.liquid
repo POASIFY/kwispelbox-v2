@@ -39,9 +39,8 @@
   border-bottom: 1px solid #EDE2C9;
 }
 .trust-bar__inner {
-  max-width: 1280px;
-  margin: 0 auto;
   display: flex;
+  width: 100%;
 }
 
 /* Desktop items */
@@ -49,9 +48,10 @@
   display: none;
   flex: 1;
   align-items: center;
-  gap: 14px;
-  padding: 20px 24px;
+  gap: 12px;
+  padding: 18px 16px;
   border-right: 1px solid #EDE2C9;
+  min-width: 0;
 }
 .trust-bar__item--desktop:last-of-type { border-right: none; }
 
@@ -110,7 +110,7 @@
 @media (min-width: 768px) {
   .trust-bar__item--desktop { display: flex; }
   .trust-bar__item--mobile  { display: none !important; }
-  .trust-bar__inner { padding: 0 60px; }
+  .trust-bar__inner { padding: 0; }
 }
 {% endstylesheet %}
 

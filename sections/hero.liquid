@@ -65,10 +65,11 @@
       {%- assign accent = section.settings.heading_accent -%}
       <h1 class="hero__heading">
         {%- if accent != blank -%}
-          {%- assign parts = section.settings.heading | split: accent -%}
+          {%- assign raw = section.settings.heading | newline_to_br -%}
+          {%- assign parts = raw | split: accent -%}
           {{- parts[0] -}}<span class="hero__heading-accent">{{- accent -}}</span>{{- parts[1] -}}
         {%- else -%}
-          {{- section.settings.heading -}}
+          {{- section.settings.heading | newline_to_br -}}
         {%- endif -%}
       </h1>
     {%- endif -%}
@@ -253,8 +254,10 @@
   font-size: clamp(2.4rem, 6vw, 4.5rem);
   line-height: 1.05;
   color: #603A15;
-  max-width: 20ch;
+  margin: 0;
+  padding: 0;
 }
+.hero__heading br { display: block; }
 .hero__heading-accent {
   color: #F7A048;
 }
@@ -323,7 +326,8 @@
   flex-wrap: wrap;
   gap: 8px;
   list-style: none;
-  margin-top: 4px;
+  margin: 4px 0 0;
+  padding: 0;
 }
 
 .hero__pill {
@@ -432,7 +436,7 @@
       "type": "textarea",
       "id": "heading",
       "label": "Koptekst",
-      "default": "Een feestje voor jouw hond."
+      "default": "Een feestje\nvoor jouw hond."
     },
     {
       "type": "text",
