@@ -77,6 +77,151 @@
     </div>
   </div>
 
+  <!-- ══ FILTERS ══════════════════════════════════════════ -->
+  {%- if collection.filters.size > 0 -%}
+    <div class="kc__filters">
+      <div class="kc__filters-inner">
+
+        <!-- Actieve filters -->
+        {%- assign active_count = 0 -%}
+        {%- for filter in collection.filters -%}
+          {%- for value in filter.active_values -%}
+            {%- assign active_count = active_count | plus: 1 -%}
+          {%- endfor -%}
+          {%- if filter.type == 'price_range' -%}
+            {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+              {%- assign active_count = active_count | plus: 1 -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        <div class="kc__filters-scroll">
+
+          <!-- Filter label -->
+          <span class="kc__filter-label">
+            {{- 'icon-paw.svg' | inline_asset_content -}}
+            Filters
+            {%- if active_count > 0 -%}
+              <span class="kc__filter-count">{{ active_count }}</span>
+            {%- endif -%}
+          </span>
+
+          <!-- Filter groepen -->
+          {%- for filter in collection.filters -%}
+            <div class="kc__filter-group" data-filter-index="{{ forloop.index }}">
+              <button class="kc__filter-toggle" type="button"
+                      aria-expanded="false"
+                      aria-controls="KcFilter{{ forloop.index }}">
+                {{ filter.label }}
+                {%- if filter.active_values.size > 0 -%}
+                  <span class="kc__filter-active-dot"></span>
+                {%- endif -%}
+                <svg class="kc__filter-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+
+              <div class="kc__filter-dropdown" id="KcFilter{{ forloop.index }}" hidden>
+                {%- if filter.type == 'list' -%}
+                  <ul class="kc__filter-list">
+                    {%- for value in filter.values -%}
+                      <li>
+                        <label class="kc__filter-check">
+                          <input type="checkbox"
+                                 name="{{ value.param_name }}"
+                                 value="{{ value.value }}"
+                                 class="kc__filter-input"
+                                 data-url-add="{{ value.url_to_add }}"
+                                 data-url-remove="{{ value.url_to_remove }}"
+                                 {% if value.active %}checked{% endif %}
+                                 {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                          <span class="kc__filter-check-box" aria-hidden="true">
+                            {%- if value.active -%}
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                            {%- endif -%}
+                          </span>
+                          <span class="kc__filter-check-label">{{ value.label }}</span>
+                          <span class="kc__filter-check-count">({{ value.count }})</span>
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+
+                {%- elsif filter.type == 'price_range' -%}
+                  <div class="kc__filter-price">
+                    <div class="kc__filter-price-inputs">
+                      <div class="kc__filter-price-field">
+                        <span class="kc__filter-price-currency">€</span>
+                        <input
+                          type="number" name="{{ filter.min_value.param_name }}"
+                          class="kc__filter-price-input"
+                          id="FilterMinPrice{{ forloop.index }}"
+                          placeholder="0"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                          data-filter-type="price"
+                        >
+                      </div>
+                      <span class="kc__filter-price-sep">—</span>
+                      <div class="kc__filter-price-field">
+                        <span class="kc__filter-price-currency">€</span>
+                        <input
+                          type="number" name="{{ filter.max_value.param_name }}"
+                          class="kc__filter-price-input"
+                          id="FilterMaxPrice{{ forloop.index }}"
+                          placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                          data-filter-type="price"
+                        >
+                      </div>
+                    </div>
+                    <button type="button" class="kc__filter-price-apply" data-price-filter>
+                      Toepassen
+                    </button>
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endfor -%}
+
+          <!-- Wis filters -->
+          {%- if active_count > 0 -%}
+            <a href="{{ collection.url }}" class="kc__filter-clear">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              Wis alles
+            </a>
+          {%- endif -%}
+
+        </div>
+
+        <!-- Actieve filter tags -->
+        {%- if active_count > 0 -%}
+          <div class="kc__filter-tags">
+            {%- for filter in collection.filters -%}
+              {%- for value in filter.active_values -%}
+                <a href="{{ value.url_to_remove }}" class="kc__filter-tag">
+                  {{ filter.label }}: {{ value.label }}
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </a>
+              {%- endfor -%}
+              {%- if filter.type == 'price_range' -%}
+                {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+                  <a href="{{ filter.url_to_remove }}" class="kc__filter-tag">
+                    Prijs: € {{ filter.min_value.value | money_without_currency }} — € {{ filter.max_value.value | money_without_currency }}
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                  </a>
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+      </div>
+    </div>
+  {%- endif -%}
+
+
   <!-- ══ PRODUCT GRID ═════════════════════════════════════ -->
   <div class="kc__grid-wrap">
     {%- if collection.products.size > 0 -%}
@@ -241,6 +386,65 @@
 
 </div>
 
+<script>
+(function() {
+  // ── Toggle dropdowns ──────────────────────────────────
+  document.querySelectorAll('.kc__filter-toggle').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var expanded = this.getAttribute('aria-expanded') === 'true';
+      // Sluit alle andere dropdowns
+      document.querySelectorAll('.kc__filter-toggle[aria-expanded="true"]').forEach(function(b) {
+        b.setAttribute('aria-expanded', 'false');
+        var dd = document.getElementById(b.getAttribute('aria-controls'));
+        if (dd) dd.hidden = true;
+      });
+      // Toggle huidige
+      if (!expanded) {
+        this.setAttribute('aria-expanded', 'true');
+        var dd = document.getElementById(this.getAttribute('aria-controls'));
+        if (dd) dd.hidden = false;
+      }
+    });
+  });
+
+  // Sluit bij klik buiten
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.kc__filter-group')) {
+      document.querySelectorAll('.kc__filter-toggle[aria-expanded="true"]').forEach(function(b) {
+        b.setAttribute('aria-expanded', 'false');
+        var dd = document.getElementById(b.getAttribute('aria-controls'));
+        if (dd) dd.hidden = true;
+      });
+    }
+  });
+
+  // ── Checkbox filters: navigeer naar URL ───────────────
+  document.querySelectorAll('.kc__filter-input').forEach(function(input) {
+    input.addEventListener('change', function() {
+      var url = this.checked ? this.dataset.urlAdd : this.dataset.urlRemove;
+      if (url) window.location = url;
+    });
+  });
+
+  // ── Prijsfilter: apply knop ───────────────────────────
+  document.querySelectorAll('[data-price-filter]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var form = this.closest('.kc__filter-dropdown');
+      if (!form) return;
+      var url = new URL(window.location.href);
+      form.querySelectorAll('.kc__filter-price-input').forEach(function(input) {
+        if (input.value !== '') {
+          url.searchParams.set(input.name, input.value);
+        } else {
+          url.searchParams.delete(input.name);
+        }
+      });
+      window.location = url.toString();
+    });
+  });
+})();
+</script>
+
 {%- endpaginate -%}
 
 {% stylesheet %}
@@ -332,6 +536,176 @@
   font-size: .72rem; color: #fff; line-height: 1.25;
 }
 .kc__hero-badge svg { width: 14px; height: 14px; color: #FFE071; margin-bottom: 3px; }
+
+
+/* ══ Filters ════════════════════════════════════════════ */
+.kc__filters {
+  background: #fff;
+  border-bottom: 1.5px solid #EDE2C9;
+  position: sticky; top: 53px; z-index: 9;
+}
+.kc__filters-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 20px;
+}
+@media(min-width: 768px) { .kc__filters-inner { padding: 0 60px; } }
+
+/* Horizontale scroll rij */
+.kc__filters-scroll {
+  display: flex; align-items: center; gap: 8px;
+  overflow-x: auto; scrollbar-width: none;
+  padding: 12px 0;
+}
+.kc__filters-scroll::-webkit-scrollbar { display: none; }
+
+/* Filter label */
+.kc__filter-label {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Karla', sans-serif; font-size: .78rem; font-weight: 800;
+  color: #3d2209; flex-shrink: 0;
+}
+.kc__filter-label svg { width: 14px; height: 14px; color: #F7A048; }
+.kc__filter-count {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #F7A048; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .65rem; font-weight: 800;
+}
+
+/* Filter groep */
+.kc__filter-group { position: relative; flex-shrink: 0; }
+
+.kc__filter-toggle {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Karla', sans-serif; font-size: .8rem; font-weight: 700;
+  color: #3d2209; background: #F8EFDD;
+  border: 1.5px solid #DAC9A1; border-radius: 999px;
+  padding: 7px 14px; cursor: pointer;
+  transition: all 160ms; white-space: nowrap;
+  position: relative;
+}
+.kc__filter-toggle:hover { border-color: #66AA44; background: #e8f5e2; }
+.kc__filter-toggle[aria-expanded="true"] {
+  border-color: #66AA44; background: #e8f5e2; color: #2d7a1a;
+}
+.kc__filter-active-dot {
+  position: absolute; top: 4px; right: 4px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #F7A048; border: 1.5px solid #fff;
+}
+.kc__filter-chevron {
+  transition: transform 200ms; flex-shrink: 0;
+}
+.kc__filter-toggle[aria-expanded="true"] .kc__filter-chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown */
+.kc__filter-dropdown {
+  position: absolute; top: calc(100% + 8px); left: 0;
+  background: #fff; border: 1.5px solid #EDE2C9;
+  border-radius: 18px; padding: 16px;
+  min-width: 200px; max-width: 280px;
+  box-shadow: 0 8px 32px rgba(96,58,21,.12);
+  z-index: 100;
+  animation: kcFilterIn 150ms ease;
+}
+@keyframes kcFilterIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Checkboxes */
+.kc__filter-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
+.kc__filter-check {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 10px; border-radius: 10px; cursor: pointer;
+  transition: background 140ms;
+}
+.kc__filter-check:hover { background: #F8EFDD; }
+.kc__filter-input { position: absolute; opacity: 0; width: 0; height: 0; }
+.kc__filter-check-box {
+  width: 18px; height: 18px; border-radius: 5px;
+  border: 2px solid #DAC9A1; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 150ms; background: #fff;
+}
+.kc__filter-input:checked + .kc__filter-check-box {
+  background: #66AA44; border-color: #66AA44; color: #fff;
+}
+.kc__filter-input:disabled + .kc__filter-check-box { opacity: .4; }
+.kc__filter-check-label {
+  font-family: 'Karla', sans-serif; font-size: .82rem;
+  font-weight: 700; color: #3d2209; flex: 1;
+}
+.kc__filter-check-count {
+  font-family: 'Karla', sans-serif; font-size: .72rem; color: #A88259;
+}
+
+/* Prijs filter */
+.kc__filter-price { display: flex; flex-direction: column; gap: 12px; }
+.kc__filter-price-inputs { display: flex; align-items: center; gap: 8px; }
+.kc__filter-price-field {
+  display: flex; align-items: center; gap: 4px;
+  border: 1.5px solid #DAC9A1; border-radius: 999px;
+  padding: 7px 12px; flex: 1;
+  transition: border-color 150ms;
+}
+.kc__filter-price-field:focus-within { border-color: #66AA44; }
+.kc__filter-price-currency {
+  font-family: 'Karla', sans-serif; font-size: .8rem;
+  color: #A88259; flex-shrink: 0;
+}
+.kc__filter-price-input {
+  flex: 1; border: none; outline: none; background: transparent;
+  font-family: 'Karla', sans-serif; font-size: .82rem; color: #3d2209;
+  min-width: 0; width: 60px;
+  -moz-appearance: textfield;
+}
+.kc__filter-price-input::-webkit-outer-spin-button,
+.kc__filter-price-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.kc__filter-price-sep { font-family: 'Karla', sans-serif; color: #A88259; flex-shrink: 0; }
+.kc__filter-price-apply {
+  width: 100%; padding: 9px 16px;
+  background: #66AA44; color: #fff;
+  font-family: 'Karla', sans-serif; font-size: .82rem; font-weight: 800;
+  border: none; border-radius: 999px; cursor: pointer;
+  transition: background 160ms;
+}
+.kc__filter-price-apply:hover { background: #4d8833; }
+
+/* Wis filters */
+.kc__filter-clear {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: 'Karla', sans-serif; font-size: .75rem; font-weight: 700;
+  color: #A88259; text-decoration: none;
+  border: 1.5px dashed #DAC9A1; border-radius: 999px;
+  padding: 7px 14px; flex-shrink: 0;
+  transition: all 160ms; white-space: nowrap;
+}
+.kc__filter-clear:hover { border-color: #e75480; color: #e75480; background: #fff0f5; }
+.kc__filter-clear svg { flex-shrink: 0; }
+
+/* Actieve filter tags */
+.kc__filter-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 0 0 12px;
+}
+.kc__filter-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Karla', sans-serif; font-size: .75rem; font-weight: 700;
+  color: #2d7a1a; background: #e8f5e2;
+  border: 1.5px solid #c8e6c0; border-radius: 999px;
+  padding: 5px 12px; text-decoration: none;
+  transition: all 160ms;
+}
+.kc__filter-tag:hover { background: #c8e6c0; }
+.kc__filter-tag svg { flex-shrink: 0; }
+
+@media(max-width: 767px) {
+  .kc__filters { top: 52px; }
+  .kc__filters-inner { padding: 0 16px; }
+  .kc__filter-dropdown { min-width: 180px; }
+}
 
 /* ══ Toolbar ═════════════════════════════════════════════ */
 .kc__toolbar {
