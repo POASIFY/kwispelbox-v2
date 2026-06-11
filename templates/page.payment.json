@@ -3,18 +3,20 @@
     "main": {
       "type": "main-page-payment",
       "blocks": {
-        "m-1": { "type": "method", "settings": { "name": "iDEAL", "description": "Direct betalen via je eigen bank" } },
-        "m-2": { "type": "method", "settings": { "name": "Bancontact", "description": "Voor onze Belgische klanten" } },
-        "m-3": { "type": "method", "settings": { "name": "Creditcard", "description": "Visa & Mastercard" } },
-        "m-4": { "type": "method", "settings": { "name": "PayPal", "description": "Snel en vertrouwd betalen" } },
-        "m-5": { "type": "method", "settings": { "name": "Klarna", "description": "Achteraf betalen" } },
-        "m-6": { "type": "method", "settings": { "name": "Apple Pay", "description": "Betalen met je iPhone" } },
-        "t-1": { "type": "trust", "settings": { "title": "Versleutelde betaling", "body": "SSL-beveiligd", "icon": "lock", "color": "green" } },
-        "t-2": { "type": "trust", "settings": { "title": "Geen gegevens opgeslagen", "body": "Veilig verwerkt", "icon": "shield", "color": "orange" } },
-        "t-3": { "type": "trust", "settings": { "title": "Niet goed, geld terug", "body": "Binnen 14 dagen", "icon": "refresh", "color": "pink" } },
-        "t-4": { "type": "trust", "settings": { "title": "Snelle levering", "body": "1-2 werkdagen", "icon": "truck", "color": "yellow" } }
+        "m-1": { "type": "method", "settings": { "name": "iDEAL", "description": "Veilig en vertrouwd betalen via je eigen bank." } },
+        "m-2": { "type": "method", "settings": { "name": "Klarna", "description": "Achteraf betalen of in 3 termijnen. Flexibel en zonder gedoe." } },
+        "m-3": { "type": "method", "settings": { "name": "Mastercard", "description": "Betaal eenvoudig en veilig met je Mastercard." } },
+        "m-4": { "type": "method", "settings": { "name": "Visa", "description": "Wereldwijd geaccepteerd en altijd betrouwbaar." } },
+        "m-5": { "type": "method", "settings": { "name": "PayPal", "description": "Snel en veilig betalen met je PayPal account." } },
+        "m-6": { "type": "method", "settings": { "name": "Apple Pay", "description": "Supersnel betalen met Apple Pay." } },
+        "m-7": { "type": "method", "settings": { "name": "Google Pay", "description": "Betaal makkelijk en veilig met Google Pay." } },
+        "m-8": { "type": "method", "settings": { "name": "Bancontact", "description": "Voor onze Belgische klanten: veilig en vertrouwd." } },
+        "f-1": { "type": "faq", "settings": { "question": "Is betalen bij Kwispelbox veilig?", "answer": "Ja, al je betalingen verlopen via een beveiligde SSL-verbinding en we slaan geen betaalgegevens op." } },
+        "f-2": { "type": "faq", "settings": { "question": "Wanneer wordt het bedrag afgeschreven?", "answer": "Het bedrag wordt direct na het plaatsen van je bestelling afgeschreven, behalve bij achteraf betalen via Klarna." } },
+        "f-3": { "type": "faq", "settings": { "question": "Kan ik achteraf betalen?", "answer": "Ja, via Klarna kun je achteraf of in termijnen betalen." } },
+        "f-4": { "type": "faq", "settings": { "question": "Welke betaalmethoden zijn er in België?", "answer": "In België kun je betalen met Bancontact, creditcard, PayPal en meer." } }
       },
-      "block_order": ["m-1","m-2","m-3","m-4","m-5","m-6","t-1","t-2","t-3","t-4"],
+      "block_order": ["m-1","m-2","m-3","m-4","m-5","m-6","m-7","m-8","f-1","f-2","f-3","f-4"],
       "settings": {}
     }
   },
