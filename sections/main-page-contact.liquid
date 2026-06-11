@@ -1,13 +1,12 @@
 {% comment %}
   Kwispelbox — Contact / Klantenservice pagina
-  Eén section met: hero, hulp-kaarten (blocks), formulier + contactgegevens,
-  over-strip en trust-bar. Alles instelbaar via Theme Editor.
+  Hero is full-width (directe child van .shopify-section); de rest staat in
+  een begrensde container. Alles instelbaar via Theme Editor.
 {% endcomment %}
 
-<div class="pc full-width">
-
-  {%- comment -%} ── HERO ─────────────────────────────────────── {%- endcomment -%}
-  {%- if section.settings.hero_title_1 != blank or section.settings.hero_image != blank -%}
+{%- comment -%} ── HERO (volle breedte) ─────────────────────── {%- endcomment -%}
+{%- if section.settings.hero_title_1 != blank or section.settings.hero_image != blank -%}
+  <div class="pc__hero-wrap full-width">
     <div class="pc__hero">
       <div class="pc__hero-text">
         <h1 class="pc__hero-heading">
@@ -45,8 +44,8 @@
 
       <div class="pc__hero-media">
         {%- if section.settings.hero_image != blank -%}
-          {{ section.settings.hero_image | image_url: width: 1200 | image_tag:
-             widths: '600, 900, 1200', sizes: '(min-width: 1000px) 50vw, 100vw',
+          {{ section.settings.hero_image | image_url: width: 2000 | image_tag:
+             widths: '800, 1200, 1600, 2000', sizes: '(min-width: 768px) 50vw, 100vw',
              loading: 'eager', fetchpriority: 'high',
              class: 'pc__hero-img', alt: section.settings.hero_title_1 | escape }}
         {%- else -%}
@@ -55,7 +54,10 @@
         <span class="pc__hero-blob" aria-hidden="true">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
       </div>
     </div>
-  {%- endif -%}
+  </div>
+{%- endif -%}
+
+<div class="pc full-width">
 
   {%- comment -%} ── HULP-KAARTEN ─────────────────────────────── {%- endcomment -%}
   {%- assign help_blocks = section.blocks | where: 'type', 'help_card' -%}
@@ -261,8 +263,9 @@
 .pc{max-width:1200px;margin:0 auto;padding:0 20px 60px;font-family:'Karla',sans-serif}
 .pc__sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-/* Hero */
-.pc__hero{position:relative;background:#F4E7D0;border-radius:32px;overflow:hidden;margin-top:24px;display:flex;flex-direction:column}
+/* Hero — volle breedte */
+.pc__hero-wrap{background:#F4E7D0}
+.pc__hero{position:relative;max-width:1280px;margin:0 auto;overflow:hidden;display:flex;flex-direction:column}
 .pc__hero-text{padding:32px 24px 28px;display:flex;flex-direction:column;gap:18px}
 .pc__hero-heading{font-family:'Lilita One',cursive;font-size:2.4rem;line-height:1.05;color:#3d2209;margin:0;position:relative}
 .pc__hero-heading-accent{color:#66AA44;display:inline}
@@ -385,7 +388,7 @@
 
 /* Desktop */
 @media(min-width:768px){
-  .pc__hero{flex-direction:row;align-items:stretch;margin-top:32px}
+  .pc__hero{flex-direction:row;align-items:stretch}
   .pc__hero-text{flex:1;padding:48px 40px;justify-content:center}
   .pc__hero-heading{font-size:3.2rem}
   .pc__hero-media{flex:1;min-height:420px}
