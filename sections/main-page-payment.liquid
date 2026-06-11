@@ -5,7 +5,6 @@
 {% endcomment %}
 
 {%- comment -%} ── HERO (volle breedte, foto als achtergrond) ── {%- endcomment -%}
-{% render 'breadcrumbs' %}
 {%- if section.settings.hero_title_1 != blank or section.settings.hero_image != blank -%}
   <div class="pp__hero full-width">
     {%- if section.settings.hero_image != blank -%}
@@ -31,6 +30,8 @@
     </div>
   </div>
 {%- endif -%}
+
+{% render 'breadcrumbs', overlay: true %}
 
 <div class="pp full-width">
 

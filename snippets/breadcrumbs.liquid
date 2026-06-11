@@ -3,11 +3,13 @@
   Herbruikbaar: rendert visuele breadcrumb + BreadcrumbList JSON-LD.
   Detecteert paginatype zelf. Niet tonen op de homepage.
   Gebruik: {% render 'breadcrumbs' %}
+  Optie:   {% render 'breadcrumbs', overlay: true %}
+           → overlapt onderaan de hero, gecentreerd (voor full-bleed hero-pagina's)
 {% endcomment %}
 
 {%- unless template.name == 'index' or template.name == 'cart' or template.name == '404' -%}
 
-  <nav class="kw-crumbs full-width" aria-label="Kruimelpad">
+  <nav class="kw-crumbs full-width{% if overlay %} kw-crumbs--overlay{% endif %}" aria-label="Kruimelpad">
     <ol class="kw-crumbs__list" role="list">
 
       {%- comment -%} Altijd: Home (huis-icoon) {%- endcomment -%}
@@ -126,6 +128,13 @@
       .kw-crumbs{padding:0 60px}
       .kw-crumbs__list{margin-top:20px;padding:16px 24px;font-size:.95rem}
       .kw-crumbs__current{max-width:none}
+    }
+    /* Overlay-variant: overlapt onderaan de hero, gecentreerd (desktop) */
+    .kw-crumbs--overlay{position:relative;z-index:3;margin-top:-44px;display:flex;justify-content:center;pointer-events:none}
+    .kw-crumbs--overlay .kw-crumbs__list{pointer-events:auto;margin-top:0;display:inline-flex;width:auto}
+    @media(max-width:767px){
+      .kw-crumbs--overlay{margin-top:0;justify-content:flex-start}
+      .kw-crumbs--overlay .kw-crumbs__list{width:100%}
     }
   </style>
 
