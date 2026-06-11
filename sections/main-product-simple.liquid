@@ -18,7 +18,7 @@
                 srcset="{{ image | image_url: width: 500 }} 500w, {{ image | image_url: width: 900 }} 900w"
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 alt="{{ image.alt | default: product.title | escape }}"
-                width="900"
+                width="900" height="506"
                 loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
                 fetchpriority="{% if forloop.first %}high{% else %}auto{% endif %}"
                 class="ps__slide-img"
@@ -63,7 +63,7 @@
                     data-slide="{{ forloop.index }}" type="button">
               <img src="{{ image | image_url: width: 200 }}"
                    alt="{{ image.alt | default: product.title }}"
-                   width="200" loading="lazy">
+                   width="200" height="200" loading="lazy">
             </button>
           {%- endfor -%}
         </div>
@@ -256,7 +256,7 @@
           <div class="ps__upsell-img-wrap">
             <img src="{{ section.settings.upsell_image | image_url: width: 600 }}"
                  alt="{{ section.settings.upsell_title }}"
-                 width="600" loading="lazy" class="ps__upsell-img">
+                 width="600" height="400" loading="lazy" class="ps__upsell-img">
           </div>
         {%- endif -%}
       </div>

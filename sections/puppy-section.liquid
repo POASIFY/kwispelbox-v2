@@ -13,7 +13,7 @@
                     {{ section.settings.hero_image | image_url: width: 900 }} 900w"
             sizes="(max-width: 899px) 100vw, 48vw"
             alt="{{ section.settings.hero_image.alt | default: 'Puppy' | escape }}"
-            width="900" loading="lazy" class="puppy__hero-img"
+            width="900" height="506" loading="lazy" class="puppy__hero-img"
           >
         {%- else -%}
           <div class="puppy__hero-ph">
@@ -75,7 +75,7 @@
               <img
                 src="{{ section.settings.side_image | image_url: width: 300 }}"
                 alt="{{ section.settings.side_image.alt | default: 'Puppy speelgoed' | escape }}"
-                width="300" loading="lazy" class="puppy__side-img"
+                width="300" height="400" loading="lazy" class="puppy__side-img"
               >
               <!-- Laag 2: sparkle zweeft rechtsboven BUITEN de foto -->
               <div class="puppy__side-sparkle" aria-hidden="true">
@@ -129,7 +129,7 @@
               <img
                 src="{{ block.settings.image | image_url: width: 240 }}"
                 alt="{{ block.settings.title | escape }}"
-                width="240" loading="lazy"
+                width="240" height="240" loading="lazy"
                 class="puppy__product-img"
               >
             {%- else -%}

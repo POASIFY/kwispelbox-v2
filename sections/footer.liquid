@@ -205,13 +205,11 @@
           <div class="kw-footer__shipping-logos">
             {%- if section.settings.shipping_logo_1 != blank -%}
               <img src="{{ section.settings.shipping_logo_1 | image_url: width: 120 }}"
-                   alt="{{ section.settings.shipping_logo_1_alt | default: 'Verzender' }}"
-                   height="28" loading="lazy" class="kw-footer__shipping-img">
+                   alt="{{ section.settings.shipping_logo_1_alt | default: 'Verzender' }}" width="120" height="28" loading="lazy" class="kw-footer__shipping-img">
             {%- endif -%}
             {%- if section.settings.shipping_logo_2 != blank -%}
               <img src="{{ section.settings.shipping_logo_2 | image_url: width: 120 }}"
-                   alt="{{ section.settings.shipping_logo_2_alt | default: 'Verzender' }}"
-                   height="28" loading="lazy" class="kw-footer__shipping-img">
+                   alt="{{ section.settings.shipping_logo_2_alt | default: 'Verzender' }}" width="120" height="28" loading="lazy" class="kw-footer__shipping-img">
             {%- endif -%}
           </div>
         </div>

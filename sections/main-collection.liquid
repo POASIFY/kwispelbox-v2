@@ -15,7 +15,7 @@
                   {{ collection.image | image_url: width: 1800 }} 1800w"
           sizes="100vw"
           alt="{{ collection.title | escape }}"
-          width="1800" loading="eager" fetchpriority="high"
+          width="1800" height="1029" loading="eager" fetchpriority="high"
           class="kc__hero-bg-img"
         >
       </div>
@@ -249,14 +249,14 @@
                             {{ product.featured_image | image_url: width: 600 }} 600w"
                     sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
                     alt="{{ product.featured_image.alt | default: product.title | escape }}"
-                    width="600" loading="lazy"
+                    width="600" height="600" loading="lazy"
                     class="kc__card-img"
                   >
                   {%- if product.images.size > 1 -%}
                     <img
                       src="{{ product.images[1] | image_url: width: 600 }}"
                       alt="{{ product.title | escape }}"
-                      width="600" loading="lazy"
+                      width="600" height="600" loading="lazy"
                       class="kc__card-img kc__card-img--hover"
                     >
                   {%- endif -%}
