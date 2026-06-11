@@ -24,17 +24,24 @@
       </a>
 
       <form action="{{ routes.search_url }}" method="get"
-            class="kw-search" role="search" aria-label="Zoeken">
+            class="kw-search" role="search" aria-label="Zoeken"
+            data-kw-search>
         <input type="hidden" name="type" value="product">
         <div class="kw-search__field">
           <span class="kw-search__ico" aria-hidden="true">{{- 'icon-search.svg' | inline_asset_content -}}</span>
           <label for="KwSearchInput" class="kw-sr-only">Zoekterm</label>
           <input type="search" id="KwSearchInput" name="q"
-                 class="kw-search__input"
+                 class="kw-search__input" data-kw-search-input
                  placeholder="{{ section.settings.search_placeholder }}"
-                 autocomplete="off" value="{{ search.terms | escape }}">
+                 autocomplete="off" autocorrect="off" spellcheck="false"
+                 role="combobox" aria-expanded="false" aria-autocomplete="list"
+                 aria-controls="KwSearchResults" aria-label="Zoekterm"
+                 value="{{ search.terms | escape }}">
+          <button type="button" class="kw-search__clear" data-kw-search-clear
+                  aria-label="Zoekterm wissen" hidden>{{- 'icon-close.svg' | inline_asset_content -}}</button>
         </div>
         <button type="submit" class="kw-search__submit">Zoeken</button>
+        <div class="kw-search__results" id="KwSearchResults" data-kw-search-results role="listbox" hidden></div>
       </form>
 
       <div class="kw-actions">
@@ -62,14 +69,24 @@
 
   <!-- RIJ 2: Mobiele zoekbalk ────────────────────────────────────── -->
   <div class="kw-search-mob full-width">
-    <form action="{{ routes.search_url }}" method="get" role="search" aria-label="Zoeken">
+    <form action="{{ routes.search_url }}" method="get" role="search" aria-label="Zoeken"
+          class="kw-search-mob__form" data-kw-search>
       <input type="hidden" name="type" value="product">
-      <span class="kw-search__ico" aria-hidden="true">{{- 'icon-search.svg' | inline_asset_content -}}</span>
-      <label for="KwSearchMob" class="kw-sr-only">Zoekterm</label>
-      <input type="search" id="KwSearchMob" name="q"
-             class="kw-search__input"
-             placeholder="{{ section.settings.search_placeholder }}"
-             autocomplete="off" value="{{ search.terms | escape }}">
+      <div class="kw-search-mob__field">
+        <span class="kw-search__ico" aria-hidden="true">{{- 'icon-search.svg' | inline_asset_content -}}</span>
+        <label for="KwSearchMob" class="kw-sr-only">Zoekterm</label>
+        <input type="search" id="KwSearchMob" name="q"
+               class="kw-search__input" data-kw-search-input
+               placeholder="{{ section.settings.search_placeholder }}"
+               autocomplete="off" autocorrect="off" spellcheck="false"
+               role="combobox" aria-expanded="false" aria-autocomplete="list"
+               aria-controls="KwSearchResultsMob" aria-label="Zoekterm"
+               value="{{ search.terms | escape }}">
+        <button type="button" class="kw-search__clear" data-kw-search-clear
+                aria-label="Zoekterm wissen" hidden>{{- 'icon-close.svg' | inline_asset_content -}}</button>
+      </div>
+      <button type="submit" class="kw-search-mob__submit" aria-label="Zoeken">{{- 'icon-search.svg' | inline_asset_content -}}</button>
+      <div class="kw-search__results" id="KwSearchResultsMob" data-kw-search-results role="listbox" hidden></div>
     </form>
   </div>
 
@@ -310,7 +327,7 @@
 .kw-logo__paw svg{width:20px;height:20px;color:#F7A048}
 
 /* Zoekbalk */
-.kw-search{display:none;flex:1;max-width:600px}
+.kw-search{display:none;flex:1;max-width:600px;position:relative}
 .kw-search__field{display:flex;align-items:center;background:#F8EFDD;border:2px solid #DAC9A1;border-radius:999px 0 0 999px;height:50px;padding:0 16px;flex:1;transition:border-color 200ms,box-shadow 200ms}
 .kw-search__field:focus-within{border-color:#F7A048;box-shadow:0 0 0 3px rgba(247,160,72,.15)}
 .kw-search__ico{color:#A88259;flex-shrink:0;display:flex;align-items:center;margin-right:10px}
@@ -318,8 +335,26 @@
 .kw-search__input{flex:1;border:none;outline:none;background:transparent;font-family:'Karla',sans-serif;font-size:.95rem;color:#603A15;min-width:0}
 .kw-search__input::placeholder{color:#A88259}
 .kw-search__input::-webkit-search-cancel-button{display:none}
+.kw-search__clear{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border:none;background:#DAC9A1;color:#603A15;border-radius:50%;cursor:pointer;flex-shrink:0;margin-left:6px;transition:background 140ms}
+.kw-search__clear:hover{background:#A88259;color:#fff}
+.kw-search__clear svg{width:12px;height:12px}
 .kw-search__submit{height:50px;padding:0 24px;background:#F7A048;color:#fff;font-family:'Lilita One',cursive;font-size:.95rem;border:none;border-radius:0 999px 999px 0;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 160ms}
 .kw-search__submit:hover{background:#d9823a}
+
+/* Zoekresultaten dropdown */
+.kw-search__results{position:absolute;top:calc(100% + 10px);left:0;right:0;background:#fff;border:1.5px solid #DAC9A1;border-radius:18px;box-shadow:0 8px 28px rgba(96,58,21,.16);padding:8px;z-index:120;max-height:70vh;overflow-y:auto;overscroll-behavior:contain}
+.kw-sr__list{list-style:none;margin:0;padding:0}
+.kw-sr__item{display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:12px;text-decoration:none;transition:background 130ms}
+.kw-sr__item:hover,.kw-sr__item.is-active{background:#F8EFDD}
+.kw-sr__thumb{width:48px;height:48px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#F8EFDD;display:flex;align-items:center;justify-content:center}
+.kw-sr__thumb img{width:100%;height:100%;object-fit:cover}
+.kw-sr__thumb--empty{background:#EDE2C9}
+.kw-sr__info{display:flex;flex-direction:column;gap:2px;min-width:0}
+.kw-sr__title{font-family:'Karla',sans-serif;font-size:.92rem;font-weight:700;color:#3d2209;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kw-sr__price{font-family:'Karla',sans-serif;font-size:.85rem;font-weight:600;color:#66AA44}
+.kw-sr__all{display:block;text-align:center;margin-top:6px;padding:11px;background:#66AA44;color:#fff;font-family:'Lilita One',cursive;font-size:.9rem;border-radius:12px;text-decoration:none;transition:background 150ms}
+.kw-sr__all:hover,.kw-sr__all.is-active{background:#4d8833}
+.kw-sr__empty{text-align:center;padding:20px 12px;color:#A88259;font-family:'Karla',sans-serif;font-size:.92rem;margin:0}
 
 /* Acties */
 .kw-actions{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
@@ -347,11 +382,18 @@
 
 /* Mobiele zoekbalk */
 .kw-search-mob{background:#F8EFDD;border-top:1px solid #EDE2C9;padding:10px 20px}
-.kw-search-mob form{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid #DAC9A1;border-radius:999px;height:42px;padding:0 16px;width:100%;transition:border-color 200ms}
-.kw-search-mob form:focus-within{border-color:#F7A048}
-.kw-search-mob .kw-search__input{flex:1;border:none;outline:none;background:transparent;font-family:'Karla',sans-serif;font-size:.9rem;color:#603A15;min-width:0}
+.kw-search-mob__form{display:flex;align-items:center;gap:8px;width:100%;position:relative}
+.kw-search-mob__field{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid #DAC9A1;border-radius:999px;height:44px;padding:0 16px;flex:1;min-width:0;transition:border-color 200ms,box-shadow 200ms}
+.kw-search-mob__field:focus-within{border-color:#F7A048;box-shadow:0 0 0 3px rgba(247,160,72,.15)}
 .kw-search-mob .kw-search__ico{color:#A88259;display:flex;flex-shrink:0}
 .kw-search-mob .kw-search__ico svg{width:16px;height:16px}
+.kw-search-mob .kw-search__input{flex:1;border:none;outline:none;background:transparent;font-family:'Karla',sans-serif;font-size:16px;color:#603A15;min-width:0}
+.kw-search-mob .kw-search__input::placeholder{color:#A88259}
+.kw-search-mob .kw-search__clear{margin-left:4px}
+.kw-search-mob__submit{display:flex;align-items:center;justify-content:center;width:44px;height:44px;flex-shrink:0;background:#F7A048;color:#fff;border:none;border-radius:50%;cursor:pointer;transition:background 160ms}
+.kw-search-mob__submit:hover{background:#d9823a}
+.kw-search-mob__submit svg{width:18px;height:18px}
+.kw-search-mob .kw-search__results{top:calc(100% + 8px)}
 
 /* Mobiele snelkoppelingen */
 .kw-shortcuts{background:#fff;border-top:1px solid #EDE2C9;padding:8px 0;}
@@ -534,14 +576,12 @@
     drawer.showModal();
     document.body.style.overflow = 'hidden';
     if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
-    document.body.style.overflow = 'hidden';
   }
   function closeDrawer() {
     if (!drawer) return;
     drawer.close();
     document.body.style.overflow = '';
     if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
   }
 
   if (menuBtn)  menuBtn.addEventListener('click', openDrawer);
@@ -553,6 +593,119 @@
       document.body.style.overflow = '';
     });
   }
+
+  // ── Predictive search ────────────────────────────────────────
+  var searchRoot = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+
+  function money(cents) {
+    try {
+      return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(cents / 100);
+    } catch (e) {
+      return '\u20ac' + (cents / 100).toFixed(2).replace('.', ',');
+    }
+  }
+
+  function initSearch(form) {
+    var input   = form.querySelector('[data-kw-search-input]');
+    var results = form.querySelector('[data-kw-search-results]');
+    var clear   = form.querySelector('[data-kw-search-clear]');
+    if (!input || !results) return;
+
+    var controller = null;
+    var timer = null;
+    var activeIndex = -1;
+
+    function hideResults() {
+      results.hidden = true;
+      results.innerHTML = '';
+      input.setAttribute('aria-expanded', 'false');
+      activeIndex = -1;
+    }
+
+    function toggleClear() {
+      if (clear) clear.hidden = input.value.length === 0;
+    }
+
+    function render(data, term) {
+      var products = (data.resources && data.resources.results && data.resources.results.products) || [];
+      var html = '';
+
+      if (products.length) {
+        html += '<ul class="kw-sr__list" role="presentation">';
+        products.slice(0, 6).forEach(function (p) {
+          var img = p.featured_image && p.featured_image.url ? p.featured_image.url : (p.image || '');
+          var price = (p.price !== undefined) ? money(p.price) : '';
+          html += '<li role="option"><a class="kw-sr__item" href="' + p.url + '">' +
+            (img ? '<span class="kw-sr__thumb"><img src="' + img + '&width=80" alt="" width="48" height="48" loading="lazy"></span>' : '<span class="kw-sr__thumb kw-sr__thumb--empty"></span>') +
+            '<span class="kw-sr__info"><span class="kw-sr__title">' + p.title + '</span>' +
+            (price ? '<span class="kw-sr__price">' + price + '</span>' : '') +
+            '</span></a></li>';
+        });
+        html += '</ul>';
+        html += '<a class="kw-sr__all" href="' + searchRoot + 'search?q=' + encodeURIComponent(term) + '&type=product">Alle resultaten voor &ldquo;' + term + '&rdquo;</a>';
+      } else {
+        html += '<p class="kw-sr__empty">Geen resultaten voor &ldquo;' + term + '&rdquo;</p>';
+      }
+
+      results.innerHTML = html;
+      results.hidden = false;
+      input.setAttribute('aria-expanded', 'true');
+      activeIndex = -1;
+    }
+
+    function doSearch(term) {
+      if (controller) controller.abort();
+      controller = new AbortController();
+      var url = searchRoot + 'search/suggest.json?q=' + encodeURIComponent(term) +
+        '&resources[type]=product&resources[limit]=6&resources[options][unavailable_products]=last&resources[options][fields]=title,product_type,variants.title,vendor';
+      fetch(url, { signal: controller.signal })
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+        .then(function (data) { render(data, term); })
+        .catch(function () { /* abort of netwerk: stil */ });
+    }
+
+    input.addEventListener('input', function () {
+      toggleClear();
+      var term = input.value.trim();
+      clearTimeout(timer);
+      if (term.length < 2) { hideResults(); return; }
+      timer = setTimeout(function () { doSearch(term); }, 200);
+    });
+
+    input.addEventListener('keydown', function (e) {
+      var items = results.querySelectorAll('.kw-sr__item, .kw-sr__all');
+      if (results.hidden || !items.length) return;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault(); activeIndex = Math.min(activeIndex + 1, items.length - 1); setActive(items);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault(); activeIndex = Math.max(activeIndex - 1, 0); setActive(items);
+      } else if (e.key === 'Enter') {
+        if (activeIndex >= 0 && items[activeIndex]) { e.preventDefault(); window.location.href = items[activeIndex].href; }
+      } else if (e.key === 'Escape') {
+        hideResults(); input.blur();
+      }
+    });
+
+    function setActive(items) {
+      items.forEach(function (el, i) { el.classList.toggle('is-active', i === activeIndex); });
+      if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: 'nearest' });
+    }
+
+    if (clear) clear.addEventListener('click', function () {
+      input.value = ''; toggleClear(); hideResults(); input.focus();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!form.contains(e.target)) hideResults();
+    });
+    input.addEventListener('focus', function () {
+      if (input.value.trim().length >= 2 && results.innerHTML) results.hidden = false;
+    });
+
+    toggleClear();
+  }
+
+  document.querySelectorAll('[data-kw-search]').forEach(initSearch);
 })();
 {% endjavascript %}
 
