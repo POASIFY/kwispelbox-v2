@@ -449,11 +449,13 @@
 .kc__hero {
   position: relative;
   overflow: hidden;
-  min-height: 360px;
+  aspect-ratio: 7 / 4;
   background: #3d2209;
   display: flex; align-items: flex-end;
 }
-@media(min-width: 768px) { .kc__hero { min-height: 440px; } }
+@media(max-width: 767px) {
+  .kc__hero { aspect-ratio: unset; min-height: 280px; }
+}
 
 /* Achtergrond afbeelding */
 .kc__hero-bg {
