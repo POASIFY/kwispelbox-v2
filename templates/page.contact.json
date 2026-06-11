@@ -1,0 +1,23 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page-contact",
+      "blocks": {
+        "help-1": { "type": "help_card", "settings": { "title": "Bestelling & levering", "body": "Alles over je bestelling, verzending en bezorgen.", "icon": "box", "color": "green" } },
+        "help-2": { "type": "help_card", "settings": { "title": "Retouren & ruilen", "body": "Niet helemaal tevreden? Lees hier hoe het werkt.", "icon": "refresh", "color": "orange" } },
+        "help-3": { "type": "help_card", "settings": { "title": "Producten & boxen", "body": "Vragen over onze boxen en speeltjes.", "icon": "paw", "color": "pink" } },
+        "help-4": { "type": "help_card", "settings": { "title": "Account & abonnement", "body": "Beheer je account of Kwispelclub abonnement.", "icon": "account", "color": "brown" } },
+        "info-1": { "type": "info_item", "settings": { "title": "E-mail", "body": "hallo@kwispelbox.nl\nWe reageren binnen 1 werkdag", "icon": "mail", "color": "green" } },
+        "info-2": { "type": "info_item", "settings": { "title": "Openingstijden", "body": "Maandag t/m vrijdag\n09:00 - 17:00", "icon": "refresh", "color": "yellow" } },
+        "info-3": { "type": "info_item", "settings": { "title": "Volg ons", "body": "Blijf op de hoogte van nieuwtjes, acties en blije honden!", "icon": "heart", "color": "pink" } },
+        "trust-1": { "type": "trust_item", "settings": { "title": "Gratis verzending", "body": "vanaf €75", "icon": "truck", "color": "green" } },
+        "trust-2": { "type": "trust_item", "settings": { "title": "Flexibel opzegbaar", "body": "op elk moment", "icon": "refresh", "color": "orange" } },
+        "trust-3": { "type": "trust_item", "settings": { "title": "Elke maand verrassing", "body": "met zorg samengesteld", "icon": "gift", "color": "pink" } },
+        "trust-4": { "type": "trust_item", "settings": { "title": "Met liefde samengesteld", "body": "voor blije honden", "icon": "heart", "color": "yellow" } }
+      },
+      "block_order": ["help-1","help-2","help-3","help-4","info-1","info-2","info-3","trust-1","trust-2","trust-3","trust-4"],
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}
