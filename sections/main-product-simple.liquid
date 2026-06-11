@@ -178,7 +178,7 @@
       </div>
 
       <!-- Hoeveelheid + ATC -->
-      <form id="PsForm" action="/cart/add" method="post">
+      <form id="PsForm" action="{{ routes.cart_add_url }}" method="post">
         <input type="hidden" name="id" id="PsVariantId" value="{{ current_variant.id }}">
         <div class="ps__atc-row">
           <div class="ps__qty">

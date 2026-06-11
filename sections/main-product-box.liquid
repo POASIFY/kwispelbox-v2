@@ -133,7 +133,7 @@
       </div>
 
       <!-- ATC -->
-      <form id="PbForm" action="/cart/add" method="post">
+      <form id="PbForm" action="{{ routes.cart_add_url }}" method="post">
         <input type="hidden" name="id" id="PbVariantId" value="{{ current_variant.id }}">
         <input type="hidden" name="quantity" value="1">
         <button type="submit" class="pb__atc" id="PbAtc"
