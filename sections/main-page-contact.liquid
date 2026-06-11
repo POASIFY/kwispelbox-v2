@@ -18,7 +18,6 @@
     {%- endif -%}
 
     <div class="pc__hero-overlay" aria-hidden="true"></div>
-    <span class="pc__hero-blob" aria-hidden="true">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
 
     <div class="pc__hero-content">
       <h1 class="pc__hero-heading">
@@ -268,7 +267,7 @@
 .pc__hero-img--placeholder{background:#EDE2C9;display:flex;align-items:center;justify-content:center}
 .pc__hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(244,231,208,.45) 0%,rgba(244,231,208,.8) 50%,rgba(244,231,208,.97) 78%)}
 .pc__hero-content{position:relative;z-index:2;width:100%;max-width:1280px;margin:0 auto;padding:36px 24px 40px;display:flex;flex-direction:column;gap:18px}
-.pc__hero-heading{font-family:'Lilita One',cursive;font-size:2.4rem;line-height:1.05;color:#3d2209;margin:0}
+.pc__hero-heading{font-family:'Lilita One',cursive;font-size:clamp(2.4rem,6vw,4.5rem);line-height:1.05;color:#3d2209;margin:0;max-width:16ch}
 .pc__hero-heading-accent{color:#66AA44;display:inline}
 .pc__hero-heart{display:inline-flex;color:#FFB8CD;vertical-align:middle;margin-left:6px}
 .pc__hero-heart svg{width:30px;height:30px}
@@ -282,11 +281,9 @@
 .pc__hero-usp-text{display:flex;flex-direction:column;gap:1px}
 .pc__hero-usp-text strong{font-size:1rem;font-weight:800;color:#3d2209}
 .pc__hero-usp-text span{font-size:.9rem;color:#603A15}
-.pc__hero-blob{position:absolute;top:0;right:0;z-index:1;width:120px;height:120px;background:#66AA44;display:flex;align-items:flex-start;justify-content:flex-end;padding:18px;color:#fff;clip-path:ellipse(85% 80% at 80% 20%)}
-.pc__hero-blob svg{width:34px;height:34px}
 
 /* Sectie-titels */
-.pc__section-title{font-family:'Lilita One',cursive;font-size:1.9rem;color:#3d2209;text-align:center;margin:0;display:flex;align-items:center;justify-content:center;gap:14px}
+.pc__section-title{font-family:'Lilita One',cursive;font-size:clamp(2rem,5vw,3.4rem);color:#3d2209;text-align:center;margin:0;display:flex;align-items:center;justify-content:center;gap:14px}
 .pc__title-dash{width:26px;height:3px;background:#66AA44;border-radius:3px;display:inline-block}
 .pc__section-sub{text-align:center;color:#A88259;font-size:1rem;margin:8px 0 0}
 
@@ -316,7 +313,7 @@
 /* Contact: formulier + info */
 .pc__contact{margin-top:48px;display:grid;grid-template-columns:1fr;gap:24px}
 .pc__form-wrap{background:#FBF3E4;border-radius:24px;padding:28px 24px}
-.pc__form-title{font-family:'Lilita One',cursive;font-size:1.6rem;color:#3d2209;margin:0;display:flex;align-items:center;gap:8px}
+.pc__form-title{font-family:'Lilita One',cursive;font-size:clamp(1.6rem,3vw,2rem);color:#3d2209;margin:0;display:flex;align-items:center;gap:8px}
 .pc__form-heart{display:inline-flex;color:#FFB8CD}
 .pc__form-heart svg{width:22px;height:22px}
 .pc__form-sub{color:#A88259;font-size:.95rem;margin:6px 0 20px}
@@ -389,13 +386,10 @@
   .pc__hero{min-height:520px}
   .pc__hero-overlay{background:linear-gradient(90deg,rgba(244,231,208,.95) 0%,rgba(244,231,208,.88) 32%,rgba(244,231,208,.5) 56%,rgba(244,231,208,0) 80%)}
   .pc__hero-content{padding:64px 60px;max-width:1280px}
-  .pc__hero-heading{font-size:3.4rem;max-width:14ch}
-  .pc__hero-blob{width:150px;height:150px;padding:22px}
   .pc__help-grid{grid-template-columns:repeat(4,1fr)}
   .pc__contact{grid-template-columns:1.6fr 1fr;align-items:start}
   .pc__form-wrap{padding:36px 32px}
   .pc__form-row{grid-template-columns:1fr 1fr}
-  .pc__form-title{font-size:1.8rem}
   .pc__about{flex-direction:row;align-items:center;padding:24px 32px;gap:28px}
   .pc__about-media{width:240px;flex-shrink:0}
   .pc__about-text{flex:1}
