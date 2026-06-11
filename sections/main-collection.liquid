@@ -454,7 +454,43 @@
   display: flex; align-items: flex-end;
 }
 @media(max-width: 767px) {
-  .kc__hero { aspect-ratio: unset; min-height: 280px; }
+  .kc__hero {
+    aspect-ratio: unset;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  /* Afbeelding: vaste hoogte, geen tekst eroverheen */
+  .kc__hero-bg {
+    position: relative;
+    aspect-ratio: 4/3;
+    flex-shrink: 0;
+  }
+  .kc__hero-bg-img {
+    position: absolute; inset: 0;
+  }
+  /* Overlay alleen op afbeelding, niet op tekst */
+  .kc__hero-overlay { display: none; }
+  /* Content: onder de afbeelding, op crème achtergrond */
+  .kc__hero-content {
+    position: static;
+    background: #F8EFDD;
+    padding: 24px 16px 28px;
+    gap: 12px;
+  }
+  .kc__hero-title { color: #3d2209; text-shadow: none; font-size: 2rem; }
+  .kc__hero-eyebrow { color: #F7A048; }
+  .kc__hero-desc { color: #A88259; }
+  .kc__hero-count {
+    background: #e8f5e2; color: #66AA44;
+    border-color: #c8e6c0;
+    backdrop-filter: none;
+  }
+  .kc__hero-badge {
+    position: absolute;
+    top: 12px; right: 12px; bottom: auto;
+    width: 76px; height: 76px;
+  }
+  .kc__hero-badge span { font-size: .62rem; }
 }
 
 /* Achtergrond afbeelding */
