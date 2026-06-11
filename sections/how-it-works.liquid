@@ -22,6 +22,11 @@
 
           <!-- Nummer + verbindingslijn -->
           <div class="hiw__step-top">
+            {%- unless forloop.first -%}
+              <div class="hiw__connector" aria-hidden="true">
+                <span class="hiw__connector-paw">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
+              </div>
+            {%- endunless -%}
             <div class="hiw__num hiw__num--{{ block.settings.color }}">
               {{ forloop.index }}
             </div>
@@ -162,6 +167,43 @@
   .hiw__steps { min-width: unset; }
 }
 
+
+/* ── Verbindingslijn tussen stappen ────────────────────── */
+.hiw__step-top {
+  position: relative;
+}
+.hiw__connector {
+  position: absolute;
+  left: -50%;
+  width: 100%;
+  top: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 0;
+  pointer-events: none;
+}
+.hiw__connector::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  transform: translateY(-50%);
+  border-top: 2px dashed #DAC9A1;
+  z-index: 0;
+}
+.hiw__connector-paw {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 24px;
+  background: #F8EFDD;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+  color: #DAC9A1;
+}
+.hiw__connector-paw svg { width: 14px; height: 14px; }
+
 /* ── Stap ───────────────────────────────────────────────── */
 .hiw__step {
   display: flex;
@@ -185,25 +227,7 @@
 
 /* Verbindingslijn links van nummer */
 /* connector verwijderd */
-/* Elk stap img-wrap krijgt unieke blob vorm */
-.hiw__step:nth-child(1) .hiw__img-wrap {
-  border-radius: 62% 38% 46% 54% / 60% 44% 56% 40%;
-}
-.hiw__step:nth-child(2) .hiw__img-wrap {
-  border-radius: 40% 60% 55% 45% / 48% 62% 38% 52%;
-}
-.hiw__step:nth-child(3) .hiw__img-wrap {
-  border-radius: 55% 45% 38% 62% / 44% 58% 42% 56%;
-}
-.hiw__step:nth-child(4) .hiw__img-wrap {
-  border-radius: 48% 52% 60% 40% / 56% 40% 60% 44%;
-}
-
-/* Hover: subtiele morph animatie */
-.hiw__step:nth-child(1) .hiw__img-wrap:hover { border-radius: 38% 62% 54% 46% / 44% 56% 44% 56%; }
-.hiw__step:nth-child(2) .hiw__img-wrap:hover { border-radius: 60% 40% 45% 55% / 52% 38% 62% 48%; }
-.hiw__step:nth-child(3) .hiw__img-wrap:hover { border-radius: 45% 55% 62% 38% / 58% 44% 56% 42%; }
-.hiw__step:nth-child(4) .hiw__img-wrap:hover { border-radius: 52% 48% 40% 60% / 40% 60% 44% 56%; }
+/* Cirkels zijn altijd rond (border-radius via hiw__img-wrap) */
 
 /* Genummerde cirkel */
 .hiw__num {
@@ -263,10 +287,10 @@
   flex-shrink: 0;
 }
 .hiw__icon svg { width: 20px; height: 20px; }
-.hiw__icon--green  { background: #e8f5e2; color: #66AA44; }
-.hiw__icon--orange { background: #fff0e4; color: #F7A048; }
-.hiw__icon--pink   { background: #fff0f5; color: #e75480; }
-.hiw__icon--yellow { background: #fffae0; color: #c49000; }
+.hiw__icon--green  { background: #66AA44; color: #fff; }
+.hiw__icon--orange { background: #F7A048; color: #fff; }
+.hiw__icon--pink   { background: #FFB8CD; color: #603A15; }
+.hiw__icon--yellow { background: #FFE071; color: #603A15; }
 
 /* ── Tekst ──────────────────────────────────────────────── */
 .hiw__text {
@@ -301,8 +325,8 @@
 
 /* ── Trust strip ────────────────────────────────────────── */
 .hiw__trust {
-  background: #EDE2C9;
-  border-top: 1.5px solid #DAC9A1;
+  background: #FBF6EC;
+  border-top: 1.5px solid #EDE2C9;
   margin-top: 40px;
 }
 .hiw__trust-inner {
