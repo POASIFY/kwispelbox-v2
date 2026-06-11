@@ -403,6 +403,14 @@
   .pc__trust{grid-template-columns:repeat(4,1fr);gap:24px}
 }
 
+@media(max-width:767px){
+  .pc__hero{flex-direction:column;align-items:stretch;min-height:unset;background:#F4E7D0}
+  .pc__hero-img{position:relative;inset:auto;width:100%;height:auto;aspect-ratio:4/3;display:block}
+  .pc__hero-img--placeholder{aspect-ratio:4/3}
+  .pc__hero-overlay{display:none}
+  .pc__hero-content{position:static;background:#F4E7D0;padding:24px 20px 30px}
+}
+
 @media(prefers-reduced-motion:reduce){
   .pc__card,.pc__submit,.pc__social{transition:none}
   .pc__card:hover,.pc__submit:hover,.pc__social:hover{transform:none}
