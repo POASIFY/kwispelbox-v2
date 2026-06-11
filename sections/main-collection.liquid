@@ -4,56 +4,51 @@
 
   <!-- ══ COLLECTION HERO ══════════════════════════════════ -->
   <div class="kc__hero">
-    <div class="kc__hero-inner">
 
-      <!-- Tekst links -->
-      <div class="kc__hero-copy">
-        {%- if section.settings.eyebrow != blank -%}
-          <p class="kc__hero-eyebrow">
-            {{- 'icon-sparkle.svg' | inline_asset_content -}}
-            {{ section.settings.eyebrow }}
-          </p>
-        {%- endif -%}
-        <h1 class="kc__hero-title">{{ collection.title }}</h1>
-        {%- if collection.description != blank -%}
-          <p class="kc__hero-desc">{{ collection.description | strip_html }}</p>
-        {%- endif -%}
-        <p class="kc__hero-count">
-          {{- 'icon-paw.svg' | inline_asset_content -}}
-          {{ collection.products_count }}
-          {%- if collection.products_count == 1 -%}&nbsp;product{%- else -%}&nbsp;producten{%- endif -%}
+    <!-- Achtergrond afbeelding: volle breedte + hoogte -->
+    {%- if collection.image -%}
+      <div class="kc__hero-bg">
+        <img
+          src="{{ collection.image | image_url: width: 1800 }}"
+          srcset="{{ collection.image | image_url: width: 900 }} 900w,
+                  {{ collection.image | image_url: width: 1400 }} 1400w,
+                  {{ collection.image | image_url: width: 1800 }} 1800w"
+          sizes="100vw"
+          alt="{{ collection.title | escape }}"
+          width="1800" loading="eager" fetchpriority="high"
+          class="kc__hero-bg-img"
+        >
+      </div>
+    {%- endif -%}
+
+    <!-- Gradient overlay -->
+    <div class="kc__hero-overlay"></div>
+
+    <!-- Content over de afbeelding -->
+    <div class="kc__hero-content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="kc__hero-eyebrow">
+          {{- 'icon-sparkle.svg' | inline_asset_content -}}
+          {{ section.settings.eyebrow }}
         </p>
-      </div>
-
-      <!-- Foto rechts met blob -->
-      <div class="kc__hero-img-col">
-        <div class="kc__hero-img-wrap">
-          {%- if collection.image -%}
-            <img
-              src="{{ collection.image | image_url: width: 900 }}"
-              srcset="{{ collection.image | image_url: width: 600 }} 600w,
-                      {{ collection.image | image_url: width: 900 }} 900w"
-              sizes="(min-width: 900px) 45vw, 90vw"
-              alt="{{ collection.title | escape }}"
-              width="900" loading="eager" fetchpriority="high"
-              class="kc__hero-img"
-            >
-          {%- else -%}
-            <div class="kc__hero-img-ph">
-              {{- 'icon-box.svg' | inline_asset_content -}}
-              <span>Voeg collectie foto toe</span>
-            </div>
-          {%- endif -%}
+      {%- endif -%}
+      <h1 class="kc__hero-title">{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}
+        <p class="kc__hero-desc">{{ collection.description | strip_html }}</p>
+      {%- endif -%}
+      <p class="kc__hero-count">
+        {{- 'icon-paw.svg' | inline_asset_content -}}
+        {{ collection.products_count }}
+        {%- if collection.products_count == 1 -%}&nbsp;product{%- else -%}&nbsp;producten{%- endif -%}
+      </p>
+      {%- if section.settings.circle_badge != blank -%}
+        <div class="kc__hero-badge">
+          {{- 'icon-paw.svg' | inline_asset_content -}}
+          <span>{{ section.settings.circle_badge }}</span>
         </div>
-        {%- if section.settings.circle_badge != blank -%}
-          <div class="kc__hero-badge">
-            {{- 'icon-paw.svg' | inline_asset_content -}}
-            <span>{{ section.settings.circle_badge }}</span>
-          </div>
-        {%- endif -%}
-      </div>
-
+      {%- endif -%}
     </div>
+
   </div>
 
   <!-- ══ TOOLBAR: sorteren ════════════════════════════════ -->
@@ -452,85 +447,88 @@
 
 /* ══ Hero: split layout — tekst links, foto rechts ══════ */
 .kc__hero {
-  background: #F8EFDD;
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
+  min-height: 360px;
+  background: #3d2209;
+  display: flex; align-items: flex-end;
 }
-.kc__hero-inner {
-  max-width: 1280px; margin: 0 auto;
-  padding: 56px 20px 0;
-  display: grid; grid-template-columns: 1fr;
-  gap: 32px; align-items: center;
-  position: relative; z-index: 2;
+@media(min-width: 768px) { .kc__hero { min-height: 440px; } }
+
+/* Achtergrond afbeelding */
+.kc__hero-bg {
+  position: absolute; inset: 0; z-index: 0;
 }
-@media(min-width: 900px) {
-  .kc__hero-inner {
-    grid-template-columns: 1fr 1fr;
-    padding: 64px 60px 0;
-    min-height: 420px;
-  }
+.kc__hero-bg-img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center 30%;
+  display: block;
 }
 
-/* Tekst kolom */
-.kc__hero-copy { display: flex; flex-direction: column; gap: 16px; padding-bottom: 48px; }
+/* Gradient overlay: donker onderaan voor leesbaarheid tekst */
+.kc__hero-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(61,34,9,.15) 0%,
+    rgba(61,34,9,.35) 40%,
+    rgba(61,34,9,.75) 100%
+  );
+}
+
+/* Content over de afbeelding */
+.kc__hero-content {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 1280px; margin: 0 auto;
+  padding: 40px 20px 48px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+@media(min-width: 768px) { .kc__hero-content { padding: 56px 60px 56px; } }
+
 .kc__hero-eyebrow {
   display: inline-flex; align-items: center; gap: 7px;
-  font-family: 'Karla', sans-serif; font-size: .75rem; font-weight: 800;
-  letter-spacing: .1em; text-transform: uppercase; color: #F7A048;
+  font-family: 'Karla', sans-serif; font-size: .72rem; font-weight: 800;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: #FFE071;
 }
-.kc__hero-eyebrow svg { width: 13px; height: 13px; flex-shrink: 0; }
+.kc__hero-eyebrow svg { width: 12px; height: 12px; flex-shrink: 0; color: #FFE071; }
+
 .kc__hero-title {
   font-family: 'Lilita One', cursive;
-  font-size: clamp(2.4rem, 5.5vw, 4rem);
-  color: #3d2209; line-height: 1.02; margin: 0;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  color: #fff; line-height: 1.02; margin: 0;
+  text-shadow: 0 2px 12px rgba(61,34,9,.3);
+  max-width: 16ch;
 }
-.kc__hero-title span { color: #F7A048; }
 .kc__hero-desc {
   font-family: 'Karla', sans-serif;
-  font-size: .95rem; color: #A88259; line-height: 1.75;
-  max-width: 44ch;
+  font-size: .95rem; color: rgba(255,255,255,.8);
+  line-height: 1.7; max-width: 52ch;
 }
 .kc__hero-count {
   display: inline-flex; align-items: center; gap: 7px;
-  font-family: 'Karla', sans-serif; font-size: .82rem; font-weight: 700;
-  color: #66AA44; background: #e8f5e2;
-  border: 1.5px solid #c8e6c0;
-  padding: 7px 16px; border-radius: 999px;
+  font-family: 'Karla', sans-serif; font-size: .78rem; font-weight: 700;
+  color: #fff;
+  background: rgba(255,255,255,.18);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,.25);
+  padding: 6px 14px; border-radius: 999px;
   align-self: flex-start;
 }
-.kc__hero-count svg { width: 14px; height: 14px; flex-shrink: 0; }
+.kc__hero-count svg { width: 13px; height: 13px; flex-shrink: 0; color: #FFE071; }
 
-/* Foto kolom met blob */
-.kc__hero-img-col {
-  position: relative; align-self: flex-end;
-}
-.kc__hero-img-wrap {
-  border-radius: 52% 48% 44% 56% / 48% 44% 56% 52%;
-  overflow: hidden; background: #EDE2C9;
-  aspect-ratio: 1;
-  box-shadow: 0 20px 60px rgba(96,58,21,.15);
-  max-width: 460px; margin: 0 auto;
-}
-@media(min-width: 900px) { .kc__hero-img-wrap { max-width: 100%; } }
-.kc__hero-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.kc__hero-img-ph {
-  width: 100%; height: 100%; min-height: 280px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 12px; color: #A88259;
-}
-
-/* Cirkel badge op foto */
+/* Badge: floating rechtsonder de content */
 .kc__hero-badge {
-  position: absolute; top: 16px; right: 0;
-  width: 100px; height: 100px; background: #66AA44;
-  border-radius: 50%; z-index: 3;
+  position: absolute; bottom: 48px; right: 20px; z-index: 3;
+  width: 96px; height: 96px; background: #66AA44;
+  border-radius: 50%;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   text-align: center; padding: 12px;
-  box-shadow: 0 6px 24px rgba(102,170,68,.35);
+  box-shadow: 0 6px 24px rgba(102,170,68,.4);
   border: 3px solid #fff;
 }
+@media(min-width: 768px) { .kc__hero-badge { right: 60px; bottom: 56px; width: 108px; height: 108px; } }
 .kc__hero-badge span {
   font-family: 'Lilita One', cursive;
   font-size: .72rem; color: #fff; line-height: 1.25;
@@ -955,12 +953,9 @@
 
 /* ══ Mobiel ══════════════════════════════════════════════ */
 @media(max-width: 767px) {
-  .kc__hero-inner { padding: 32px 16px 0; gap: 20px; }
-  .kc__hero-copy { padding-bottom: 0; gap: 12px; }
-  .kc__hero-title { font-size: 2.2rem; }
-  .kc__hero-img-col { order: -1; }
-  .kc__hero-img-wrap { border-radius: 32px; aspect-ratio: 4/3; }
-  .kc__hero-badge { width: 80px; height: 80px; top: 10px; right: 10px; }
+  .kc__hero { min-height: 280px; }
+  .kc__hero-content { padding: 32px 16px 40px; gap: 12px; }
+  .kc__hero-badge { width: 76px; height: 76px; right: 16px; bottom: 40px; }
   .kc__hero-badge span { font-size: .62rem; }
   .kc__toolbar-inner { padding: 12px 16px; }
   .kc__grid-wrap { padding: 28px 16px 40px; }
