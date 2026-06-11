@@ -529,27 +529,33 @@
   width: 100%; max-width: 1280px; margin: 0 auto;
   padding: 40px 20px 48px;
   display: flex; flex-direction: column; gap: 14px;
+  color: #fff;
 }
-@media(min-width: 768px) { .kc__hero-content { padding: 56px 60px 56px; } }
+@media(min-width: 768px) {
+  .kc__hero-content { padding: 56px 60px 56px; }
+  .kc__hero-title { text-shadow: 0 2px 12px rgba(61,34,9,.3); }
+  .kc__hero-eyebrow { color: #FFE071; }
+  .kc__hero-eyebrow svg { color: #FFE071; }
+}
 
 .kc__hero-eyebrow {
   display: inline-flex; align-items: center; gap: 7px;
   font-family: 'Karla', sans-serif; font-size: .72rem; font-weight: 800;
   letter-spacing: .1em; text-transform: uppercase;
-  color: #FFE071;
+  color: inherit;
 }
-.kc__hero-eyebrow svg { width: 12px; height: 12px; flex-shrink: 0; color: #FFE071; }
+.kc__hero-eyebrow svg { width: 12px; height: 12px; flex-shrink: 0; color: inherit; }
 
 .kc__hero-title {
   font-family: 'Lilita One', cursive;
   font-size: clamp(2.2rem, 5vw, 4rem);
-  color: #fff; line-height: 1.02; margin: 0;
-  text-shadow: 0 2px 12px rgba(61,34,9,.3);
+  color: inherit; line-height: 1.02; margin: 0;
+  text-shadow: inherit;
   max-width: 16ch;
 }
 .kc__hero-desc {
   font-family: 'Karla', sans-serif;
-  font-size: .95rem; color: rgba(255,255,255,.8);
+  font-size: .95rem; color: inherit;
   line-height: 1.7; max-width: 52ch;
 }
 .kc__hero-count {
