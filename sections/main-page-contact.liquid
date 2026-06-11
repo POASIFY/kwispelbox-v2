@@ -4,55 +4,54 @@
   een begrensde container. Alles instelbaar via Theme Editor.
 {% endcomment %}
 
-{%- comment -%} ── HERO (volle breedte) ─────────────────────── {%- endcomment -%}
+{%- comment -%} ── HERO (volle breedte, foto als achtergrond) ── {%- endcomment -%}
 {%- if section.settings.hero_title_1 != blank or section.settings.hero_image != blank -%}
-  <div class="pc__hero-wrap full-width">
-    <div class="pc__hero">
-      <div class="pc__hero-text">
-        <h1 class="pc__hero-heading">
-          {{ section.settings.hero_title_1 }}
-          {%- if section.settings.hero_title_2 != blank -%}
-            <span class="pc__hero-heading-accent">{{ section.settings.hero_title_2 }}</span>
-            <span class="pc__hero-heart" aria-hidden="true">{{- 'icon-heart.svg' | inline_asset_content -}}</span>
-          {%- endif -%}
-        </h1>
-        {%- if section.settings.hero_body != blank -%}
-          <p class="pc__hero-body">{{ section.settings.hero_body }}</p>
-        {%- endif -%}
+  <div class="pc__hero full-width">
 
-        <ul class="pc__hero-usps" role="list">
-          {%- if section.settings.usp_1_title != blank -%}
-            <li class="pc__hero-usp">
-              <span class="pc__hero-usp-icon pc__hero-usp-icon--green" aria-hidden="true">{{- 'icon-mail.svg' | inline_asset_content -}}</span>
-              <span class="pc__hero-usp-text">
-                <strong>{{ section.settings.usp_1_title }}</strong>
-                {%- if section.settings.usp_1_body != blank -%}<span>{{ section.settings.usp_1_body }}</span>{%- endif -%}
-              </span>
-            </li>
-          {%- endif -%}
-          {%- if section.settings.usp_2_title != blank -%}
-            <li class="pc__hero-usp">
-              <span class="pc__hero-usp-icon pc__hero-usp-icon--yellow" aria-hidden="true">{{- 'icon-refresh.svg' | inline_asset_content -}}</span>
-              <span class="pc__hero-usp-text">
-                <strong>{{ section.settings.usp_2_title }}</strong>
-                {%- if section.settings.usp_2_body != blank -%}<span>{{ section.settings.usp_2_body }}</span>{%- endif -%}
-              </span>
-            </li>
-          {%- endif -%}
-        </ul>
-      </div>
+    {%- if section.settings.hero_image != blank -%}
+      {{ section.settings.hero_image | image_url: width: 2400 | image_tag:
+         widths: '800, 1200, 1600, 2000, 2400', sizes: '100vw',
+         loading: 'eager', fetchpriority: 'high',
+         class: 'pc__hero-img', alt: section.settings.hero_title_1 | escape }}
+    {%- else -%}
+      <div class="pc__hero-img pc__hero-img--placeholder">{{ 'image' | placeholder_svg_tag: 'pc__placeholder' }}</div>
+    {%- endif -%}
 
-      <div class="pc__hero-media">
-        {%- if section.settings.hero_image != blank -%}
-          {{ section.settings.hero_image | image_url: width: 2000 | image_tag:
-             widths: '800, 1200, 1600, 2000', sizes: '(min-width: 768px) 50vw, 100vw',
-             loading: 'eager', fetchpriority: 'high',
-             class: 'pc__hero-img', alt: section.settings.hero_title_1 | escape }}
-        {%- else -%}
-          <div class="pc__hero-img pc__hero-img--placeholder">{{ 'image' | placeholder_svg_tag: 'pc__placeholder' }}</div>
+    <div class="pc__hero-overlay" aria-hidden="true"></div>
+    <span class="pc__hero-blob" aria-hidden="true">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
+
+    <div class="pc__hero-content">
+      <h1 class="pc__hero-heading">
+        {{ section.settings.hero_title_1 }}
+        {%- if section.settings.hero_title_2 != blank -%}
+          <span class="pc__hero-heading-accent">{{ section.settings.hero_title_2 }}</span>
+          <span class="pc__hero-heart" aria-hidden="true">{{- 'icon-heart.svg' | inline_asset_content -}}</span>
         {%- endif -%}
-        <span class="pc__hero-blob" aria-hidden="true">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
-      </div>
+      </h1>
+      {%- if section.settings.hero_body != blank -%}
+        <p class="pc__hero-body">{{ section.settings.hero_body }}</p>
+      {%- endif -%}
+
+      <ul class="pc__hero-usps" role="list">
+        {%- if section.settings.usp_1_title != blank -%}
+          <li class="pc__hero-usp">
+            <span class="pc__hero-usp-icon pc__hero-usp-icon--green" aria-hidden="true">{{- 'icon-mail.svg' | inline_asset_content -}}</span>
+            <span class="pc__hero-usp-text">
+              <strong>{{ section.settings.usp_1_title }}</strong>
+              {%- if section.settings.usp_1_body != blank -%}<span>{{ section.settings.usp_1_body }}</span>{%- endif -%}
+            </span>
+          </li>
+        {%- endif -%}
+        {%- if section.settings.usp_2_title != blank -%}
+          <li class="pc__hero-usp">
+            <span class="pc__hero-usp-icon pc__hero-usp-icon--yellow" aria-hidden="true">{{- 'icon-refresh.svg' | inline_asset_content -}}</span>
+            <span class="pc__hero-usp-text">
+              <strong>{{ section.settings.usp_2_title }}</strong>
+              {%- if section.settings.usp_2_body != blank -%}<span>{{ section.settings.usp_2_body }}</span>{%- endif -%}
+            </span>
+          </li>
+        {%- endif -%}
+      </ul>
     </div>
   </div>
 {%- endif -%}
@@ -263,11 +262,13 @@
 .pc{max-width:1200px;margin:0 auto;padding:0 20px 60px;font-family:'Karla',sans-serif}
 .pc__sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-/* Hero — volle breedte */
-.pc__hero-wrap{background:#F4E7D0}
-.pc__hero{position:relative;max-width:1280px;margin:0 auto;overflow:hidden;display:flex;flex-direction:column}
-.pc__hero-text{padding:32px 24px 28px;display:flex;flex-direction:column;gap:18px}
-.pc__hero-heading{font-family:'Lilita One',cursive;font-size:2.4rem;line-height:1.05;color:#3d2209;margin:0;position:relative}
+/* Hero — volle breedte, foto als achtergrond */
+.pc__hero{position:relative;width:100%;min-height:360px;overflow:hidden;display:flex;align-items:center;background:#F4E7D0}
+.pc__hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center;display:block}
+.pc__hero-img--placeholder{background:#EDE2C9;display:flex;align-items:center;justify-content:center}
+.pc__hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(244,231,208,.45) 0%,rgba(244,231,208,.8) 50%,rgba(244,231,208,.97) 78%)}
+.pc__hero-content{position:relative;z-index:2;width:100%;max-width:1280px;margin:0 auto;padding:36px 24px 40px;display:flex;flex-direction:column;gap:18px}
+.pc__hero-heading{font-family:'Lilita One',cursive;font-size:2.4rem;line-height:1.05;color:#3d2209;margin:0}
 .pc__hero-heading-accent{color:#66AA44;display:inline}
 .pc__hero-heart{display:inline-flex;color:#FFB8CD;vertical-align:middle;margin-left:6px}
 .pc__hero-heart svg{width:30px;height:30px}
@@ -280,11 +281,8 @@
 .pc__hero-usp-icon--yellow{background:#FFC83D}
 .pc__hero-usp-text{display:flex;flex-direction:column;gap:1px}
 .pc__hero-usp-text strong{font-size:1rem;font-weight:800;color:#3d2209}
-.pc__hero-usp-text span{font-size:.9rem;color:#A88259}
-.pc__hero-media{position:relative;min-height:280px}
-.pc__hero-img{width:100%;height:100%;object-fit:cover;display:block;min-height:280px}
-.pc__hero-img--placeholder{background:#EDE2C9;display:flex;align-items:center;justify-content:center}
-.pc__hero-blob{position:absolute;top:0;right:0;width:120px;height:120px;background:#66AA44;border-radius:0 32px 0 60%;display:flex;align-items:flex-start;justify-content:flex-end;padding:18px;color:#fff;clip-path:ellipse(85% 80% at 80% 20%)}
+.pc__hero-usp-text span{font-size:.9rem;color:#603A15}
+.pc__hero-blob{position:absolute;top:0;right:0;z-index:1;width:120px;height:120px;background:#66AA44;display:flex;align-items:flex-start;justify-content:flex-end;padding:18px;color:#fff;clip-path:ellipse(85% 80% at 80% 20%)}
 .pc__hero-blob svg{width:34px;height:34px}
 
 /* Sectie-titels */
@@ -388,11 +386,10 @@
 
 /* Desktop */
 @media(min-width:768px){
-  .pc__hero{flex-direction:row;align-items:stretch}
-  .pc__hero-text{flex:1;padding:48px 40px;justify-content:center}
-  .pc__hero-heading{font-size:3.2rem}
-  .pc__hero-media{flex:1;min-height:420px}
-  .pc__hero-img{min-height:420px}
+  .pc__hero{min-height:520px}
+  .pc__hero-overlay{background:linear-gradient(90deg,rgba(244,231,208,.95) 0%,rgba(244,231,208,.88) 32%,rgba(244,231,208,.5) 56%,rgba(244,231,208,0) 80%)}
+  .pc__hero-content{padding:64px 60px;max-width:1280px}
+  .pc__hero-heading{font-size:3.4rem;max-width:14ch}
   .pc__hero-blob{width:150px;height:150px;padding:22px}
   .pc__help-grid{grid-template-columns:repeat(4,1fr)}
   .pc__contact{grid-template-columns:1.6fr 1fr;align-items:start}
