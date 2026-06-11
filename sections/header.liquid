@@ -1,519 +1,454 @@
-<header class="kw-header full-width" id="KwHeader">
+{%- comment -%} sections/header.liquid — GrillBrothers {%- endcomment -%}
 
-  <!-- RIJ 1: Logo + Zoek + Acties ──────────────────────────────── -->
-  <div class="kw-header__top">
-    <div class="kw-header__inner">
+<style>
+  #shopify-section-{{ section.id }} {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+  }
 
-      <!-- Hamburger — alleen mobiel, staat links -->
-      <button type="button" class="kw-icon-btn kw-menu-btn"
-              aria-expanded="false" aria-controls="KwDrawer"
-              aria-label="{{ 'header.menu_open' | t }}">
-        {{- 'icon-menu.svg' | inline_asset_content -}}
-      </button>
+  .gb-header {
+    height: {{ section.settings.header_height }}px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    background: rgba({{ section.settings.header_bg.rgb }}, {{ section.settings.header_opacity | divided_by: 100.0 }});
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(239, 238, 234, 0.07);
+    transition: background 0.3s;
+  }
 
-      <a href="{{ routes.root_url }}" class="kw-logo" aria-label="{{ shop.name }}">
-        {%- if settings.logo != blank -%}
-          <img src="{{ settings.logo | image_url: width: 220 }}"
-               alt="{{ shop.name }}" width="160" height="52"
-               loading="eager" fetchpriority="high">
-        {%- else -%}
-          <span class="kw-logo__text">
-            {{ shop.name }}<span class="kw-logo__paw" aria-hidden="true">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
-          </span>
-        {%- endif -%}
-      </a>
+  /* ── LOGO ── */
+  .gb-header__logo {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: {{ section.settings.logo_size }}px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--gb-ash);
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .gb-header__logo em {
+    font-style: normal;
+    color: var(--gb-ember);
+  }
 
-      <form action="{{ routes.search_url }}" method="get"
-            class="kw-search" role="search" aria-label="Zoeken">
-        <input type="hidden" name="type" value="product">
-        <div class="kw-search__field">
-          <span class="kw-search__ico" aria-hidden="true">{{- 'icon-search.svg' | inline_asset_content -}}</span>
-          <label for="KwSearchInput" class="kw-sr-only">Zoekterm</label>
-          <input type="search" id="KwSearchInput" name="q"
-                 class="kw-search__input"
-                 placeholder="{{ section.settings.search_placeholder }}"
-                 autocomplete="off" value="{{ search.terms | escape }}">
-        </div>
-        <button type="submit" class="kw-search__submit">Zoeken</button>
-      </form>
+  /* Logo als afbeelding */
+  .gb-header__logo-img {
+    height: {{ section.settings.logo_height }}px;
+    width: auto;
+    display: block;
+  }
 
-      <div class="kw-actions">
-        {%- if shop.customer_accounts_enabled -%}
-          <a href="{{ routes.account_url }}" class="kw-account-btn" aria-label="Mijn account">
-            <span class="kw-account-btn__icon">{{- 'icon-account.svg' | inline_asset_content -}}</span>
-            <span class="kw-account-btn__labels">
-              <span class="kw-account-btn__title">Mijn account</span>
-              <span class="kw-account-btn__sub">Inloggen / Registreren</span>
-            </span>
+  /* ── NAVIGATIE ── */
+  .gb-header__nav {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .gb-header__nav-link {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gb-ash-2);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .gb-header__nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--gb-ember);
+    transform: scaleX(0);
+    transition: transform 0.2s;
+  }
+  .gb-header__nav-link:hover {
+    color: var(--gb-ash);
+  }
+  .gb-header__nav-link:hover::after,
+  .gb-header__nav-link[aria-current="page"]::after {
+    transform: scaleX(1);
+  }
+  .gb-header__nav-link[aria-current="page"] {
+    color: var(--gb-ash);
+  }
+
+  /* ── ACTIES (winkelwagen, account) ── */
+  .gb-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+
+  .gb-header__action-link {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--gb-ash-2);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .gb-header__action-link:hover {
+    color: var(--gb-ash);
+  }
+
+  .gb-header__cart {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gb-ember);
+    color: var(--gb-ash);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 9px 20px;
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .gb-header__cart:hover {
+    background: var(--gb-ember-l);
+  }
+
+  .gb-header__cart-count {
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
+  /* ── MOBIEL MENU KNOP ── */
+  .gb-header__menu-btn {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    padding: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .gb-header__menu-btn span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--gb-ash);
+    transition: transform 0.3s, opacity 0.3s;
+  }
+
+  /* ── MOBIEL MENU ── */
+  .gb-mobile-nav {
+    display: none;
+    position: fixed;
+    top: {{ section.settings.header_height }}px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gb-coal-2);
+    z-index: 99;
+    padding: 40px 32px;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.35s ease;
+  }
+  .gb-mobile-nav.is-open {
+    transform: translateX(0);
+  }
+
+  .gb-mobile-nav__link {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 36px;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    color: var(--gb-ash);
+    text-decoration: none;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(239, 238, 234, 0.07);
+    transition: color 0.2s;
+    display: block;
+  }
+  .gb-mobile-nav__link:hover {
+    color: var(--gb-ember);
+  }
+
+  .gb-mobile-nav__actions {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* ── BODY OFFSET — voorkomt dat content achter de vaste header valt ── */
+  body {
+    padding-top: {{ section.settings.header_height }}px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 989px) {
+    .gb-header {
+      padding: 0 24px;
+    }
+    .gb-header__nav {
+      display: none;
+    }
+    .gb-header__action-link {
+      display: none;
+    }
+    .gb-header__menu-btn {
+      display: flex;
+    }
+    .gb-mobile-nav {
+      display: flex;
+    }
+  }
+</style>
+
+{%- liquid
+  assign main_menu = linklists[section.settings.menu]
+-%}
+
+<header class="gb-header" role="banner">
+
+  {%- comment -%} ── LOGO ── {%- endcomment -%}
+  <a href="{{ routes.root_url }}" class="gb-header__logo" aria-label="{{ shop.name }}">
+    {%- if section.settings.logo != blank -%}
+      {{
+        section.settings.logo
+        | image_url: width: 300
+        | image_tag:
+          class: 'gb-header__logo-img',
+          alt: section.settings.logo.alt | default: shop.name,
+          loading: 'eager',
+          fetchpriority: 'high'
+      }}
+    {%- else -%}
+      Grill<em>Brothers</em>
+    {%- endif -%}
+  </a>
+
+  {%- comment -%} ── NAVIGATIE ── {%- endcomment -%}
+  <nav aria-label="{{ 'accessibility.open_menu' | t }}">
+    <ul class="gb-header__nav" role="list">
+      {%- for link in main_menu.links -%}
+        <li>
+          <a
+            href="{{ link.url }}"
+            class="gb-header__nav-link"
+            {% if link.active %}aria-current="page"{% endif %}
+          >
+            {{ link.title }}
           </a>
-        {%- endif -%}
-        <a href="{{ routes.cart_url }}" class="kw-cart-btn"
-           aria-label="Winkelwagen, {{ cart.item_count }} items">
-          {{- 'icon-cart.svg' | inline_asset_content -}}
-          <span class="kw-cart-btn__label">Winkelwagen</span>
-          {%- if cart.item_count > 0 -%}
-            <span class="kw-cart-btn__badge" data-cart-count>{{- cart.item_count -}}</span>
-          {%- endif -%}
-        </a>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- RIJ 2: Mobiele zoekbalk ────────────────────────────────────── -->
-  <div class="kw-search-mob full-width">
-    <form action="{{ routes.search_url }}" method="get" role="search" aria-label="Zoeken">
-      <input type="hidden" name="type" value="product">
-      <span class="kw-search__ico" aria-hidden="true">{{- 'icon-search.svg' | inline_asset_content -}}</span>
-      <label for="KwSearchMob" class="kw-sr-only">Zoekterm</label>
-      <input type="search" id="KwSearchMob" name="q"
-             class="kw-search__input"
-             placeholder="{{ section.settings.search_placeholder }}"
-             autocomplete="off" value="{{ search.terms | escape }}">
-    </form>
-  </div>
-
-  <!-- RIJ 3: Mobiele snelkoppelingen ─────────────────────────────── -->
-  {%- assign shortcut_blocks = section.blocks | where: 'type', 'shortcut' -%}
-  {%- if shortcut_blocks.size > 0 -%}
-    <div class="kw-shortcuts full-width">
-      <ul class="kw-shortcuts__list" role="list">
-        {%- for block in shortcut_blocks -%}
-          <li {{ block.shopify_attributes }}>
-            <a href="{{ block.settings.url }}" class="kw-shortcut">
-              <span class="kw-shortcut__icon kw-shortcut__icon--{{ block.settings.color }}" aria-hidden="true">
-                {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
-              </span>
-              <span class="kw-shortcut__label">{{ block.settings.title }}</span>
-            </a>
-          </li>
-        {%- endfor -%}
-      </ul>
-    </div>
-  {%- endif -%}
-
-  <!-- RIJ 4: Navigatie + Trust trio (desktop) ────────────────────── -->
-  <nav class="kw-nav full-width" aria-label="{{ 'general.header' | t }}">
-    <div class="kw-nav__inner">
-
-      <ul class="kw-nav__list" role="list">
-        {%- assign nav_blocks = section.blocks | where: 'type', 'nav_item' -%}
-        {%- if nav_blocks.size > 0 -%}
-          {%- for block in nav_blocks -%}
-            <li class="kw-nav__item" {{ block.shopify_attributes }}>
-              <a href="{{ block.settings.url }}"
-                 class="kw-nav__link kw-nav__link--pill{% if request.path == block.settings.url %} is-active{% endif %}">
-                {%- if block.settings.icon != blank -%}
-                  <span class="kw-nav__pill-icon kw-nav__pill-icon--{{ block.settings.color }}" aria-hidden="true">
-                    {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
-                  </span>
-                {%- endif -%}
-                {{ block.settings.title }}
-                {%- if block.settings.show_chevron -%}
-                  <span class="kw-nav__chevron" aria-hidden="true">{{- 'icon-chevron-down.svg' | inline_asset_content -}}</span>
-                {%- endif -%}
-              </a>
-            </li>
-          {%- endfor -%}
-        {%- else -%}
-          {%- for link in section.settings.menu.links -%}
-            <li class="kw-nav__item{% if link.child_links.size > 0 %} has-sub{% endif %}">
-              <a href="{{ link.url }}"
-                 class="kw-nav__link{% if link.active %} is-active{% endif %}"
-                 {%- if link.child_links.size > 0 %} aria-haspopup="true" aria-expanded="false"{%- endif %}>
-                {{- link.title -}}
-                {%- if link.child_links.size > 0 -%}
-                  <span class="kw-nav__chevron" aria-hidden="true">{{- 'icon-chevron-down.svg' | inline_asset_content -}}</span>
-                {%- endif -%}
-              </a>
-              {%- if link.child_links.size > 0 -%}
-                <ul class="kw-dropdown" role="list">
-                  {%- for child in link.child_links -%}
-                    <li><a href="{{ child.url }}" class="kw-dropdown__link{% if child.active %} is-active{% endif %}">{{- child.title -}}</a></li>
-                  {%- endfor -%}
-                </ul>
-              {%- endif -%}
-            </li>
-          {%- endfor -%}
-        {%- endif -%}
-      </ul>
-
-      <!-- Trust trio -->
-      <ul class="kw-trust" role="list">
-        <li class="kw-trust__item">
-          <span class="kw-trust__icon" aria-hidden="true">{{- 'icon-truck.svg' | inline_asset_content -}}</span>
-          <span class="kw-trust__text"><strong>Snelle levering</strong><span>1-2 werkdagen</span></span>
         </li>
-        <li class="kw-trust__item">
-          <span class="kw-trust__icon" aria-hidden="true">{{- 'icon-refresh.svg' | inline_asset_content -}}</span>
-          <span class="kw-trust__text"><strong>Niet goed?</strong><span>Geld terug</span></span>
-        </li>
-        <li class="kw-trust__item">
-          <span class="kw-trust__icon" aria-hidden="true">{{- 'icon-shield.svg' | inline_asset_content -}}</span>
-          <span class="kw-trust__text"><strong>Veilig betalen</strong><span>100% veilig</span></span>
-        </li>
-      </ul>
-
-    </div>
+      {%- endfor -%}
+    </ul>
   </nav>
 
+  {%- comment -%} ── ACTIES ── {%- endcomment -%}
+  <div class="gb-header__actions">
+
+    {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+      <a
+        href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
+        class="gb-header__action-link"
+        aria-label="{%- if customer -%}{{ 'customer.account.title' | t }}{%- else -%}{{ 'customer.login.title' | t }}{%- endif -%}"
+      >
+        {%- if customer -%}
+          {{ 'customer.account.title' | t }}
+        {%- else -%}
+          {{ 'customer.login.title' | t }}
+        {%- endif -%}
+      </a>
+    {%- endif -%}
+
+    <a
+      href="{{ routes.cart_url }}"
+      class="gb-header__cart"
+      aria-label="{{ 'accessibility.open_cart' | t }}"
+    >
+      {{ 'cart.general.title' | t }}
+      <span class="gb-header__cart-count" aria-live="polite">
+        ({{ cart.item_count }})
+      </span>
+    </a>
+
+    {%- comment -%} ── MOBIEL MENU KNOP ── {%- endcomment -%}
+    <button
+      class="gb-header__menu-btn"
+      aria-expanded="false"
+      aria-controls="gb-mobile-nav"
+      aria-label="{{ 'accessibility.open_menu' | t }}"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+  </div>
 </header>
 
-<!-- Mobiel drawer ──────────────────────────────────────────────── -->
-<dialog class="kw-drawer" id="KwDrawer" aria-label="{{ 'general.header' | t }}">
-  <div class="kw-drawer__panel">
-    <div class="kw-drawer__head">
-      <a href="{{ routes.root_url }}" class="kw-logo">
-        {%- if settings.logo != blank -%}
-          <img src="{{ settings.logo | image_url: width: 160 }}" alt="{{ shop.name }}" width="120" height="40" loading="lazy">
-        {%- else -%}
-          <span class="kw-logo__text">{{ shop.name }}</span>
-        {%- endif -%}
+{%- comment -%} ── MOBIEL MENU ── {%- endcomment -%}
+<nav
+  id="gb-mobile-nav"
+  class="gb-mobile-nav"
+  aria-label="{{ 'accessibility.open_menu' | t }}"
+  aria-hidden="true"
+>
+  {%- for link in main_menu.links -%}
+    <a
+      href="{{ link.url }}"
+      class="gb-mobile-nav__link"
+      {% if link.active %}aria-current="page"{% endif %}
+    >
+      {{ link.title }}
+    </a>
+  {%- endfor -%}
+
+  <div class="gb-mobile-nav__actions">
+    {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+      <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="gb-btn-ghost">
+        {%- if customer -%}{{ 'customer.account.title' | t }}{%- else -%}{{ 'customer.login.title' | t }}{%- endif -%}
       </a>
-      <button type="button" class="kw-icon-btn kw-drawer__close" aria-label="{{ 'header.menu_close' | t }}" autofocus>
-        {{- 'icon-close.svg' | inline_asset_content -}}
-      </button>
-    </div>
-    <nav class="kw-drawer__nav" aria-label="{{ 'general.header' | t }}">
-      <ul role="list">
-        {%- if nav_blocks.size > 0 -%}
-          {%- for block in nav_blocks -%}
-            <li>
-              <a href="{{ block.settings.url }}" class="kw-drawer__link">
-                {%- if block.settings.icon != blank -%}
-                  <span class="kw-drawer__link-icon kw-nav__pill-icon--{{ block.settings.color }}" aria-hidden="true">
-                    {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
-                  </span>
-                {%- endif -%}
-                {{ block.settings.title }}
-              </a>
-            </li>
-          {%- endfor -%}
-        {%- else -%}
-          {%- for link in section.settings.menu.links -%}
-            <li>
-              <a href="{{ link.url }}" class="kw-drawer__link{% if link.active %} is-active{% endif %}">{{- link.title -}}</a>
-              {%- if link.child_links.size > 0 -%}
-                <ul class="kw-drawer__sub" role="list">
-                  {%- for child in link.child_links -%}
-                    <li><a href="{{ child.url }}" class="kw-drawer__sub-link">{{- child.title -}}</a></li>
-                  {%- endfor -%}
-                </ul>
-              {%- endif -%}
-            </li>
-          {%- endfor -%}
-        {%- endif -%}
-      </ul>
-    </nav>
-    <div class="kw-drawer__foot">
-      <a href="{{ routes.cart_url }}" class="kw-cart-btn kw-cart-btn--full">
-        {{- 'icon-cart.svg' | inline_asset_content -}}
-        Winkelwagen
-        {%- if cart.item_count > 0 -%}<span class="kw-cart-btn__badge">{{ cart.item_count }}</span>{%- endif -%}
-      </a>
-    </div>
+    {%- endif -%}
+    <a href="{{ routes.cart_url }}" class="gb-btn-primary">
+      {{ 'cart.general.title' | t }} ({{ cart.item_count }})
+    </a>
   </div>
-</dialog>
+</nav>
 
-{% stylesheet %}
-.kw-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+<script>
+  (function() {
+    var btn = document.querySelector('.gb-header__menu-btn');
+    var nav = document.getElementById('gb-mobile-nav');
 
-/* Header */
-.kw-header{background:#fff;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 #EDE2C9;transition:box-shadow 240ms ease}
-.kw-header.scrolled{box-shadow:0 4px 20px rgba(96,58,21,.12)}
-.kw-header__top{border-bottom:1px solid #EDE2C9}
-.kw-header__inner{
-  max-width:1280px;margin:0 auto;padding:12px 20px;
-  display:grid;
-  grid-template-columns: 44px 1fr auto;
-  align-items:center;gap:8px;
-}
-@media(min-width:768px){
-  .kw-header__inner{
-    display:flex;
-    gap:16px;
-  }
-  .kw-menu-btn{ display:none!important; }
-}
-@media(min-width:1200px){.kw-header__inner{padding:12px 60px}}
+    if (!btn || !nav) return;
 
-/* Logo */
-.kw-logo{text-decoration:none;flex-shrink:0;display:flex;align-items:center;justify-content:center}
-.kw-logo img{height:48px;width:auto}
-.kw-logo__text{font-family:'Lilita One',cursive;font-size:1.8rem;color:#F7A048;line-height:1;white-space:nowrap;display:flex;align-items:center;gap:3px}
-.kw-logo__paw{display:flex;align-items:flex-end;margin-bottom:4px}
-.kw-logo__paw svg{width:20px;height:20px;color:#F7A048}
-
-/* Zoekbalk */
-.kw-search{display:none;flex:1;max-width:600px}
-.kw-search__field{display:flex;align-items:center;background:#F8EFDD;border:2px solid #DAC9A1;border-radius:999px 0 0 999px;height:50px;padding:0 16px;flex:1;transition:border-color 200ms,box-shadow 200ms}
-.kw-search__field:focus-within{border-color:#F7A048;box-shadow:0 0 0 3px rgba(247,160,72,.15)}
-.kw-search__ico{color:#A88259;flex-shrink:0;display:flex;align-items:center;margin-right:10px}
-.kw-search__ico svg{width:18px;height:18px}
-.kw-search__input{flex:1;border:none;outline:none;background:transparent;font-family:'Karla',sans-serif;font-size:.95rem;color:#603A15;min-width:0}
-.kw-search__input::placeholder{color:#A88259}
-.kw-search__input::-webkit-search-cancel-button{display:none}
-.kw-search__submit{height:50px;padding:0 24px;background:#F7A048;color:#fff;font-family:'Lilita One',cursive;font-size:.95rem;border:none;border-radius:0 999px 999px 0;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 160ms}
-.kw-search__submit:hover{background:#d9823a}
-
-/* Acties */
-.kw-actions{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
-.kw-account-btn{display:none;align-items:center;gap:10px;text-decoration:none;color:#603A15;padding:6px 12px;border-radius:12px;transition:background 160ms}
-.kw-account-btn:hover{background:#F8EFDD}
-.kw-account-btn__icon{display:flex;color:#603A15}
-.kw-account-btn__icon svg{width:24px;height:24px}
-.kw-account-btn__labels{display:flex;flex-direction:column;gap:1px}
-.kw-account-btn__title{font-family:'Karla',sans-serif;font-size:.8rem;font-weight:700;color:#603A15;line-height:1.2}
-.kw-account-btn__sub{font-family:'Karla',sans-serif;font-size:.7rem;color:#A88259;line-height:1.2}
-.kw-cart-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;width:44px;padding:0;background:#66AA44;color:#fff;border-radius:50%;text-decoration:none;font-family:'Lilita One',cursive;font-size:.95rem;position:relative;flex-shrink:0;transition:background 160ms,transform 200ms cubic-bezier(.34,1.56,.64,1)}
-@media(min-width:768px){
-  .kw-cart-btn{height:48px;width:auto;padding:0 20px;border-radius:999px}
-}
-.kw-cart-btn:hover{background:#4d8833;transform:translateY(-2px)}
-.kw-cart-btn svg{width:20px;height:20px}
-.kw-cart-btn__label{display:none}
-.kw-cart-btn--full{width:100%}
-.kw-cart-btn__badge{background:#F7A048;color:#fff;font-family:'Lilita One',cursive;font-size:.75rem;min-width:22px;height:22px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px}
-.kw-icon-btn{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:transparent;border:none;cursor:pointer;color:#603A15;text-decoration:none;transition:background 160ms,color 160ms}
-.kw-icon-btn:hover{background:#EDE2C9;color:#F7A048}
-.kw-icon-btn svg{width:22px;height:22px}
-.kw-menu-btn{display:flex;order:-1}
-@media(min-width:768px){.kw-menu-btn{order:0}}
-
-/* Mobiele zoekbalk */
-.kw-search-mob{background:#F8EFDD;border-top:1px solid #EDE2C9;padding:10px 20px}
-.kw-search-mob form{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid #DAC9A1;border-radius:999px;height:42px;padding:0 16px;width:100%;transition:border-color 200ms}
-.kw-search-mob form:focus-within{border-color:#F7A048}
-.kw-search-mob .kw-search__input{flex:1;border:none;outline:none;background:transparent;font-family:'Karla',sans-serif;font-size:.9rem;color:#603A15;min-width:0}
-.kw-search-mob .kw-search__ico{color:#A88259;display:flex;flex-shrink:0}
-.kw-search-mob .kw-search__ico svg{width:16px;height:16px}
-
-/* Mobiele snelkoppelingen */
-.kw-shortcuts{background:#fff;border-top:1px solid #EDE2C9;padding:8px 0;}
-.kw-shortcuts__list{display:grid;grid-template-columns:repeat(4,1fr);list-style:none;margin:0;padding:0 8px;width:100%;box-sizing:border-box;}
-.kw-shortcut{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;padding:6px 0;}
-.kw-shortcut__icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform 200ms cubic-bezier(.34,1.56,.64,1)}
-.kw-shortcut:hover .kw-shortcut__icon{transform:scale(1.08)}
-.kw-shortcut__icon svg{width:24px;height:24px}
-.kw-shortcut__label{font-family:'Karla',sans-serif;font-size:.7rem;font-weight:700;color:#603A15;text-align:center;white-space:nowrap}
-.kw-shortcuts__list li:nth-child(n+5){display:none;}
-
-/* Icon kleuren */
-.kw-shortcut__icon--green,.kw-nav__pill-icon--green{background:#e8f5e2;color:#66AA44}
-.kw-shortcut__icon--orange,.kw-nav__pill-icon--orange{background:#fff0e4;color:#F7A048}
-.kw-shortcut__icon--pink,.kw-nav__pill-icon--pink{background:#fff0f5;color:#e75480}
-.kw-shortcut__icon--yellow,.kw-nav__pill-icon--yellow{background:#fffae0;color:#c49000}
-.kw-shortcut__icon--brown,.kw-nav__pill-icon--brown{background:#F8EFDD;color:#A88259}
-
-/* Nav balk */
-.kw-nav{background:#fff;border-top:1px solid #EDE2C9;display:none}
-.kw-nav__inner{max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:0}
-@media(min-width:1200px){.kw-nav__inner{padding:0 60px}}
-.kw-nav__list{display:flex;align-items:center;list-style:none;height:56px;gap:4px}
-.kw-nav__item{position:relative}
-
-/* Standaard nav link */
-.kw-nav__link{display:inline-flex;align-items:center;gap:6px;padding:0 16px;height:56px;font-family:'Karla',sans-serif;font-size:.9rem;font-weight:700;color:#A88259;text-decoration:none;white-space:nowrap;position:relative;transition:color 160ms}
-.kw-nav__link::after{content:'';position:absolute;bottom:0;left:16px;right:16px;height:3px;background:#F7A048;border-radius:3px 3px 0 0;transform:scaleX(0);transition:transform 220ms cubic-bezier(.34,1.56,.64,1)}
-.kw-nav__link:hover{color:#603A15}
-.kw-nav__link:hover::after,.kw-nav__link.is-active::after{transform:scaleX(1)}
-.kw-nav__link.is-active{color:#F7A048}
-
-/* Pill nav link */
-.kw-nav__link--pill{height:40px;margin:8px 2px;padding:0 14px;border-radius:999px;background:#F8EFDD;color:#603A15;font-weight:700}
-.kw-nav__link--pill::after{display:none}
-.kw-nav__link--pill:hover{background:#EDE2C9;color:#603A15;transform:none}
-.kw-nav__link--pill.is-active{background:#F7A048;color:#fff}
-.kw-nav__pill-icon{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.kw-nav__pill-icon svg{width:13px;height:13px}
-.kw-nav__chevron{display:flex;align-items:center}
-.kw-nav__chevron svg{width:11px;height:11px}
-
-/* Drawer link icon */
-.kw-drawer__link{display:flex;align-items:center;gap:12px;padding:12px 16px;font-family:'Lilita One',cursive;font-size:1.1rem;color:#603A15;text-decoration:none;border-radius:14px;margin-bottom:2px;transition:background 140ms,color 140ms}
-.kw-drawer__link:hover,.kw-drawer__link.is-active{background:#fff0e4;color:#d9823a}
-.kw-drawer__link-icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.kw-drawer__link-icon svg{width:16px;height:16px}
-
-/* Dropdown */
-.kw-dropdown{position:absolute;top:calc(100% + 4px);left:0;min-width:200px;background:#fff;border:1.5px solid #DAC9A1;border-radius:16px;box-shadow:0 4px 20px rgba(96,58,21,.12);padding:8px;list-style:none;z-index:10;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity 200ms,visibility 200ms,transform 200ms}
-.kw-nav__item.has-sub:hover .kw-dropdown,.kw-nav__item.has-sub:focus-within .kw-dropdown{opacity:1;visibility:visible;transform:translateY(0)}
-.kw-dropdown__link{display:block;padding:10px 16px;font-family:'Karla',sans-serif;font-size:.9rem;font-weight:600;color:#603A15;text-decoration:none;border-radius:10px;transition:background 140ms,color 140ms}
-.kw-dropdown__link:hover,.kw-dropdown__link.is-active{background:#fff0e4;color:#d9823a}
-
-/* Trust trio */
-.kw-trust{display:flex;align-items:center;list-style:none;border-left:1px solid #EDE2C9;margin-left:auto;flex-shrink:0}
-.kw-trust__item{display:flex;align-items:center;gap:8px;padding:8px 16px;border-right:1px solid #EDE2C9}
-.kw-trust__item:last-child{border-right:none}
-.kw-trust__icon{display:flex;align-items:center;color:#66AA44;flex-shrink:0}
-.kw-trust__icon svg{width:18px;height:18px}
-.kw-trust__text{display:flex;flex-direction:column;gap:1px}
-.kw-trust__text strong{font-family:'Karla',sans-serif;font-size:.75rem;font-weight:700;color:#603A15;line-height:1.2}
-.kw-trust__text span{font-size:.65rem;color:#A88259;line-height:1.2}
-
-/* Desktop */
-@media(min-width:768px){
-  .kw-search{display:flex}
-  .kw-search-mob{display:none}
-  .kw-shortcuts{display:none}
-  .kw-nav{display:block}
-  .kw-actions{margin-left:0}
-  .kw-account-btn{display:flex}
-  .kw-cart-btn__label{display:inline}
-  .kw-cart-btn{height:48px;width:auto;padding:0 20px;border-radius:999px}
-  .kw-cart-btn__badge{position:absolute;top:-6px;right:-6px}
-}
-@media(max-width:767px){
-  .kw-account-btn{display:none!important}
-  .kw-cart-btn__label{display:none!important}
-  .kw-cart-btn{
-    background:transparent!important;
-    color:#603A15!important;
-    width:44px;height:44px;padding:0;
-    box-shadow:none!important;
-    transform:none!important;
-  }
-  .kw-cart-btn:hover{background:transparent!important;transform:none!important}
-  .kw-cart-btn svg{width:26px;height:26px}
-  .kw-cart-btn__badge{
-    position:absolute;top:-4px;right:-4px;
-    min-width:18px;height:18px;font-size:.65rem;
-    border:2px solid #F8EFDD;
-  }
-}
-
-/* Drawer */
-.kw-drawer{position:fixed;inset:0;z-index:200;padding:0;border:none;background:transparent;max-width:100%;max-height:100%;width:100%;height:100%;touch-action:none}
-.kw-drawer::backdrop{background:rgba(61,34,9,.5)}
-.kw-drawer:not([open]){display:none}
-.kw-drawer[open]{display:flex;justify-content:flex-end}
-.kw-drawer__panel{background:#fff;width:300px;max-width:88vw;height:100%;display:flex;flex-direction:column;overflow-y:auto;animation:kw-panel-in 300ms ease forwards;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch}
-@keyframes kw-panel-in{from{transform:translateX(100%)}to{transform:translateX(0)}}
-.kw-drawer__head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #EDE2C9;flex-shrink:0}
-.kw-drawer__close{background:#EDE2C9}
-.kw-drawer__close:hover{background:#DAC9A1}
-.kw-drawer__nav{flex:1;padding:12px;overflow-y:auto}
-.kw-drawer__nav ul{list-style:none}
-.kw-drawer__sub{padding-left:16px;margin-bottom:6px;list-style:none}
-.kw-drawer__sub-link{display:block;padding:8px 16px;font-size:.9rem;font-weight:600;color:#A88259;text-decoration:none;border-radius:10px;transition:color 140ms}
-.kw-drawer__sub-link:hover{color:#F7A048}
-.kw-drawer__foot{padding:16px 20px;border-top:1px solid #EDE2C9;flex-shrink:0}
-
-@media(prefers-reduced-motion:reduce){
-  .kw-header,.kw-cart-btn,.kw-nav__link::after,.kw-dropdown,.kw-drawer__panel{transition:none;animation:none}
-}
-{% endstylesheet %}
-
-{% javascript %}
-(function () {
-  var header  = document.getElementById('KwHeader');
-  var drawer  = document.getElementById('KwDrawer');
-  var menuBtn = document.querySelector('.kw-menu-btn');
-  var closeBtn = document.querySelector('.kw-drawer__close');
-
-  if (header) {
-    window.addEventListener('scroll', function () {
-      header.classList.toggle('scrolled', window.scrollY > 40);
-    }, { passive: true });
-  }
-
-  function openDrawer() {
-    if (!drawer) return;
-    drawer.showModal();
-    document.body.style.overflow = 'hidden';
-    if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeDrawer() {
-    if (!drawer) return;
-    drawer.close();
-    document.body.style.overflow = '';
-    if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
-  }
-
-  if (menuBtn)  menuBtn.addEventListener('click', openDrawer);
-  if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
-  if (drawer) {
-    drawer.addEventListener('click', function (e) { if (e.target === drawer) closeDrawer(); });
-    drawer.addEventListener('cancel', function () {
-      if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
+    btn.addEventListener('click', function() {
+      var isOpen = nav.classList.contains('is-open');
+      nav.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', !isOpen);
+      nav.setAttribute('aria-hidden', isOpen);
+      document.body.style.overflow = isOpen ? '' : 'hidden';
     });
-  }
-})();
-{% endjavascript %}
+
+    // Sluit menu bij klik buiten
+    document.addEventListener('click', function(e) {
+      if (!btn.contains(e.target) && !nav.contains(e.target)) {
+        nav.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        nav.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    });
+  })();
+</script>
 
 {% schema %}
 {
-  "name": "t:general.header",
-  "blocks": [
+  "name": "Header — Navigatie",
+  "class": "gb-section-header",
+  "settings": [
     {
-      "type": "nav_item",
-      "name": "Nav item",
-      "settings": [
-        { "type": "text", "id": "title", "label": "Titel", "default": "Boxen" },
-        { "type": "url",  "id": "url",   "label": "Link" },
-        {
-          "type": "select", "id": "icon", "label": "Icoon", "default": "box",
-          "options": [
-            { "value": "box",    "label": "Box" },
-            { "value": "toy",    "label": "Speeltje" },
-            { "value": "puppy",  "label": "Puppy" },
-            { "value": "gift",   "label": "Cadeau" },
-            { "value": "star",   "label": "Ster" },
-            { "value": "heart",  "label": "Hart" },
-            { "value": "paw",    "label": "Poot" }
-          ]
-        },
-        {
-          "type": "select", "id": "color", "label": "Kleur", "default": "green",
-          "options": [
-            { "value": "green",  "label": "Groen" },
-            { "value": "orange", "label": "Oranje" },
-            { "value": "pink",   "label": "Roze" },
-            { "value": "yellow", "label": "Geel" },
-            { "value": "brown",  "label": "Bruin" }
-          ]
-        },
-        { "type": "checkbox", "id": "show_chevron", "label": "Pijltje tonen", "default": false }
-      ]
+      "type": "header",
+      "content": "Logo"
     },
     {
-      "type": "shortcut",
-      "name": "Mobiel snelkoppeling",
-      "settings": [
-        { "type": "text", "id": "title", "label": "Label", "default": "Mini Box" },
-        { "type": "url",  "id": "url",   "label": "Link" },
-        {
-          "type": "select", "id": "icon", "label": "Icoon", "default": "box",
-          "options": [
-            { "value": "box",    "label": "Box" },
-            { "value": "toy",    "label": "Speeltje" },
-            { "value": "puppy",  "label": "Puppy" },
-            { "value": "gift",   "label": "Cadeau" },
-            { "value": "star",   "label": "Ster" },
-            { "value": "heart",  "label": "Hart" },
-            { "value": "paw",    "label": "Poot" }
-          ]
-        },
-        {
-          "type": "select", "id": "color", "label": "Kleur", "default": "green",
-          "options": [
-            { "value": "green",  "label": "Groen" },
-            { "value": "orange", "label": "Oranje" },
-            { "value": "pink",   "label": "Roze" },
-            { "value": "yellow", "label": "Geel" },
-            { "value": "brown",  "label": "Bruin" }
-          ]
-        }
-      ]
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo afbeelding",
+      "info": "Upload hier het GrillBrothers logo. Laat leeg om de tekstversie te gebruiken."
+    },
+    {
+      "type": "range",
+      "id": "logo_size",
+      "label": "Tekstlogo grootte",
+      "info": "Alleen van toepassing als er geen logo afbeelding is geüpload.",
+      "min": 16,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo hoogte",
+      "info": "Hoogte van het logo als afbeelding.",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Navigatie"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Hoofdmenu",
+      "info": "Kies het menu dat in de navigatie wordt getoond. Beheer menu's via Online Winkel > Navigatie.",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "Account"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Toon account-link",
+      "info": "Toont een inlog- of accountlink naast de winkelwagen. Alleen zichtbaar als klantenaccounts zijn ingeschakeld.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Uiterlijk"
+    },
+    {
+      "type": "range",
+      "id": "header_height",
+      "label": "Headerhoogte",
+      "info": "Hoogte van de navigatiebalk.",
+      "min": 52,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "color",
+      "id": "header_bg",
+      "label": "Achtergrondkleur header",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "header_opacity",
+      "label": "Doorzichtigheid achtergrond",
+      "info": "100 = volledig dekkend, lager = meer glaseffect.",
+      "min": 60,
+      "max": 100,
+      "step": 5,
+      "default": 95
     }
-  ],
-  "settings": [
-    { "type": "link_list", "id": "menu", "label": "t:labels.menu", "default": "main-menu" },
-    { "type": "link_list", "id": "customer_account_menu", "label": "t:labels.customer_account_menu", "default": "customer-account-main-menu" },
-    { "type": "text", "id": "search_placeholder", "label": "Zoekbalk tekst", "default": "Zoek naar speeltjes, boxen..." }
   ]
 }
 {% endschema %}
