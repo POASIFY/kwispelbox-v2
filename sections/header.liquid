@@ -1,11 +1,32 @@
+{% comment %}
+  ─────────────────────────────────────────────────────────────────
+  KWISPELBOX — HEADER
+  ─────────────────────────────────────────────────────────────────
+  Structuur
+    Rij 1  Logo · Zoekbalk (desktop) · Klantenservice/Account/Cart
+    Rij 2  Zoekbalk (mobiel)
+    Rij 3  Snelkoppelingen (mobiel, optionele blocks)
+    Rij 4  Categorie-chips + trust-trio (desktop)
+    Drawer Mobiel menu (dialog)
+
+  Conventies
+    · Design-tokens als CSS custom properties op .kw-header
+    · Mobile-first; desktop-overrides in min-width queries
+    · Geen !important; cascade geregeld via mobile-first opbouw
+    · JS: predictive search (suggest.json) + drawer, vanilla ES5
+  ─────────────────────────────────────────────────────────────────
+{% endcomment %}
+
+{%- assign nav_blocks      = section.blocks | where: 'type', 'nav_item' -%}
+{%- assign shortcut_blocks = section.blocks | where: 'type', 'shortcut' -%}
+
 <header class="kw-header full-width" id="KwHeader">
 
-  <!-- RIJ 1: Logo + Zoek + Acties ──────────────────────────────── -->
-  <div class="kw-header__top">
-    <div class="kw-header__inner">
+  {%- comment -%} ── RIJ 1 · Hoofdbalk ─────────────────────────── {%- endcomment -%}
+  <div class="kw-header__main">
+    <div class="kw-container kw-main">
 
-      <!-- Hamburger — alleen mobiel, staat links -->
-      <button type="button" class="kw-icon-btn kw-menu-btn"
+      <button type="button" class="kw-iconbtn kw-burger"
               aria-expanded="false" aria-controls="KwDrawer"
               aria-label="{{ 'header.menu_open' | t }}">
         {{- 'icon-menu.svg' | inline_asset_content -}}
@@ -13,7 +34,7 @@
 
       <a href="{{ routes.root_url }}" class="kw-logo" aria-label="{{ shop.name }}">
         {%- if section.settings.logo != blank -%}
-          {%- assign logo_h = section.settings.logo_height | default: 48 -%}
+          {%- assign logo_h   = section.settings.logo_height | default: 48 -%}
           {%- assign logo_alt = shop.name | escape -%}
           <img
             src="{{ section.settings.logo | image_url: width: 440 }}"
@@ -27,14 +48,15 @@
             loading="eager" fetchpriority="high">
         {%- else -%}
           <span class="kw-logo__text">
-            {{ shop.name }}<span class="kw-logo__paw" aria-hidden="true">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
+            {{- shop.name -}}
+            <span class="kw-logo__paw" aria-hidden="true">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
           </span>
         {%- endif -%}
       </a>
 
+      {%- comment -%} Zoekbalk · desktop — knop ín de pill (mockup) {%- endcomment -%}
       <form action="{{ routes.search_url }}" method="get"
-            class="kw-search" role="search" aria-label="Zoeken"
-            data-kw-search>
+            class="kw-search" role="search" aria-label="Zoeken" data-kw-search>
         <input type="hidden" name="type" value="product">
         <div class="kw-search__field">
           <span class="kw-search__ico" aria-hidden="true">{{- 'icon-search.svg' | inline_asset_content -}}</span>
@@ -48,36 +70,35 @@
                  value="{{ search.terms | escape }}">
           <button type="button" class="kw-search__clear" data-kw-search-clear
                   aria-label="Zoekterm wissen" hidden>{{- 'icon-close.svg' | inline_asset_content -}}</button>
+          <button type="submit" class="kw-search__submit">Zoeken</button>
         </div>
-        <button type="submit" class="kw-search__submit">Zoeken</button>
         <div class="kw-search__results" id="KwSearchResults" data-kw-search-results role="listbox" hidden></div>
       </form>
 
       <div class="kw-actions">
         {%- if section.settings.service_url != blank -%}
-          <a href="{{ section.settings.service_url }}" class="kw-service-btn" aria-label="Klantenservice">
-            <span class="kw-service-btn__icon">{{- 'icon-shield.svg' | inline_asset_content -}}</span>
-            <span class="kw-service-btn__labels">
-              <span class="kw-service-btn__title">Klantenservice</span>
-              <span class="kw-service-btn__sub">Hulp &amp; contact</span>
+          <a href="{{ section.settings.service_url }}" class="kw-textbtn" aria-label="Klantenservice">
+            <span class="kw-textbtn__icon kw-textbtn__icon--green">{{- 'icon-shield.svg' | inline_asset_content -}}</span>
+            <span class="kw-textbtn__labels">
+              <span class="kw-textbtn__title">Klantenservice</span>
+              <span class="kw-textbtn__sub">Hulp &amp; contact</span>
             </span>
           </a>
         {%- endif -%}
         {%- if shop.customer_accounts_enabled -%}
-          <a href="{{ routes.account_url }}" class="kw-account-btn" aria-label="Mijn account">
-            <span class="kw-account-btn__icon">{{- 'icon-account.svg' | inline_asset_content -}}</span>
-            <span class="kw-account-btn__labels">
-              <span class="kw-account-btn__title">Mijn account</span>
-              <span class="kw-account-btn__sub">Inloggen / Registreren</span>
+          <a href="{{ routes.account_url }}" class="kw-textbtn" aria-label="Mijn account">
+            <span class="kw-textbtn__icon">{{- 'icon-account.svg' | inline_asset_content -}}</span>
+            <span class="kw-textbtn__labels">
+              <span class="kw-textbtn__title">Mijn account</span>
+              <span class="kw-textbtn__sub">Inloggen / Registreren</span>
             </span>
           </a>
         {%- endif -%}
-        <a href="{{ routes.cart_url }}" class="kw-cart-btn"
-           aria-label="Winkelwagen, {{ cart.item_count }} items">
+        <a href="{{ routes.cart_url }}" class="kw-cart" aria-label="Winkelwagen, {{ cart.item_count }} items">
           {{- 'icon-cart.svg' | inline_asset_content -}}
-          <span class="kw-cart-btn__label">Winkelwagen</span>
+          <span class="kw-cart__label">Winkelwagen</span>
           {%- if cart.item_count > 0 -%}
-            <span class="kw-cart-btn__badge" data-cart-count>{{- cart.item_count -}}</span>
+            <span class="kw-cart__badge" data-cart-count>{{- cart.item_count -}}</span>
           {%- endif -%}
         </a>
       </div>
@@ -85,12 +106,12 @@
     </div>
   </div>
 
-  <!-- RIJ 2: Mobiele zoekbalk ────────────────────────────────────── -->
-  <div class="kw-search-mob full-width">
+  {%- comment -%} ── RIJ 2 · Zoekbalk mobiel ───────────────────── {%- endcomment -%}
+  <div class="kw-msearch full-width">
     <form action="{{ routes.search_url }}" method="get" role="search" aria-label="Zoeken"
-          class="kw-search-mob__form" data-kw-search>
+          class="kw-msearch__form" data-kw-search>
       <input type="hidden" name="type" value="product">
-      <div class="kw-search-mob__field">
+      <div class="kw-msearch__field">
         <span class="kw-search__ico" aria-hidden="true">{{- 'icon-search.svg' | inline_asset_content -}}</span>
         <label for="KwSearchMob" class="kw-sr-only">Zoekterm</label>
         <input type="search" id="KwSearchMob" name="q"
@@ -103,20 +124,19 @@
         <button type="button" class="kw-search__clear" data-kw-search-clear
                 aria-label="Zoekterm wissen" hidden>{{- 'icon-close.svg' | inline_asset_content -}}</button>
       </div>
-      <button type="submit" class="kw-search-mob__submit" aria-label="Zoeken">{{- 'icon-search.svg' | inline_asset_content -}}</button>
+      <button type="submit" class="kw-msearch__submit" aria-label="Zoeken">{{- 'icon-search.svg' | inline_asset_content -}}</button>
       <div class="kw-search__results" id="KwSearchResultsMob" data-kw-search-results role="listbox" hidden></div>
     </form>
   </div>
 
-  <!-- RIJ 3: Mobiele snelkoppelingen ─────────────────────────────── -->
-  {%- assign shortcut_blocks = section.blocks | where: 'type', 'shortcut' -%}
+  {%- comment -%} ── RIJ 3 · Snelkoppelingen mobiel ────────────── {%- endcomment -%}
   {%- if shortcut_blocks.size > 0 -%}
     <div class="kw-shortcuts full-width">
       <ul class="kw-shortcuts__list" role="list">
         {%- for block in shortcut_blocks -%}
           <li {{ block.shopify_attributes }}>
             <a href="{{ block.settings.url }}" class="kw-shortcut">
-              <span class="kw-shortcut__icon kw-shortcut__icon--{{ block.settings.color }}" aria-hidden="true">
+              <span class="kw-shortcut__icon kw-tint--{{ block.settings.color }}" aria-hidden="true">
                 {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
               </span>
               <span class="kw-shortcut__label">{{ block.settings.title }}</span>
@@ -127,38 +147,36 @@
     </div>
   {%- endif -%}
 
-  <!-- RIJ 4: Navigatie + Trust trio (desktop) ────────────────────── -->
+  {%- comment -%} ── RIJ 4 · Chips + trust (desktop) ───────────── {%- endcomment -%}
   <nav class="kw-nav full-width" aria-label="{{ 'general.header' | t }}">
-    <div class="kw-nav__inner">
+    <div class="kw-container kw-nav__bar">
 
-      <ul class="kw-nav__list" role="list">
-        {%- assign nav_blocks = section.blocks | where: 'type', 'nav_item' -%}
+      <ul class="kw-chips" role="list">
         {%- if nav_blocks.size > 0 -%}
           {%- for block in nav_blocks -%}
-            <li class="kw-nav__item" {{ block.shopify_attributes }}>
+            <li {{ block.shopify_attributes }}>
               <a href="{{ block.settings.url }}"
-                 class="kw-nav__link kw-nav__link--pill kw-nav__link--pill-{{ block.settings.color }}{% if request.path == block.settings.url %} is-active{% endif %}">
+                 class="kw-chip{% if request.path == block.settings.url %} is-active{% endif %}">
                 {%- if block.settings.icon != blank -%}
-                  <span class="kw-nav__pill-icon kw-nav__pill-icon--{{ block.settings.color }}" aria-hidden="true">
+                  <span class="kw-chip__icon kw-ink--{{ block.settings.color }}" aria-hidden="true">
                     {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
                   </span>
                 {%- endif -%}
                 {{ block.settings.title }}
                 {%- if block.settings.show_chevron -%}
-                  <span class="kw-nav__chevron" aria-hidden="true">{{- 'icon-chevron-down.svg' | inline_asset_content -}}</span>
+                  <span class="kw-chip__chevron" aria-hidden="true">{{- 'icon-chevron-down.svg' | inline_asset_content -}}</span>
                 {%- endif -%}
               </a>
             </li>
           {%- endfor -%}
         {%- else -%}
           {%- for link in section.settings.menu.links -%}
-            <li class="kw-nav__item{% if link.child_links.size > 0 %} has-sub{% endif %}">
-              <a href="{{ link.url }}"
-                 class="kw-nav__link{% if link.active %} is-active{% endif %}"
+            <li{% if link.child_links.size > 0 %} class="has-sub"{% endif %}>
+              <a href="{{ link.url }}" class="kw-chip{% if link.active %} is-active{% endif %}"
                  {%- if link.child_links.size > 0 %} aria-haspopup="true" aria-expanded="false"{%- endif %}>
                 {{- link.title -}}
                 {%- if link.child_links.size > 0 -%}
-                  <span class="kw-nav__chevron" aria-hidden="true">{{- 'icon-chevron-down.svg' | inline_asset_content -}}</span>
+                  <span class="kw-chip__chevron" aria-hidden="true">{{- 'icon-chevron-down.svg' | inline_asset_content -}}</span>
                 {%- endif -%}
               </a>
               {%- if link.child_links.size > 0 -%}
@@ -173,7 +191,6 @@
         {%- endif -%}
       </ul>
 
-      <!-- Trust trio -->
       <ul class="kw-trust" role="list">
         <li class="kw-trust__item">
           <span class="kw-trust__icon" aria-hidden="true">{{- 'icon-truck.svg' | inline_asset_content -}}</span>
@@ -194,13 +211,12 @@
 
 </header>
 
-<!-- Mobiel drawer ──────────────────────────────────────────────── -->
+{%- comment -%} ── DRAWER · mobiel menu ──────────────────────────── {%- endcomment -%}
 <dialog class="kw-drawer" id="KwDrawer" aria-label="{{ 'general.header' | t }}">
   <div class="kw-drawer__panel">
 
-    <!-- Head: merk + tagline + sluitknop -->
     <div class="kw-drawer__head">
-      <button type="button" class="kw-icon-btn kw-drawer__close" aria-label="{{ 'header.menu_close' | t }}" autofocus>
+      <button type="button" class="kw-iconbtn kw-drawer__close" aria-label="{{ 'header.menu_close' | t }}" autofocus>
         {{- 'icon-close.svg' | inline_asset_content -}}
       </button>
       <a href="{{ routes.root_url }}" class="kw-drawer__brand" aria-label="{{ shop.name }}">
@@ -219,7 +235,6 @@
 
     <div class="kw-drawer__scroll">
 
-      <!-- Categorie-rijen (gevoed door nav_item-blocks) -->
       <nav class="kw-drawer__nav" aria-label="{{ 'general.header' | t }}">
         <ul role="list">
           {%- if nav_blocks.size > 0 -%}
@@ -227,7 +242,7 @@
               <li {{ block.shopify_attributes }}>
                 <a href="{{ block.settings.url }}" class="kw-drawer__row{% if request.path == block.settings.url %} is-active{% endif %}">
                   {%- if block.settings.icon != blank -%}
-                    <span class="kw-drawer__row-icon kw-icon--{{ block.settings.color }}" aria-hidden="true">
+                    <span class="kw-drawer__row-icon kw-ink--{{ block.settings.color }}" aria-hidden="true">
                       {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
                     </span>
                   {%- endif -%}
@@ -252,7 +267,6 @@
         </ul>
       </nav>
 
-      <!-- Kwispelclub-kaart -->
       {%- if section.settings.club_title != blank -%}
         <a href="{{ section.settings.club_url }}" class="kw-drawer__club">
           <span class="kw-drawer__club-icon" aria-hidden="true">{{- 'icon-heart.svg' | inline_asset_content -}}</span>
@@ -266,7 +280,6 @@
         </a>
       {%- endif -%}
 
-      <!-- Secundaire links -->
       <ul class="kw-drawer__links" role="list">
         {%- if shop.customer_accounts_enabled -%}
           <li><a href="{{ routes.account_url }}" class="kw-drawer__minilink">
@@ -290,7 +303,6 @@
         {%- endif -%}
       </ul>
 
-      <!-- CTA-kaart onderaan -->
       {%- if section.settings.cta_title != blank -%}
         <a href="{{ section.settings.cta_url }}" class="kw-drawer__cta">
           <span class="kw-drawer__cta-body">
@@ -318,224 +330,216 @@
 </dialog>
 
 {% stylesheet %}
+/* ════════════════════════════════════════════════════════════════
+   TOKENS
+   ════════════════════════════════════════════════════════════════ */
+.kw-header{
+  --green:#66AA44; --green-dark:#4d8833; --green-soft:#e8f5e2;
+  --orange:#F7A048; --orange-dark:#d9823a;
+  --pink:#e75480; --yellow:#e0a800;
+  --ink:#3d2209; --body:#603A15; --soft:#A88259;
+  --line:#EDE2C9; --line-strong:#DAC9A1;
+  --cream:#F8EFDD; --cream-soft:#FBF6EC;
+  --font-head:'Lilita One',cursive;
+  --font-body:'Karla',sans-serif;
+  --gutter:20px;
+  --speed:160ms;
+}
+@media(min-width:1024px){.kw-header{--gutter:60px}}
+
+.kw-container{max-width:1280px;margin-inline:auto;padding-inline:var(--gutter)}
 .kw-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-/* Header */
-.kw-header{background:#fff;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 #EDE2C9;transition:box-shadow 240ms ease}
+/* Kleur-utilities (iconen) */
+.kw-ink--green{color:var(--green)}
+.kw-ink--orange{color:var(--orange)}
+.kw-ink--pink{color:var(--pink)}
+.kw-ink--yellow{color:var(--yellow)}
+.kw-ink--brown{color:var(--soft)}
+.kw-tint--green{background:var(--green-soft);color:var(--green)}
+.kw-tint--orange{background:#fff0e4;color:var(--orange)}
+.kw-tint--pink{background:#fff0f5;color:var(--pink)}
+.kw-tint--yellow{background:#fffae0;color:#c49000}
+.kw-tint--brown{background:var(--cream);color:var(--soft)}
+
+/* ════════════════════════════════════════════════════════════════
+   SHELL
+   ════════════════════════════════════════════════════════════════ */
+.kw-header{background:#fff;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--line);transition:box-shadow 240ms ease}
 .kw-header.scrolled{box-shadow:0 4px 20px rgba(96,58,21,.12)}
-.kw-header__top{border-bottom:1px solid #EDE2C9}
-.kw-header__inner{
-  max-width:1280px;margin:0 auto;padding:12px 20px;
-  display:grid;
-  grid-template-columns: 44px 1fr auto;
-  align-items:center;gap:8px;
-}
-@media(min-width:768px){
-  .kw-header__inner{
-    display:flex;
-    gap:16px;
-  }
-  .kw-menu-btn{ display:none!important; }
-}
-@media(min-width:1200px){.kw-header__inner{padding:12px 60px}}
+.kw-header__main{border-bottom:1px solid var(--line)}
 
-/* Logo */
-.kw-logo{text-decoration:none;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+/* ════════════════════════════════════════════════════════════════
+   RIJ 1 · HOOFDBALK    mobiel: [burger][logo][cart] · desktop: flex
+   ════════════════════════════════════════════════════════════════ */
+.kw-main{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:8px;padding-block:10px}
+
+.kw-iconbtn{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:none;border-radius:50%;background:transparent;color:var(--body);cursor:pointer;transition:background var(--speed)}
+.kw-iconbtn:hover{background:var(--cream)}
+.kw-iconbtn svg{width:24px;height:24px}
+
+.kw-logo{display:flex;align-items:center;justify-content:center;min-width:0;text-decoration:none}
 .kw-logo__img{width:auto;display:block;object-fit:contain}
-.kw-logo__text{font-family:'Lilita One',cursive;font-size:2rem;color:#F7A048;line-height:1;white-space:nowrap;display:flex;align-items:center;gap:3px}
-.kw-logo__paw{display:flex;align-items:flex-start;margin-top:-2px;margin-bottom:0}
-.kw-logo__paw svg{width:18px;height:18px;color:#F7A048}
+.kw-logo__text{display:flex;align-items:center;gap:2px;font-family:var(--font-head);font-size:1.7rem;color:var(--orange);line-height:1;white-space:nowrap}
+.kw-logo__paw{display:flex;align-self:flex-start;margin-top:-2px}
+.kw-logo__paw svg{width:16px;height:16px}
 
-/* Zoekbalk */
-.kw-search{display:none;flex:1;max-width:480px;position:relative}
-.kw-search__field{display:flex;align-items:center;background:#F8EFDD;border:2px solid #DAC9A1;border-radius:999px 0 0 999px;height:50px;padding:0 16px;flex:1;transition:border-color 200ms,box-shadow 200ms}
-.kw-search__field:focus-within{border-color:#F7A048;box-shadow:0 0 0 3px rgba(247,160,72,.15)}
-.kw-search__ico{color:#A88259;flex-shrink:0;display:flex;align-items:center;margin-right:10px}
+/* Zoekbalk desktop — verborgen op mobiel */
+.kw-search{display:none;position:relative;flex:1 1 auto;max-width:620px}
+.kw-search__field{display:flex;align-items:center;gap:10px;height:52px;padding:4px 4px 4px 20px;background:var(--cream);border:1.5px solid var(--line);border-radius:999px;transition:border-color 200ms,box-shadow 200ms}
+.kw-search__field:focus-within{border-color:var(--orange);box-shadow:0 0 0 3px rgba(247,160,72,.15)}
+.kw-search__ico{display:flex;flex-shrink:0;color:var(--soft)}
 .kw-search__ico svg{width:18px;height:18px}
-.kw-search__input{flex:1;border:none;outline:none;background:transparent;font-family:'Karla',sans-serif;font-size:.95rem;color:#603A15;min-width:0}
-.kw-search__input::placeholder{color:#A88259}
+.kw-search__input{flex:1;min-width:0;border:none;outline:none;background:transparent;font-family:var(--font-body);font-size:.95rem;color:var(--body)}
+.kw-search__input::placeholder{color:var(--soft)}
 .kw-search__input::-webkit-search-cancel-button{display:none}
-.kw-search__clear{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border:none;background:#DAC9A1;color:#603A15;border-radius:50%;cursor:pointer;flex-shrink:0;margin-left:6px;transition:background 140ms}
-.kw-search__clear:hover{background:#A88259;color:#fff}
+.kw-search__clear{display:flex;align-items:center;justify-content:center;width:26px;height:26px;flex-shrink:0;border:none;border-radius:50%;background:var(--line-strong);color:var(--body);cursor:pointer;transition:background 140ms}
+.kw-search__clear:hover{background:var(--soft);color:#fff}
 .kw-search__clear svg{width:12px;height:12px}
-.kw-search__submit{height:50px;padding:0 24px;background:#F7A048;color:#fff;font-family:'Lilita One',cursive;font-size:.95rem;border:none;border-radius:0 999px 999px 0;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 160ms}
-.kw-search__submit:hover{background:#d9823a}
-
-/* Zoekresultaten dropdown */
-.kw-search__results{position:absolute;top:calc(100% + 10px);left:0;right:0;background:#fff;border:1.5px solid #DAC9A1;border-radius:18px;box-shadow:0 8px 28px rgba(96,58,21,.16);padding:8px;z-index:120;max-height:70vh;overflow-y:auto;overscroll-behavior:contain}
-.kw-sr__list{list-style:none;margin:0;padding:0}
-.kw-sr__item{display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:12px;text-decoration:none;transition:background 130ms}
-.kw-sr__item:hover,.kw-sr__item.is-active{background:#F8EFDD}
-.kw-sr__thumb{width:48px;height:48px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#F8EFDD;display:flex;align-items:center;justify-content:center}
-.kw-sr__thumb img{width:100%;height:100%;object-fit:cover}
-.kw-sr__thumb--empty{background:#EDE2C9}
-.kw-sr__info{display:flex;flex-direction:column;gap:2px;min-width:0}
-.kw-sr__title{font-family:'Karla',sans-serif;font-size:.92rem;font-weight:700;color:#3d2209;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.kw-sr__price{font-family:'Karla',sans-serif;font-size:.85rem;font-weight:600;color:#66AA44}
-.kw-sr__all{display:block;text-align:center;margin-top:6px;padding:11px;background:#66AA44;color:#fff;font-family:'Lilita One',cursive;font-size:.9rem;border-radius:12px;text-decoration:none;transition:background 150ms}
-.kw-sr__all:hover,.kw-sr__all.is-active{background:#4d8833}
-.kw-sr__empty{text-align:center;padding:20px 12px;color:#A88259;font-family:'Karla',sans-serif;font-size:.92rem;margin:0}
+.kw-search__submit{height:42px;padding:0 26px;flex-shrink:0;border:none;border-radius:999px;background:var(--orange);color:#fff;font-family:var(--font-head);font-size:.95rem;cursor:pointer;transition:background var(--speed)}
+.kw-search__submit:hover{background:var(--orange-dark)}
 
 /* Acties */
-.kw-actions{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
-.kw-account-btn{display:none;align-items:center;gap:10px;text-decoration:none;color:#603A15;padding:6px 12px;border-radius:12px;transition:background 160ms}
-.kw-account-btn:hover{background:#F8EFDD}
-.kw-account-btn__icon{display:flex;color:#603A15}
-.kw-account-btn__icon svg{width:24px;height:24px}
-.kw-account-btn__labels{display:flex;flex-direction:column;gap:1px}
-.kw-account-btn__title{font-family:'Karla',sans-serif;font-size:.82rem;font-weight:700;color:#603A15;line-height:1.2}
-.kw-account-btn__sub{font-family:'Karla',sans-serif;font-size:.7rem;color:#A88259;line-height:1.2}
-.kw-service-btn{display:none;align-items:center;gap:10px;text-decoration:none;color:#603A15;padding:6px 12px;border-radius:12px;transition:background 160ms}
-.kw-service-btn:hover{background:#F8EFDD}
-.kw-service-btn__icon{display:flex;color:#66AA44}
-.kw-service-btn__icon svg{width:24px;height:24px}
-.kw-service-btn__labels{display:flex;flex-direction:column;gap:1px}
-.kw-service-btn__title{font-family:'Karla',sans-serif;font-size:.82rem;font-weight:700;color:#603A15;line-height:1.2}
-.kw-service-btn__sub{font-family:'Karla',sans-serif;font-size:.7rem;color:#A88259;line-height:1.2}
-.kw-cart-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;width:44px;padding:0;background:#66AA44;color:#fff;border-radius:50%;text-decoration:none;font-family:'Lilita One',cursive;font-size:.95rem;position:relative;flex-shrink:0;transition:background 160ms,transform 200ms cubic-bezier(.34,1.56,.64,1)}
+.kw-actions{display:flex;align-items:center;gap:6px;justify-self:end}
+
+.kw-textbtn{display:none;align-items:center;gap:10px;padding:6px 12px;border-radius:12px;text-decoration:none;transition:background var(--speed)}
+.kw-textbtn:hover{background:var(--cream)}
+.kw-textbtn__icon{display:flex;color:var(--body)}
+.kw-textbtn__icon--green{color:var(--green)}
+.kw-textbtn__icon svg{width:25px;height:25px}
+.kw-textbtn__labels{display:flex;flex-direction:column;gap:1px}
+.kw-textbtn__title{font-family:var(--font-body);font-size:.85rem;font-weight:800;color:var(--ink);line-height:1.2;white-space:nowrap}
+.kw-textbtn__sub{font-family:var(--font-body);font-size:.72rem;color:var(--soft);line-height:1.2;white-space:nowrap}
+
+/* Cart — mobile-first: icoon, desktop: groene pill */
+.kw-cart{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:9px;width:44px;height:44px;border-radius:50%;background:transparent;color:var(--body);text-decoration:none;font-family:var(--font-head);font-size:.95rem;flex-shrink:0}
+.kw-cart svg{width:25px;height:25px}
+.kw-cart__label{display:none}
+.kw-cart__badge{position:absolute;top:-4px;right:-4px;display:inline-flex;align-items:center;justify-content:center;min-width:19px;height:19px;padding:0 5px;border-radius:999px;border:2px solid #fff;background:var(--orange);color:#fff;font-family:var(--font-head);font-size:.68rem}
+
+/* ════════════════════════════════════════════════════════════════
+   RIJ 2 · ZOEKBALK MOBIEL
+   ════════════════════════════════════════════════════════════════ */
+.kw-msearch{background:var(--cream);border-top:1px solid var(--line);padding:10px var(--gutter)}
+.kw-msearch__form{position:relative;display:flex;align-items:center;gap:8px}
+.kw-msearch__field{display:flex;align-items:center;gap:8px;flex:1;min-width:0;height:44px;padding:0 16px;background:#fff;border:1.5px solid var(--line-strong);border-radius:999px;transition:border-color 200ms,box-shadow 200ms}
+.kw-msearch__field:focus-within{border-color:var(--orange);box-shadow:0 0 0 3px rgba(247,160,72,.15)}
+.kw-msearch .kw-search__ico svg{width:16px;height:16px}
+.kw-msearch .kw-search__input{font-size:16px} /* voorkomt iOS-zoom */
+.kw-msearch__submit{display:flex;align-items:center;justify-content:center;width:44px;height:44px;flex-shrink:0;border:none;border-radius:50%;background:var(--orange);color:#fff;cursor:pointer;transition:background var(--speed)}
+.kw-msearch__submit:hover{background:var(--orange-dark)}
+.kw-msearch__submit svg{width:18px;height:18px}
+
+/* ════════════════════════════════════════════════════════════════
+   ZOEKRESULTATEN-DROPDOWN (gedeeld desktop/mobiel)
+   ════════════════════════════════════════════════════════════════ */
+.kw-search__results{position:absolute;top:calc(100% + 10px);left:0;right:0;z-index:120;max-height:70vh;overflow-y:auto;overscroll-behavior:contain;padding:8px;background:#fff;border:1.5px solid var(--line-strong);border-radius:18px;box-shadow:0 8px 28px rgba(96,58,21,.16)}
+.kw-sr__list{list-style:none;margin:0;padding:0}
+.kw-sr__item{display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:12px;text-decoration:none;transition:background 130ms}
+.kw-sr__item:hover,.kw-sr__item.is-active{background:var(--cream)}
+.kw-sr__thumb{display:flex;align-items:center;justify-content:center;width:48px;height:48px;flex-shrink:0;overflow:hidden;border-radius:10px;background:var(--cream)}
+.kw-sr__thumb img{width:100%;height:100%;object-fit:cover}
+.kw-sr__thumb--empty{background:var(--line)}
+.kw-sr__info{display:flex;flex-direction:column;gap:2px;min-width:0}
+.kw-sr__title{font-family:var(--font-body);font-size:.92rem;font-weight:700;color:var(--ink);line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kw-sr__price{font-family:var(--font-body);font-size:.85rem;font-weight:600;color:var(--green)}
+.kw-sr__all{display:block;margin-top:6px;padding:11px;border-radius:12px;background:var(--green);color:#fff;font-family:var(--font-head);font-size:.9rem;text-align:center;text-decoration:none;transition:background 150ms}
+.kw-sr__all:hover,.kw-sr__all.is-active{background:var(--green-dark)}
+.kw-sr__empty{margin:0;padding:20px 12px;color:var(--soft);font-family:var(--font-body);font-size:.92rem;text-align:center}
+
+/* ════════════════════════════════════════════════════════════════
+   RIJ 3 · SNELKOPPELINGEN MOBIEL
+   ════════════════════════════════════════════════════════════════ */
+.kw-shortcuts{background:#fff;border-top:1px solid var(--line);padding:10px 0}
+.kw-shortcuts__list{display:flex;gap:4px;list-style:none;margin:0;padding:0 12px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.kw-shortcuts__list::-webkit-scrollbar{display:none}
+.kw-shortcuts__list li{flex:1 0 auto;min-width:72px}
+.kw-shortcut{display:flex;flex-direction:column;align-items:center;gap:6px;padding:4px 6px;text-decoration:none}
+.kw-shortcut__icon{display:flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;transition:transform 200ms cubic-bezier(.34,1.56,.64,1)}
+.kw-shortcut:active .kw-shortcut__icon{transform:scale(.92)}
+.kw-shortcut__icon svg{width:26px;height:26px}
+.kw-shortcut__label{font-family:var(--font-body);font-size:.72rem;font-weight:700;color:var(--ink);text-align:center;white-space:nowrap}
+
+/* ════════════════════════════════════════════════════════════════
+   RIJ 4 · CHIPS + TRUST (desktop)
+   ════════════════════════════════════════════════════════════════ */
+.kw-nav{display:none;background:#fff}
+.kw-nav__bar{display:flex;align-items:center;gap:12px;padding-block:10px}
+
+.kw-chips{display:flex;align-items:center;gap:8px;list-style:none;margin:0;padding:0;min-width:0}
+.kw-chips li{position:relative}
+.kw-chip{display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 14px;border-radius:999px;background:#fff;border:1.5px solid var(--line);font-family:var(--font-body);font-size:.95rem;font-weight:800;color:var(--ink);text-decoration:none;white-space:nowrap;transition:background var(--speed),border-color var(--speed)}
+.kw-chip:hover{background:var(--cream-soft);border-color:var(--line-strong)}
+.kw-chip.is-active{border-color:var(--green);background:var(--green-soft)}
+.kw-chip__icon{display:flex;flex-shrink:0}
+.kw-chip__icon svg{width:18px;height:18px}
+.kw-chip__chevron{display:flex;color:var(--soft)}
+.kw-chip__chevron svg{width:13px;height:13px}
+
+/* Dropdown (fallback-menu met submenu's) */
+.kw-dropdown{position:absolute;top:calc(100% + 8px);left:0;z-index:110;min-width:200px;list-style:none;margin:0;padding:8px;background:#fff;border:1.5px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(96,58,21,.14);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity var(--speed),transform var(--speed),visibility var(--speed)}
+.kw-chips li.has-sub:hover .kw-dropdown,.kw-chips li.has-sub:focus-within .kw-dropdown{opacity:1;visibility:visible;transform:translateY(0)}
+.kw-dropdown__link{display:block;padding:9px 12px;border-radius:9px;font-family:var(--font-body);font-size:.92rem;font-weight:700;color:var(--body);text-decoration:none;transition:background 130ms,color 130ms}
+.kw-dropdown__link:hover,.kw-dropdown__link.is-active{background:var(--cream);color:var(--ink)}
+
+.kw-trust{display:flex;align-items:center;list-style:none;margin:0 0 0 auto;padding:0;flex-shrink:0}
+.kw-trust__item{display:flex;align-items:center;gap:8px;padding:0 13px;border-left:1px solid var(--line)}
+.kw-trust__item:last-child{padding-right:0}
+.kw-trust__icon{display:flex;flex-shrink:0;color:var(--green)}
+.kw-trust__icon svg{width:22px;height:22px}
+.kw-trust__text{display:flex;flex-direction:column;line-height:1.25}
+.kw-trust__text strong{font-family:var(--font-body);font-size:.85rem;font-weight:800;color:var(--ink);white-space:nowrap}
+.kw-trust__text span{font-family:var(--font-body);font-size:.73rem;color:var(--soft);white-space:nowrap}
+
+/* ════════════════════════════════════════════════════════════════
+   DESKTOP-OVERRIDES (≥768px)
+   ════════════════════════════════════════════════════════════════ */
 @media(min-width:768px){
-  .kw-cart-btn{height:42px;width:auto;padding:0 17px;border-radius:999px}
-}
-.kw-cart-btn:hover{background:#4d8833;transform:translateY(-2px)}
-.kw-cart-btn svg{width:20px;height:20px}
-.kw-cart-btn__label{display:none}
-.kw-cart-btn--full{width:100%}
-.kw-cart-btn__badge{background:#F7A048;color:#fff;font-family:'Lilita One',cursive;font-size:.75rem;min-width:22px;height:22px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px}
-.kw-icon-btn{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:transparent;border:none;cursor:pointer;color:#603A15;text-decoration:none;transition:background 160ms,color 160ms}
-.kw-icon-btn:hover{background:#EDE2C9;color:#F7A048}
-.kw-icon-btn svg{width:22px;height:22px}
-.kw-menu-btn{display:flex;order:-1}
-@media(min-width:768px){.kw-menu-btn{order:0}}
-
-/* Mobiele zoekbalk */
-.kw-search-mob{background:#F8EFDD;border-top:1px solid #EDE2C9;padding:10px 20px}
-.kw-search-mob__form{display:flex;align-items:center;gap:8px;width:100%;position:relative}
-.kw-search-mob__field{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid #DAC9A1;border-radius:999px;height:44px;padding:0 16px;flex:1;min-width:0;transition:border-color 200ms,box-shadow 200ms}
-.kw-search-mob__field:focus-within{border-color:#F7A048;box-shadow:0 0 0 3px rgba(247,160,72,.15)}
-.kw-search-mob .kw-search__ico{color:#A88259;display:flex;flex-shrink:0}
-.kw-search-mob .kw-search__ico svg{width:16px;height:16px}
-.kw-search-mob .kw-search__input{flex:1;border:none;outline:none;background:transparent;font-family:'Karla',sans-serif;font-size:16px;color:#603A15;min-width:0}
-.kw-search-mob .kw-search__input::placeholder{color:#A88259}
-.kw-search-mob .kw-search__clear{margin-left:4px}
-.kw-search-mob__submit{display:flex;align-items:center;justify-content:center;width:44px;height:44px;flex-shrink:0;background:#F7A048;color:#fff;border:none;border-radius:50%;cursor:pointer;transition:background 160ms}
-.kw-search-mob__submit:hover{background:#d9823a}
-.kw-search-mob__submit svg{width:18px;height:18px}
-.kw-search-mob .kw-search__results{top:calc(100% + 8px)}
-
-/* Mobiele snelkoppelingen */
-.kw-shortcuts{background:#fff;border-top:1px solid #EDE2C9;padding:8px 0;}
-.kw-shortcuts__list{display:grid;grid-template-columns:repeat(4,1fr);list-style:none;margin:0;padding:0 8px;width:100%;box-sizing:border-box;}
-.kw-shortcut{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;padding:6px 0;}
-.kw-shortcut__icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform 200ms cubic-bezier(.34,1.56,.64,1)}
-.kw-shortcut:hover .kw-shortcut__icon{transform:scale(1.08)}
-.kw-shortcut__icon svg{width:24px;height:24px}
-.kw-shortcut__label{font-family:'Karla',sans-serif;font-size:.7rem;font-weight:700;color:#603A15;text-align:center;white-space:nowrap}
-.kw-shortcuts__list li:nth-child(n+5){display:none;}
-
-/* Icon kleuren */
-.kw-shortcut__icon--green,.kw-nav__pill-icon--green{background:#e8f5e2;color:#66AA44}
-.kw-shortcut__icon--orange,.kw-nav__pill-icon--orange{background:#fff0e4;color:#F7A048}
-.kw-shortcut__icon--pink,.kw-nav__pill-icon--pink{background:#fff0f5;color:#e75480}
-.kw-shortcut__icon--yellow,.kw-nav__pill-icon--yellow{background:#fffae0;color:#c49000}
-.kw-shortcut__icon--brown,.kw-nav__pill-icon--brown{background:#F8EFDD;color:#A88259}
-
-/* Nav balk */
-.kw-nav{background:#fff;border-top:1px solid #EDE2C9;display:none}
-.kw-nav__inner{max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:0}
-@media(min-width:1200px){.kw-nav__inner{padding:0 60px}}
-.kw-nav__list{display:flex;align-items:center;list-style:none;margin:0;padding:0;height:48px;gap:4px}
-.kw-nav__item{position:relative}
-
-/* Standaard nav link */
-.kw-nav__link{display:inline-flex;align-items:center;gap:6px;padding:0 16px;height:48px;font-family:'Karla',sans-serif;font-size:.9rem;font-weight:700;color:#A88259;text-decoration:none;white-space:nowrap;position:relative;transition:color 160ms}
-.kw-nav__link::after{content:'';position:absolute;bottom:0;left:16px;right:16px;height:3px;background:#F7A048;border-radius:3px 3px 0 0;transform:scaleX(0);transition:transform 220ms cubic-bezier(.34,1.56,.64,1)}
-.kw-nav__link:hover{color:#603A15}
-.kw-nav__link:hover::after,.kw-nav__link.is-active::after{transform:scaleX(1)}
-.kw-nav__link.is-active{color:#F7A048}
-
-/* Pill nav link */
-.kw-nav__link--pill{height:38px;margin:5px 0;padding:0 16px;border-radius:999px;background:#fff;border:1.5px solid #EDE2C9;color:#3d2209;font-weight:700;gap:8px;transition:border-color 160ms,background 160ms}
-.kw-nav__link--pill::after{display:none}
-.kw-nav__link--pill:hover{background:#FBF6EC;border-color:#DAC9A1;color:#3d2209;transform:none}
-.kw-nav__link--pill.is-active{border-color:#66AA44;background:#f3faef}
-/* Icoon krijgt de merkkleur (lijn-stijl, geen tegel) */
-.kw-nav__pill-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:none}
-.kw-nav__pill-icon svg{width:18px;height:18px}
-.kw-nav__pill-icon--green{color:#66AA44;background:none}
-.kw-nav__pill-icon--orange{color:#F7A048;background:none}
-.kw-nav__pill-icon--pink{color:#e75480;background:none}
-.kw-nav__pill-icon--yellow{color:#e0a800;background:none}
-.kw-nav__pill-icon--brown{color:#A88259;background:none}
-/* Boxen (hoofdproduct) subtiel uitgelicht: groene rand + lichte tint */
-.kw-nav__link--pill-green{border-color:#bfe0a8;background:#f3faef}
-.kw-nav__link--pill-green:hover{border-color:#66AA44;background:#e8f5e2}
-.kw-nav__chevron{display:flex;align-items:center;color:#A88259}
-.kw-nav__chevron svg{width:13px;height:13px}
-
-/* Dropdown */
-.kw-dropdown{position:absolute;top:calc(100% + 4px);left:0;min-width:200px;background:#fff;border:1.5px solid #DAC9A1;border-radius:16px;box-shadow:0 4px 20px rgba(96,58,21,.12);padding:8px;list-style:none;z-index:10;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity 200ms,visibility 200ms,transform 200ms}
-.kw-nav__item.has-sub:hover .kw-dropdown,.kw-nav__item.has-sub:focus-within .kw-dropdown{opacity:1;visibility:visible;transform:translateY(0)}
-.kw-dropdown__link{display:block;padding:10px 16px;font-family:'Karla',sans-serif;font-size:.9rem;font-weight:600;color:#603A15;text-decoration:none;border-radius:10px;transition:background 140ms,color 140ms}
-.kw-dropdown__link:hover,.kw-dropdown__link.is-active{background:#fff0e4;color:#d9823a}
-
-/* Trust trio */
-.kw-trust{display:flex;align-items:center;list-style:none;margin:0 0 0 auto;padding:0 0 0 20px;border-left:1px solid #EDE2C9;flex-shrink:0}
-.kw-trust__item{display:flex;align-items:center;gap:8px;padding:8px 16px;border-right:1px solid #EDE2C9}
-.kw-trust__item:last-child{border-right:none}
-.kw-trust__icon{display:flex;align-items:center;color:#66AA44;flex-shrink:0}
-.kw-trust__icon svg{width:18px;height:18px}
-.kw-trust__text{display:flex;flex-direction:column;gap:1px}
-.kw-trust__text strong{font-family:'Karla',sans-serif;font-size:.75rem;font-weight:700;color:#603A15;line-height:1.2}
-.kw-trust__text span{font-size:.65rem;color:#A88259;line-height:1.2}
-
-/* Desktop */
-@media(min-width:768px){
-  .kw-search{display:flex}
-  .kw-search-mob{display:none}
+  .kw-main{display:flex;gap:24px;padding-block:14px}
+  .kw-burger{display:none}
+  .kw-logo{justify-content:flex-start}
+  .kw-logo__text{font-size:2rem}
+  .kw-logo__paw svg{width:18px;height:18px}
+  .kw-search{display:block}
+  .kw-actions{margin-left:auto;gap:8px}
+  .kw-textbtn{display:flex}
+  .kw-cart{width:auto;height:48px;padding:0 22px;border-radius:999px;background:var(--green);color:#fff;transition:background var(--speed),transform 200ms cubic-bezier(.34,1.56,.64,1)}
+  .kw-cart:hover{background:var(--green-dark);transform:translateY(-2px)}
+  .kw-cart svg{width:20px;height:20px}
+  .kw-cart__label{display:inline}
+  .kw-cart__badge{top:-6px;right:-6px;border-color:#fff}
+  .kw-msearch{display:none}
   .kw-shortcuts{display:none}
   .kw-nav{display:block}
-  .kw-actions{margin-left:0}
-  .kw-account-btn{display:flex}
-  .kw-service-btn{display:flex}
-  .kw-cart-btn__label{display:inline}
-  .kw-cart-btn{height:42px;width:auto;padding:0 17px;border-radius:999px}
-  .kw-cart-btn__badge{position:absolute;top:-6px;right:-6px}
-}
-@media(max-width:767px){
-  .kw-account-btn{display:none!important}
-  .kw-service-btn{display:none!important}
-  .kw-cart-btn__label{display:none!important}
-  .kw-cart-btn{
-    background:transparent!important;
-    color:#603A15!important;
-    width:44px;height:44px;padding:0;
-    box-shadow:none!important;
-    transform:none!important;
-  }
-  .kw-cart-btn:hover{background:transparent!important;transform:none!important}
-  .kw-cart-btn svg{width:26px;height:26px}
-  .kw-cart-btn__badge{
-    position:absolute;top:-4px;right:-4px;
-    min-width:18px;height:18px;font-size:.65rem;
-    border:2px solid #F8EFDD;
-  }
 }
 
-/* Drawer */
-.kw-drawer{position:fixed;inset:0;z-index:200;padding:0;border:none;background:transparent;max-width:100%;max-height:100%;width:100%;height:100%;touch-action:none}
+/* Tussenmaat: trust-subtekst weg zodat alles past */
+@media(min-width:768px) and (max-width:1180px){
+  .kw-trust__item{padding:0 14px}
+  .kw-trust__text span{display:none}
+  .kw-chip{padding:0 13px;font-size:.9rem}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .kw-header,.kw-cart,.kw-chip,.kw-dropdown,.kw-drawer__panel,.kw-shortcut__icon{transition:none;animation:none}
+}
+
+/* ════════════════════════════════════════════════════════════════
+   DRAWER
+   ════════════════════════════════════════════════════════════════ */
+.kw-drawer{position:fixed;inset:0;z-index:200;width:100%;height:100%;max-width:100%;max-height:100%;padding:0;border:none;background:transparent;touch-action:none}
 .kw-drawer::backdrop{background:rgba(61,34,9,.5)}
 .kw-drawer:not([open]){display:none}
 .kw-drawer[open]{display:flex;justify-content:flex-start}
-.kw-drawer__panel{background:#FCF6EC;width:340px;max-width:90vw;height:100%;display:flex;flex-direction:column;animation:kw-panel-in 300ms ease forwards;overscroll-behavior:contain}
+.kw-drawer__panel{display:flex;flex-direction:column;width:340px;max-width:90vw;height:100%;background:#FCF6EC;overscroll-behavior:contain;animation:kw-panel-in 300ms ease forwards}
 @keyframes kw-panel-in{from{transform:translateX(-100%)}to{transform:translateX(0)}}
-.kw-drawer__scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:8px 16px 20px;display:flex;flex-direction:column}
+.kw-drawer__scroll{flex:1;display:flex;flex-direction:column;padding:8px 16px 20px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 
-/* Head */
 .kw-drawer__head{display:flex;align-items:center;gap:14px;padding:14px 16px 10px;flex-shrink:0}
 .kw-drawer__close{background:transparent;flex-shrink:0}
 .kw-drawer__close:hover{background:#EDE2C9}
-.kw-drawer__brand{display:flex;align-items:center;gap:10px;text-decoration:none;min-width:0}
-.kw-drawer__brand-paw{display:flex;align-items:center;justify-content:center;color:#3d2209;flex-shrink:0}
+.kw-drawer__brand{display:flex;align-items:center;gap:10px;min-width:0;text-decoration:none}
+.kw-drawer__brand-paw{display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#3d2209}
 .kw-drawer__brand-paw svg{width:34px;height:34px}
 .kw-drawer__brand-text{display:flex;flex-direction:column;gap:2px;min-width:0}
 .kw-drawer__brand-name{font-family:'Lilita One',cursive;font-size:1.6rem;color:#3d2209;line-height:1}
@@ -543,97 +547,79 @@
 .kw-drawer__brand-heart{display:flex;color:#FFB8CD}
 .kw-drawer__brand-heart svg{width:14px;height:14px}
 
-/* Categorie-rijen */
 .kw-drawer__nav ul{list-style:none;margin:0;padding:0}
-.kw-drawer__row{display:flex;align-items:center;gap:14px;padding:14px 8px;text-decoration:none;border-bottom:1px solid #EDE2C9;transition:background 140ms}
+.kw-drawer__row{display:flex;align-items:center;gap:14px;padding:14px 8px;border-bottom:1px solid #EDE2C9;text-decoration:none;transition:background 140ms}
 .kw-drawer__nav li:last-child .kw-drawer__row{border-bottom:none}
 .kw-drawer__row:hover,.kw-drawer__row.is-active{background:#fff}
-.kw-drawer__row-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:transparent}
+.kw-drawer__row-icon{display:flex;align-items:center;justify-content:center;width:38px;height:38px;flex-shrink:0;border-radius:11px}
 .kw-drawer__row-icon svg{width:26px;height:26px}
-.kw-drawer__row-icon.kw-icon--green{color:#66AA44}
-.kw-drawer__row-icon.kw-icon--orange{color:#F7A048}
-.kw-drawer__row-icon.kw-icon--pink{color:#e75480}
-.kw-drawer__row-icon.kw-icon--yellow{color:#c49000}
-.kw-drawer__row-icon.kw-icon--brown{color:#A88259}
 .kw-drawer__row-label{flex:1;font-family:'Lilita One',cursive;font-size:1.15rem;color:#3d2209;line-height:1.1}
-.kw-drawer__row-badge{flex-shrink:0;background:#F7A048;color:#fff;font-family:'Karla',sans-serif;font-size:.7rem;font-weight:800;padding:3px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.02em}
-.kw-drawer__row-chevron{flex-shrink:0;display:flex;color:#A88259;transform:rotate(-90deg)}
+.kw-drawer__row-badge{flex-shrink:0;padding:3px 10px;border-radius:999px;background:#F7A048;color:#fff;font-family:'Karla',sans-serif;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.02em}
+.kw-drawer__row-chevron{display:flex;flex-shrink:0;color:#A88259;transform:rotate(-90deg)}
 .kw-drawer__row-chevron svg{width:18px;height:18px}
 
-/* Kwispelclub-kaart */
-.kw-drawer__club{display:flex;align-items:center;gap:14px;margin-top:16px;padding:16px;background:#e8f5e2;border-radius:18px;text-decoration:none;transition:background 160ms}
+.kw-drawer__club{display:flex;align-items:center;gap:14px;margin-top:16px;padding:16px;border-radius:18px;background:#e8f5e2;text-decoration:none;transition:background 160ms}
 .kw-drawer__club:hover{background:#daefcf}
-.kw-drawer__club-icon{width:44px;height:44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#66AA44}
+.kw-drawer__club-icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;flex-shrink:0;border-radius:50%;background:#fff;color:#66AA44}
 .kw-drawer__club-icon svg{width:22px;height:22px}
 .kw-drawer__club-text{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
 .kw-drawer__club-title{font-family:'Lilita One',cursive;font-size:1.05rem;color:#3d2209;line-height:1.1}
 .kw-drawer__club-body{font-family:'Karla',sans-serif;font-size:.82rem;font-weight:600;color:#4d8833;line-height:1.25}
-.kw-drawer__club-arrow{width:38px;height:38px;border-radius:50%;background:#66AA44;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;transform:rotate(-90deg)}
+.kw-drawer__club-arrow{display:flex;align-items:center;justify-content:center;width:38px;height:38px;flex-shrink:0;border-radius:50%;background:#66AA44;color:#fff;transform:rotate(-90deg)}
 .kw-drawer__club-arrow svg{width:18px;height:18px}
 
-/* Secundaire links */
-.kw-drawer__links{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column;gap:2px}
-.kw-drawer__minilink{display:flex;align-items:center;gap:14px;padding:11px 8px;font-family:'Karla',sans-serif;font-size:1rem;font-weight:700;color:#3d2209;text-decoration:none;border-radius:12px;transition:background 140ms,color 140ms}
+.kw-drawer__links{display:flex;flex-direction:column;gap:2px;list-style:none;margin:18px 0 0;padding:0}
+.kw-drawer__minilink{display:flex;align-items:center;gap:14px;padding:11px 8px;border-radius:12px;font-family:'Karla',sans-serif;font-size:1rem;font-weight:700;color:#3d2209;text-decoration:none;transition:background 140ms,color 140ms}
 .kw-drawer__minilink:hover{background:#fff;color:#d9823a}
-.kw-drawer__minilink span{display:flex;align-items:center;justify-content:center;color:#3d2209;flex-shrink:0}
+.kw-drawer__minilink span{display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#3d2209}
 .kw-drawer__minilink:hover span{color:#d9823a}
 .kw-drawer__minilink svg{width:22px;height:22px}
 
-/* CTA-kaart */
-.kw-drawer__cta{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-top:18px;min-height:130px;padding:18px;background:#4d7a30;border-radius:22px;overflow:hidden;text-decoration:none}
+.kw-drawer__cta{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-top:18px;min-height:130px;padding:18px;border-radius:22px;background:#4d7a30;overflow:hidden;text-decoration:none}
 .kw-drawer__cta-body{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:10px;max-width:60%}
 .kw-drawer__cta-heart{display:flex;color:#fff}
 .kw-drawer__cta-heart svg{width:20px;height:20px}
 .kw-drawer__cta-title{font-family:'Lilita One',cursive;font-size:1.25rem;color:#fff;line-height:1.1}
-.kw-drawer__cta-btn{display:inline-flex;align-items:center;gap:6px;background:#fff;color:#3d2209;font-family:'Lilita One',cursive;font-size:.85rem;padding:9px 16px;border-radius:999px}
+.kw-drawer__cta-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:999px;background:#fff;color:#3d2209;font-family:'Lilita One',cursive;font-size:.85rem}
 .kw-drawer__cta-btn-arrow{display:flex;transform:rotate(-90deg)}
 .kw-drawer__cta-btn-arrow svg{width:14px;height:14px}
-.kw-drawer__cta-img{position:absolute;right:-6px;bottom:0;width:48%;max-width:170px;display:flex;align-items:flex-end;z-index:0}
+.kw-drawer__cta-img{position:absolute;right:-6px;bottom:0;z-index:0;display:flex;align-items:flex-end;width:48%;max-width:170px}
 .kw-drawer__cta-img img{width:100%;height:auto;object-fit:contain}
-
-@media(prefers-reduced-motion:reduce){
-  .kw-header,.kw-cart-btn,.kw-nav__link::after,.kw-dropdown,.kw-drawer__panel{transition:none;animation:none}
-}
 {% endstylesheet %}
 
 {% javascript %}
 (function () {
-  var header  = document.getElementById('KwHeader');
-  var drawer  = document.getElementById('KwDrawer');
-  var menuBtn = document.querySelector('.kw-menu-btn');
-  var closeBtn = document.querySelector('.kw-drawer__close');
+  'use strict';
 
+  /* ── Sticky-schaduw ─────────────────────────────────────────── */
+  var header = document.getElementById('KwHeader');
   if (header) {
     window.addEventListener('scroll', function () {
       header.classList.toggle('scrolled', window.scrollY > 40);
     }, { passive: true });
   }
 
-  function openDrawer() {
-    if (!drawer) return;
-    drawer.showModal();
-    document.body.style.overflow = 'hidden';
-    if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
-  }
-  function closeDrawer() {
-    if (!drawer) return;
-    drawer.close();
-    document.body.style.overflow = '';
-    if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
-  }
+  /* ── Drawer ─────────────────────────────────────────────────── */
+  var drawer   = document.getElementById('KwDrawer');
+  var burger   = document.querySelector('.kw-burger');
+  var closeBtn = document.querySelector('.kw-drawer__close');
 
-  if (menuBtn)  menuBtn.addEventListener('click', openDrawer);
+  function setExpanded(state) {
+    if (burger) burger.setAttribute('aria-expanded', state ? 'true' : 'false');
+    document.body.style.overflow = state ? 'hidden' : '';
+  }
+  function openDrawer()  { if (drawer) { drawer.showModal(); setExpanded(true); } }
+  function closeDrawer() { if (drawer) { drawer.close();     setExpanded(false); } }
+
+  if (burger)   burger.addEventListener('click', openDrawer);
   if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
   if (drawer) {
-    drawer.addEventListener('click', function (e) { if (e.target === drawer) closeDrawer(); });
-    drawer.addEventListener('cancel', function () {
-      if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
-    });
+    drawer.addEventListener('click',  function (e) { if (e.target === drawer) closeDrawer(); });
+    drawer.addEventListener('cancel', function () { setExpanded(false); });
   }
 
-  // ── Predictive search ────────────────────────────────────────
-  var searchRoot = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+  /* ── Predictive search ──────────────────────────────────────── */
+  var root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
 
   function money(cents) {
     try {
@@ -650,14 +636,14 @@
     if (!input || !results) return;
 
     var controller = null;
-    var timer = null;
-    var activeIndex = -1;
+    var timer      = null;
+    var active     = -1;
 
-    function hideResults() {
+    function hide() {
       results.hidden = true;
       results.innerHTML = '';
       input.setAttribute('aria-expanded', 'false');
-      activeIndex = -1;
+      active = -1;
     }
 
     function toggleClear() {
@@ -671,16 +657,19 @@
       if (products.length) {
         html += '<ul class="kw-sr__list" role="presentation">';
         products.slice(0, 6).forEach(function (p) {
-          var img = p.featured_image && p.featured_image.url ? p.featured_image.url : (p.image || '');
+          var img   = p.featured_image && p.featured_image.url ? p.featured_image.url : (p.image || '');
           var price = (p.price !== undefined) ? money(p.price) : '';
           html += '<li role="option"><a class="kw-sr__item" href="' + p.url + '">' +
-            (img ? '<span class="kw-sr__thumb"><img src="' + img + '&width=80" alt="" width="48" height="48" loading="lazy"></span>' : '<span class="kw-sr__thumb kw-sr__thumb--empty"></span>') +
+            (img
+              ? '<span class="kw-sr__thumb"><img src="' + img + '&width=80" alt="" width="48" height="48" loading="lazy"></span>'
+              : '<span class="kw-sr__thumb kw-sr__thumb--empty"></span>') +
             '<span class="kw-sr__info"><span class="kw-sr__title">' + p.title + '</span>' +
             (price ? '<span class="kw-sr__price">' + price + '</span>' : '') +
             '</span></a></li>';
         });
         html += '</ul>';
-        html += '<a class="kw-sr__all" href="' + searchRoot + 'search?q=' + encodeURIComponent(term) + '&type=product">Alle resultaten voor &ldquo;' + term + '&rdquo;</a>';
+        html += '<a class="kw-sr__all" href="' + root + 'search?q=' + encodeURIComponent(term) +
+                '&type=product">Alle resultaten voor &ldquo;' + term + '&rdquo;</a>';
       } else {
         html += '<p class="kw-sr__empty">Geen resultaten voor &ldquo;' + term + '&rdquo;</p>';
       }
@@ -688,56 +677,54 @@
       results.innerHTML = html;
       results.hidden = false;
       input.setAttribute('aria-expanded', 'true');
-      activeIndex = -1;
+      active = -1;
     }
 
-    function doSearch(term) {
+    function search(term) {
       if (controller) controller.abort();
       controller = new AbortController();
-      var url = searchRoot + 'search/suggest.json?q=' + encodeURIComponent(term) +
-        '&resources[type]=product&resources[limit]=6&resources[options][unavailable_products]=last&resources[options][fields]=title,product_type,variants.title,vendor';
+      var url = root + 'search/suggest.json?q=' + encodeURIComponent(term) +
+        '&resources[type]=product&resources[limit]=6' +
+        '&resources[options][unavailable_products]=last' +
+        '&resources[options][fields]=title,product_type,variants.title,vendor';
       fetch(url, { signal: controller.signal })
         .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
         .then(function (data) { render(data, term); })
-        .catch(function () { /* abort of netwerk: stil */ });
+        .catch(function () { /* abort/netwerk: stil */ });
+    }
+
+    function setActive(items) {
+      items.forEach(function (el, i) { el.classList.toggle('is-active', i === active); });
+      if (items[active]) items[active].scrollIntoView({ block: 'nearest' });
     }
 
     input.addEventListener('input', function () {
       toggleClear();
       var term = input.value.trim();
       clearTimeout(timer);
-      if (term.length < 2) { hideResults(); return; }
-      timer = setTimeout(function () { doSearch(term); }, 200);
+      if (term.length < 2) { hide(); return; }
+      timer = setTimeout(function () { search(term); }, 200);
     });
 
     input.addEventListener('keydown', function (e) {
       var items = results.querySelectorAll('.kw-sr__item, .kw-sr__all');
       if (results.hidden || !items.length) return;
-      if (e.key === 'ArrowDown') {
-        e.preventDefault(); activeIndex = Math.min(activeIndex + 1, items.length - 1); setActive(items);
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault(); activeIndex = Math.max(activeIndex - 1, 0); setActive(items);
-      } else if (e.key === 'Enter') {
-        if (activeIndex >= 0 && items[activeIndex]) { e.preventDefault(); window.location.href = items[activeIndex].href; }
-      } else if (e.key === 'Escape') {
-        hideResults(); input.blur();
-      }
+      if (e.key === 'ArrowDown')      { e.preventDefault(); active = Math.min(active + 1, items.length - 1); setActive(items); }
+      else if (e.key === 'ArrowUp')   { e.preventDefault(); active = Math.max(active - 1, 0); setActive(items); }
+      else if (e.key === 'Enter')     { if (active >= 0 && items[active]) { e.preventDefault(); window.location.href = items[active].href; } }
+      else if (e.key === 'Escape')    { hide(); input.blur(); }
     });
 
-    function setActive(items) {
-      items.forEach(function (el, i) { el.classList.toggle('is-active', i === activeIndex); });
-      if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: 'nearest' });
-    }
+    input.addEventListener('focus', function () {
+      if (input.value.trim().length >= 2 && results.innerHTML) results.hidden = false;
+    });
 
     if (clear) clear.addEventListener('click', function () {
-      input.value = ''; toggleClear(); hideResults(); input.focus();
+      input.value = ''; toggleClear(); hide(); input.focus();
     });
 
     document.addEventListener('click', function (e) {
-      if (!form.contains(e.target)) hideResults();
-    });
-    input.addEventListener('focus', function () {
-      if (input.value.trim().length >= 2 && results.innerHTML) results.hidden = false;
+      if (!form.contains(e.target)) hide();
     });
 
     toggleClear();
