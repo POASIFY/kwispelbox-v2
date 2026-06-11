@@ -62,7 +62,15 @@
     {%- endif -%}
 
     {%- if section.settings.heading != blank -%}
-      <h1 class="hero__heading">{{ section.settings.heading }}</h1>
+      {%- assign accent = section.settings.heading_accent -%}
+      <h1 class="hero__heading">
+        {%- if accent != blank -%}
+          {%- assign parts = section.settings.heading | split: accent -%}
+          {{- parts[0] -}}<span class="hero__heading-accent">{{- accent -}}</span>{{- parts[1] -}}
+        {%- else -%}
+          {{- section.settings.heading -}}
+        {%- endif -%}
+      </h1>
     {%- endif -%}
 
     {%- if section.settings.subheading != blank -%}
@@ -245,7 +253,10 @@
   font-size: clamp(2.4rem, 6vw, 4.5rem);
   line-height: 1.05;
   color: #603A15;
-  max-width: 14ch;
+  max-width: 20ch;
+}
+.hero__heading-accent {
+  color: #F7A048;
 }
 
 .hero__sub {
@@ -422,6 +433,12 @@
       "id": "heading",
       "label": "Koptekst",
       "default": "Een feestje voor jouw hond."
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Oranje accentwoord (bijv. feestje)",
+      "default": "feestje"
     },
     {
       "type": "textarea",

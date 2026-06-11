@@ -3,7 +3,7 @@
 
     {%- comment -%} Desktop: 4 merkwaarden items {%- endcomment -%}
     {%- assign desktop_blocks = section.blocks | where: 'type', 'desktop_item' -%}
-    {%- for block in desktop_blocks -%}
+    {%- for block in desktop_blocks limit: 4 -%}
       <div class="trust-bar__item trust-bar__item--desktop" {{ block.shopify_attributes }}>
         <span class="trust-bar__icon trust-bar__icon--{{ block.settings.color }}" aria-hidden="true">
           {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
