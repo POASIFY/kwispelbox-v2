@@ -453,6 +453,16 @@
   background: #3d2209;
   display: flex; align-items: flex-end;
 }
+
+/* Achtergrond afbeelding — desktop: absolute over hero */
+.kc__hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+}
+.kc__hero-bg-img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center 30%;
+  display: block;
+}
 @media(max-width: 767px) {
   .kc__hero {
     aspect-ratio: unset;
@@ -497,16 +507,6 @@
   .kc__hero-badge span { font-size: .62rem; }
 }
 
-
-/* Achtergrond afbeelding */
-.kc__hero-bg {
-  position: absolute; inset: 0; z-index: 0;
-}
-.kc__hero-bg-img {
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: center 30%;
-  display: block;
-}
 
 /* Gradient overlay: donker onderaan voor leesbaarheid tekst */
 .kc__hero-overlay {
