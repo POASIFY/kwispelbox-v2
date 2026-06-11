@@ -12,10 +12,19 @@
       </button>
 
       <a href="{{ routes.root_url }}" class="kw-logo" aria-label="{{ shop.name }}">
-        {%- if settings.logo != blank -%}
-          <img src="{{ settings.logo | image_url: width: 220 }}"
-               alt="{{ shop.name }}" width="160" height="52"
-               loading="eager" fetchpriority="high">
+        {%- if section.settings.logo != blank -%}
+          {%- assign logo_h = section.settings.logo_height | default: 48 -%}
+          {%- assign logo_alt = shop.name | escape -%}
+          <img
+            src="{{ section.settings.logo | image_url: width: 440 }}"
+            srcset="{{ section.settings.logo | image_url: width: 220 }} 220w,
+                    {{ section.settings.logo | image_url: width: 440 }} 440w"
+            sizes="220px"
+            alt="{{ logo_alt }}"
+            class="kw-logo__img"
+            style="height:{{ logo_h }}px"
+            width="220" height="{{ logo_h }}"
+            loading="eager" fetchpriority="high">
         {%- else -%}
           <span class="kw-logo__text">
             {{ shop.name }}<span class="kw-logo__paw" aria-hidden="true">{{- 'icon-paw.svg' | inline_asset_content -}}</span>
@@ -330,7 +339,7 @@
 
 /* Logo */
 .kw-logo{text-decoration:none;flex-shrink:0;display:flex;align-items:center;justify-content:center}
-.kw-logo img{height:48px;width:auto}
+.kw-logo__img{width:auto;display:block;object-fit:contain}
 .kw-logo__text{font-family:'Lilita One',cursive;font-size:2rem;color:#F7A048;line-height:1;white-space:nowrap;display:flex;align-items:center;gap:3px}
 .kw-logo__paw{display:flex;align-items:flex-start;margin-top:-2px;margin-bottom:0}
 .kw-logo__paw svg{width:18px;height:18px;color:#F7A048}
@@ -812,6 +821,9 @@
     }
   ],
   "settings": [
+    { "type": "header", "content": "Logo" },
+    { "type": "image_picker", "id": "logo", "label": "Logo afbeelding", "info": "Leeg = toont de merknaam als tekst" },
+    { "type": "range", "id": "logo_height", "label": "Logo hoogte", "min": 28, "max": 72, "step": 2, "unit": "px", "default": 48 },
     { "type": "link_list", "id": "menu", "label": "t:labels.menu", "default": "main-menu" },
     { "type": "link_list", "id": "customer_account_menu", "label": "t:labels.customer_account_menu", "default": "customer-account-main-menu" },
     { "type": "text", "id": "search_placeholder", "label": "Zoekbalk tekst", "default": "Zoek naar speeltjes, boxen..." },
