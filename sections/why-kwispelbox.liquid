@@ -50,7 +50,12 @@
             <span aria-hidden="true">{{- 'icon-sparkle.svg' | inline_asset_content -}}</span>
           </p>
         {%- endif -%}
-        <h2 class="why-kw__title">{{ section.settings.title }}</h2>
+        <h2 class="why-kw__title">
+          {{- section.settings.title -}}
+          {%- if section.settings.show_heart -%}
+            <span class="why-kw__title-heart" aria-hidden="true">{{- 'icon-heart.svg' | inline_asset_content -}}</span>
+          {%- endif -%}
+        </h2>
         {%- if section.settings.intro != blank -%}
           <p class="why-kw__intro">{{ section.settings.intro }}</p>
         {%- endif -%}
@@ -226,7 +231,17 @@
   color: #3d2209;
   line-height: 1;
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
+.why-kw__title-heart {
+  display: flex;
+  align-items: center;
+  color: #e75480;
+}
+.why-kw__title-heart svg { width: 28px; height: 28px; }
 .why-kw__intro {
   font-family: 'Karla', sans-serif;
   font-size: 1.05rem; color: #A88259;
@@ -289,8 +304,8 @@
 }
 
 .why-kw__benefit-img-wrap {
-  width: 90px; height: 80px;
-  border-radius: 14px; overflow: hidden;
+  width: 120px; height: 96px;
+  border-radius: 16px; overflow: hidden;
   flex-shrink: 0;
 }
 .why-kw__benefit-img {
@@ -304,15 +319,15 @@
   border-top: 1.5px solid #EDE2C9;
 }
 .why-kw__trust-inner {
-  max-width: 1280px; margin: 0 auto;
-  padding: 0 20px;
+  padding: 0;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  width: 100%;
 }
 @media(min-width: 768px) {
   .why-kw__trust-inner {
     grid-template-columns: repeat(4, 1fr);
-    padding: 0 60px;
+    padding: 0;
   }
 }
 .why-kw__trust-item {
@@ -414,6 +429,7 @@
     {"type":"text",        "id":"badge_line2", "label":"Badge regel 2", "default":"liefde"},
     {"type":"text",        "id":"eyebrow",     "label":"Eyebrow",       "default":"Waarom honden dol zijn op"},
     {"type":"text",        "id":"title",       "label":"Titel",         "default":"Kwispelbox"},
+    {"type":"checkbox",    "id":"show_heart",  "label":"Hartje tonen naast titel", "default":true},
     {"type":"textarea",    "id":"intro",       "label":"Intro tekst",   "default":"Wij geloven dat elke hond het verdient om te spelen, te ontdekken en te genieten. Daarom stellen wij elke box samen met zorg, kwaliteit en een flinke dosis liefde."},
     {"type":"checkbox","id":"tagline","label":"Toon tagline strip","default":true},
     {"type":"text","id":"tagline_prefix","label":"Tagline prefix","default":"Geluk zit in de kleine dingen. En in elke "},
