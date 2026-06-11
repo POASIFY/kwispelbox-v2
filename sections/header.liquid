@@ -289,11 +289,9 @@
 .kw-search-mob .kw-search__ico svg{width:16px;height:16px}
 
 /* Mobiele snelkoppelingen */
-.kw-shortcuts{background:#fff;border-top:1px solid #EDE2C9;padding:8px 16px;}
-
-.kw-shortcuts__inner{display:flex;justify-content:center;padding:0 16px;}
-.kw-shortcuts__list{display:flex;justify-content:center;gap:12px;list-style:none;}
-.kw-shortcut{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;width:72px;flex-shrink:0;}
+.kw-shortcuts{background:#fff;border-top:1px solid #EDE2C9;padding:8px 0;}
+.kw-shortcuts__list{display:grid;grid-template-columns:repeat(4,1fr);list-style:none;margin:0;padding:0 8px;width:100%;box-sizing:border-box;}
+.kw-shortcut{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;padding:6px 0;}
 .kw-shortcut__icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform 200ms cubic-bezier(.34,1.56,.64,1)}
 .kw-shortcut:hover .kw-shortcut__icon{transform:scale(1.08)}
 .kw-shortcut__icon svg{width:24px;height:24px}
