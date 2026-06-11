@@ -1,0 +1,259 @@
+{% comment %}
+  Kwispelbox — Betaalmogelijkheden
+  Hero + betaalmethode-grid (logo/naam/beschrijving als blocks) + veiligheid-strip.
+  Alles instelbaar via Theme Editor. Mobiel-geoptimaliseerd.
+{% endcomment %}
+
+<div class="pp full-width">
+
+  {%- comment -%} ── HERO ─────────────────────────────────────── {%- endcomment -%}
+  <div class="pp__hero">
+    <div class="pp__hero-inner">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="pp__eyebrow">
+          <span class="pp__eyebrow-ico" aria-hidden="true">{{- 'icon-lock.svg' | inline_asset_content -}}</span>
+          {{ section.settings.eyebrow }}
+        </p>
+      {%- endif -%}
+      <h1 class="pp__title">
+        {{ section.settings.title }}
+        {%- if section.settings.title_accent != blank -%}
+          <span class="pp__title-accent">{{ section.settings.title_accent }}</span>
+        {%- endif -%}
+      </h1>
+      {%- if section.settings.intro != blank -%}
+        <p class="pp__intro">{{ section.settings.intro }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%} ── BETAALMETHODE-GRID ───────────────────────── {%- endcomment -%}
+  {%- assign method_blocks = section.blocks | where: 'type', 'method' -%}
+  {%- if method_blocks.size > 0 -%}
+    <div class="pp__methods">
+      {%- if section.settings.methods_title != blank -%}
+        <h2 class="pp__section-title">{{ section.settings.methods_title }}</h2>
+      {%- endif -%}
+      <ul class="pp__grid" role="list">
+        {%- for block in method_blocks -%}
+          <li class="pp__card" {{ block.shopify_attributes }}>
+            <div class="pp__card-logo">
+              {%- if block.settings.logo != blank -%}
+                {{ block.settings.logo | image_url: width: 160 | image_tag:
+                   widths: '80, 160', sizes: '80px', loading: 'lazy',
+                   class: 'pp__card-logo-img', alt: block.settings.name | escape }}
+              {%- else -%}
+                <span class="pp__card-logo-ph" aria-hidden="true">{{- 'icon-shield.svg' | inline_asset_content -}}</span>
+              {%- endif -%}
+            </div>
+            <div class="pp__card-text">
+              <h3 class="pp__card-name">{{ block.settings.name }}</h3>
+              {%- if block.settings.description != blank -%}
+                <p class="pp__card-desc">{{ block.settings.description }}</p>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ── VEILIGHEID-STRIP ─────────────────────────── {%- endcomment -%}
+  {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
+  {%- if section.settings.trust_title != blank or trust_blocks.size > 0 -%}
+    <div class="pp__safety">
+      <div class="pp__safety-head">
+        <span class="pp__safety-icon" aria-hidden="true">{{- 'icon-shield.svg' | inline_asset_content -}}</span>
+        <div class="pp__safety-headtext">
+          {%- if section.settings.trust_title != blank -%}
+            <h2 class="pp__safety-title">{{ section.settings.trust_title }}</h2>
+          {%- endif -%}
+          {%- if section.settings.trust_body != blank -%}
+            <p class="pp__safety-body">{{ section.settings.trust_body }}</p>
+          {%- endif -%}
+        </div>
+      </div>
+      {%- if trust_blocks.size > 0 -%}
+        <ul class="pp__safety-list" role="list">
+          {%- for block in trust_blocks -%}
+            <li class="pp__safety-item" {{ block.shopify_attributes }}>
+              <span class="pp__safety-item-icon pp__safety-item-icon--{{ block.settings.color }}" aria-hidden="true">
+                {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+              </span>
+              <span class="pp__safety-item-text">
+                <strong>{{ block.settings.title }}</strong>
+                {%- if block.settings.body != blank -%}<span>{{ block.settings.body }}</span>{%- endif -%}
+              </span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ── CTA ──────────────────────────────────────── {%- endcomment -%}
+  {%- if section.settings.cta_text != blank -%}
+    <div class="pp__cta">
+      <a href="{{ section.settings.cta_url | default: routes.all_products_collection_url }}" class="pp__cta-btn">
+        {{- 'icon-box.svg' | inline_asset_content -}}
+        {{ section.settings.cta_text }}
+      </a>
+    </div>
+  {%- endif -%}
+
+</div>
+
+{% stylesheet %}
+.pp{max-width:1100px;margin:0 auto;padding:0 20px 64px;font-family:'Karla',sans-serif}
+
+/* Hero */
+.pp__hero{background:#F4E7D0;border-radius:28px;margin:24px 0 40px;padding:44px 24px}
+.pp__hero-inner{max-width:680px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px}
+.pp__eyebrow{display:inline-flex;align-items:center;gap:7px;font-family:'Karla',sans-serif;font-weight:800;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;color:#66AA44;margin:0;background:#e8f5e2;padding:7px 14px;border-radius:999px}
+.pp__eyebrow-ico{display:flex}
+.pp__eyebrow-ico svg{width:14px;height:14px}
+.pp__title{font-family:'Lilita One',cursive;font-size:clamp(1.9rem,4.5vw,3rem);color:#3d2209;margin:0;line-height:1.1}
+.pp__title-accent{color:#66AA44}
+.pp__intro{color:#603A15;font-size:1.05rem;margin:0;line-height:1.5;max-width:52ch}
+
+/* Sectie-titel */
+.pp__section-title{font-family:'Lilita One',cursive;font-size:clamp(1.6rem,3.5vw,2.2rem);color:#3d2209;text-align:center;margin:0 0 24px}
+
+/* Betaalmethode-grid */
+.pp__methods{margin-bottom:48px}
+.pp__grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:14px}
+.pp__card{display:flex;align-items:center;gap:16px;background:#FBF3E4;border:1.5px solid #EDE2C9;border-radius:18px;padding:18px 20px;transition:transform 200ms cubic-bezier(.34,1.56,.64,1),box-shadow 200ms}
+.pp__card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(96,58,21,.1)}
+.pp__card-logo{width:72px;height:48px;flex-shrink:0;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:6px}
+.pp__card-logo-img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+.pp__card-logo-ph{display:flex;color:#DAC9A1}
+.pp__card-logo-ph svg{width:24px;height:24px}
+.pp__card-text{display:flex;flex-direction:column;gap:3px;min-width:0}
+.pp__card-name{font-family:'Lilita One',cursive;font-size:1.1rem;color:#3d2209;margin:0;line-height:1.15}
+.pp__card-desc{font-size:.9rem;color:#A88259;margin:0;line-height:1.4}
+
+/* Veiligheid-strip */
+.pp__safety{background:#e8f5e2;border-radius:24px;padding:28px 24px}
+.pp__safety-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:22px}
+.pp__safety-icon{width:52px;height:52px;border-radius:50%;background:#66AA44;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pp__safety-icon svg{width:26px;height:26px}
+.pp__safety-headtext{display:flex;flex-direction:column;gap:4px}
+.pp__safety-title{font-family:'Lilita One',cursive;font-size:1.4rem;color:#3d2209;margin:0}
+.pp__safety-body{font-size:.95rem;color:#3d6b1f;margin:0;line-height:1.5}
+.pp__safety-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:16px}
+.pp__safety-item{display:flex;align-items:center;gap:13px}
+.pp__safety-item-icon{width:42px;height:42px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pp__safety-item-icon svg{width:20px;height:20px}
+.pp__safety-item-icon--green{color:#66AA44}
+.pp__safety-item-icon--orange{color:#F7A048}
+.pp__safety-item-icon--pink{color:#e75480}
+.pp__safety-item-icon--yellow{color:#c49000}
+.pp__safety-item-icon--brown{color:#A88259}
+.pp__safety-item-text{display:flex;flex-direction:column;gap:1px}
+.pp__safety-item-text strong{font-size:.95rem;font-weight:800;color:#3d2209}
+.pp__safety-item-text span{font-size:.85rem;color:#3d6b1f}
+
+/* CTA */
+.pp__cta{text-align:center;margin-top:40px}
+.pp__cta-btn{display:inline-flex;align-items:center;gap:9px;background:#66AA44;color:#fff;font-family:'Lilita One',cursive;font-size:1rem;padding:15px 28px;border-radius:999px;text-decoration:none;transition:background 160ms,transform 200ms cubic-bezier(.34,1.56,.64,1)}
+.pp__cta-btn svg{width:18px;height:18px}
+.pp__cta-btn:hover{background:#4d8833;transform:translateY(-2px)}
+
+/* Desktop */
+@media(min-width:768px){
+  .pp__hero{padding:60px 24px}
+  .pp__grid{grid-template-columns:1fr 1fr;gap:16px}
+  .pp__safety{padding:36px 40px}
+  .pp__safety-list{grid-template-columns:1fr 1fr;gap:18px 28px}
+}
+@media(min-width:1024px){
+  .pp__grid{grid-template-columns:repeat(3,1fr)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .pp__card,.pp__cta-btn{transition:none}
+  .pp__card:hover,.pp__cta-btn:hover{transform:none}
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Betaalmogelijkheden",
+  "settings": [
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "100% veilig betalen" },
+    { "type": "text", "id": "title", "label": "Titel", "default": "Betaalmogelijkheden" },
+    { "type": "text", "id": "title_accent", "label": "Titel accent (groen)" },
+    { "type": "textarea", "id": "intro", "label": "Intro tekst", "default": "Bij Kwispelbox betaal je veilig en gemakkelijk met je favoriete betaalmethode. Al je gegevens worden versleuteld verwerkt." },
+
+    { "type": "header", "content": "Betaalmethodes" },
+    { "type": "text", "id": "methods_title", "label": "Titel", "default": "Zo kun je bij ons betalen" },
+
+    { "type": "header", "content": "Veiligheid-strip" },
+    { "type": "text", "id": "trust_title", "label": "Titel", "default": "Veilig en zorgeloos afrekenen" },
+    { "type": "textarea", "id": "trust_body", "label": "Tekst", "default": "Je betaling verloopt via een beveiligde verbinding. We slaan geen betaalgegevens op." },
+
+    { "type": "header", "content": "Knop" },
+    { "type": "text", "id": "cta_text", "label": "Knoptekst", "default": "Bekijk onze boxen" },
+    { "type": "url", "id": "cta_url", "label": "Link" }
+  ],
+  "blocks": [
+    {
+      "type": "method",
+      "name": "Betaalmethode",
+      "settings": [
+        { "type": "image_picker", "id": "logo", "label": "Logo" },
+        { "type": "text", "id": "name", "label": "Naam", "default": "iDEAL" },
+        { "type": "text", "id": "description", "label": "Beschrijving", "default": "Direct betalen via je eigen bank" }
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Veiligheidspunt",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titel", "default": "Versleutelde betaling" },
+        { "type": "text", "id": "body", "label": "Tekst", "default": "SSL-beveiligd" },
+        {
+          "type": "select", "id": "icon", "label": "Icoon", "default": "lock",
+          "options": [
+            { "value": "lock", "label": "Slot" },
+            { "value": "shield", "label": "Schild" },
+            { "value": "check-circle", "label": "Vinkje" },
+            { "value": "heart", "label": "Hart" },
+            { "value": "refresh", "label": "Retour" },
+            { "value": "truck", "label": "Levering" }
+          ]
+        },
+        {
+          "type": "select", "id": "color", "label": "Kleur", "default": "green",
+          "options": [
+            { "value": "green", "label": "Groen" },
+            { "value": "orange", "label": "Oranje" },
+            { "value": "pink", "label": "Roze" },
+            { "value": "yellow", "label": "Geel" },
+            { "value": "brown", "label": "Bruin" }
+          ]
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "Betaalmogelijkheden",
+      "blocks": [
+        { "type": "method", "settings": { "name": "iDEAL", "description": "Direct betalen via je eigen bank" } },
+        { "type": "method", "settings": { "name": "Bancontact", "description": "Voor onze Belgische klanten" } },
+        { "type": "method", "settings": { "name": "Creditcard", "description": "Visa & Mastercard" } },
+        { "type": "method", "settings": { "name": "PayPal", "description": "Snel en vertrouwd betalen" } },
+        { "type": "method", "settings": { "name": "Klarna", "description": "Achteraf betalen" } },
+        { "type": "method", "settings": { "name": "Apple Pay", "description": "Betalen met je iPhone" } },
+        { "type": "trust", "settings": { "title": "Versleutelde betaling", "body": "SSL-beveiligd", "icon": "lock", "color": "green" } },
+        { "type": "trust", "settings": { "title": "Geen gegevens opgeslagen", "body": "Veilig verwerkt", "icon": "shield", "color": "orange" } },
+        { "type": "trust", "settings": { "title": "Niet goed, geld terug", "body": "Binnen 14 dagen", "icon": "refresh", "color": "pink" } },
+        { "type": "trust", "settings": { "title": "Snelle levering", "body": "1-2 werkdagen", "icon": "truck", "color": "yellow" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

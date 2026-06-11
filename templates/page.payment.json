@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page-payment",
+      "blocks": {
+        "m-1": { "type": "method", "settings": { "name": "iDEAL", "description": "Direct betalen via je eigen bank" } },
+        "m-2": { "type": "method", "settings": { "name": "Bancontact", "description": "Voor onze Belgische klanten" } },
+        "m-3": { "type": "method", "settings": { "name": "Creditcard", "description": "Visa & Mastercard" } },
+        "m-4": { "type": "method", "settings": { "name": "PayPal", "description": "Snel en vertrouwd betalen" } },
+        "m-5": { "type": "method", "settings": { "name": "Klarna", "description": "Achteraf betalen" } },
+        "m-6": { "type": "method", "settings": { "name": "Apple Pay", "description": "Betalen met je iPhone" } },
+        "t-1": { "type": "trust", "settings": { "title": "Versleutelde betaling", "body": "SSL-beveiligd", "icon": "lock", "color": "green" } },
+        "t-2": { "type": "trust", "settings": { "title": "Geen gegevens opgeslagen", "body": "Veilig verwerkt", "icon": "shield", "color": "orange" } },
+        "t-3": { "type": "trust", "settings": { "title": "Niet goed, geld terug", "body": "Binnen 14 dagen", "icon": "refresh", "color": "pink" } },
+        "t-4": { "type": "trust", "settings": { "title": "Snelle levering", "body": "1-2 werkdagen", "icon": "truck", "color": "yellow" } }
+      },
+      "block_order": ["m-1","m-2","m-3","m-4","m-5","m-6","t-1","t-2","t-3","t-4"],
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}
