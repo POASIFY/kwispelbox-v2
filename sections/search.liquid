@@ -1,65 +1,289 @@
 {% comment %}
-  This section is used in the search template to render search results for
-  products, articles, and pages.
-
+  Kwispelbox — Zoekresultaten
+  Hero met zoekbalk + productgrid (kc-stijl) + overige resultaten (pagina/artikel).
   https://shopify.dev/docs/storefronts/themes/architecture/templates/search
 {% endcomment %}
 
-<h1>{{ 'search.title' | t }}</h1>
+<div class="ks full-width">
 
-<form action="{{ routes.search_url }}" method="get" role="search">
-  <input
-    type="search"
-    size="50"
-    name="q"
-    value="{{ search.terms | escape }}"
-    placeholder="{{ 'search.placeholder' | t }}"
-  >
-  <button type="submit">{{ 'search.submit' | t }}</button>
-</form>
+  {% render 'breadcrumbs' %}
 
-{% if search.performed %}
-  {% if search.results_count == 0 %}
-    <p>{{ 'search.no_results_html' | t: terms: search.terms }}</p>
-  {% else %}
-    <p>{{ 'search.results_for_html' | t: terms: search.terms, count: search.results_count }}</p>
+  <div class="ks__hero">
+    <div class="ks__hero-inner">
+      {%- if search.performed and search.terms != blank -%}
+        <p class="ks__eyebrow">Zoekresultaten</p>
+        <h1 class="ks__title">
+          {%- if search.results_count > 0 -%}
+            {{ search.results_count }} resultaten voor &ldquo;{{ search.terms | escape }}&rdquo;
+          {%- else -%}
+            Geen resultaten voor &ldquo;{{ search.terms | escape }}&rdquo;
+          {%- endif -%}
+        </h1>
+      {%- else -%}
+        <h1 class="ks__title">Waar ben je naar op zoek?</h1>
+        <p class="ks__sub">Zoek naar speeltjes, boxen en meer voor jouw hond.</p>
+      {%- endif -%}
 
-    <div class="search-results">
-      {% paginate search.results by 20 %}
-        {% # Search result items may be an article, a page, or a product. %}
-        {% for result in search.results %}
-          <div class="search-result">
-            {% assign featured_image = result.featured_image | default: result.image %}
-            {% if featured_image %}
-              {% render 'image', class: 'search-result__image', image: featured_image, url: result.url, width: 400 %}
-            {% endif %}
-            <div class="search-result__content">
-              <p>
-                {{ result.title | link_to: result.url }}
-                {% if result.price %}
-                  {{ result.price | money_with_currency }}
-                {% endif %}
-              </p>
-            </div>
-          </div>
-        {% endfor %}
-
-        {{ paginate | default_pagination }}
-      {% endpaginate %}
+      <form action="{{ routes.search_url }}" method="get" role="search" class="ks__form" aria-label="Zoeken">
+        <input type="hidden" name="type" value="product">
+        <div class="ks__form-field">
+          <span class="ks__form-ico" aria-hidden="true">{{- 'icon-search.svg' | inline_asset_content -}}</span>
+          <label for="KsInput" class="ks__sr-only">Zoekterm</label>
+          <input type="search" id="KsInput" name="q"
+                 placeholder="Zoek naar speeltjes, boxen..."
+                 value="{{ search.terms | escape }}"
+                 autocomplete="off" autocorrect="off" spellcheck="false">
+        </div>
+        <button type="submit" class="ks__form-submit">Zoeken</button>
+      </form>
     </div>
-  {% endif %}
-{% endif %}
+  </div>
+
+  {%- if search.performed -%}
+
+    {%- if search.results_count == 0 -%}
+      <div class="ks__empty">
+        <span class="ks__empty-icon" aria-hidden="true">{{- 'icon-search.svg' | inline_asset_content -}}</span>
+        <h2 class="ks__empty-title">Niets gevonden</h2>
+        <p class="ks__empty-text">We konden niets vinden voor &ldquo;{{ search.terms | escape }}&rdquo;. Probeer een andere zoekterm of bekijk al onze producten.</p>
+        <a href="{{ routes.all_products_collection_url }}" class="ks__empty-cta">
+          {{- 'icon-box.svg' | inline_asset_content -}}
+          Bekijk alle producten
+        </a>
+      </div>
+
+    {%- else -%}
+
+      {%- paginate search.results by 24 -%}
+
+        {%- assign has_products = false -%}
+        {%- assign has_other = false -%}
+        {%- for result in search.results -%}
+          {%- if result.object_type == 'product' -%}{%- assign has_products = true -%}
+          {%- else -%}{%- assign has_other = true -%}{%- endif -%}
+        {%- endfor -%}
+
+        {%- if has_products -%}
+          <ul class="ks__grid" role="list">
+            {%- for result in search.results -%}
+              {%- if result.object_type == 'product' -%}
+                {%- assign product = result -%}
+
+                {%- assign badge_tag = '' -%}
+                {%- for tag in product.tags -%}
+                  {%- if tag contains 'badge:' -%}
+                    {%- assign badge_tag = tag | remove: 'badge:' | strip -%}
+                  {%- endif -%}
+                {%- endfor -%}
+
+                <li class="ks__card">
+                  <a href="{{ product.url }}" class="ks__card-img-link" tabindex="-1" aria-hidden="true">
+                    <div class="ks__card-img-wrap">
+                      {%- if product.featured_image -%}
+                        <img
+                          src="{{ product.featured_image | image_url: width: 600 }}"
+                          srcset="{{ product.featured_image | image_url: width: 400 }} 400w,
+                                  {{ product.featured_image | image_url: width: 600 }} 600w"
+                          sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+                          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                          width="600" height="600" loading="lazy"
+                          class="ks__card-img">
+                        {%- if product.images.size > 1 -%}
+                          <img
+                            src="{{ product.images[1] | image_url: width: 600 }}"
+                            alt="{{ product.title | escape }}"
+                            width="600" height="600" loading="lazy"
+                            class="ks__card-img ks__card-img--hover">
+                        {%- endif -%}
+                      {%- else -%}
+                        <div class="ks__card-img-ph">{{- 'icon-box.svg' | inline_asset_content -}}</div>
+                      {%- endif -%}
+
+                      {%- if badge_tag != blank -%}
+                        <span class="ks__card-badge">{{ badge_tag }}</span>
+                      {%- elsif product.compare_at_price > product.price -%}
+                        {%- assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price -%}
+                        <span class="ks__card-badge ks__card-badge--sale">-{{ discount }}%</span>
+                      {%- endif -%}
+                    </div>
+                  </a>
+
+                  <div class="ks__card-body">
+                    <a href="{{ product.url }}" class="ks__card-title-link">
+                      <h2 class="ks__card-title">{{ product.title }}</h2>
+                    </a>
+                    {%- if product.metafields.custom.summary != blank -%}
+                      <p class="ks__card-desc">{{ product.metafields.custom.summary }}</p>
+                    {%- elsif product.description != blank -%}
+                      <p class="ks__card-desc">{{ product.description | strip_html | truncate: 80 }}</p>
+                    {%- endif -%}
+                    <div class="ks__card-bottom">
+                      <div class="ks__card-price-wrap">
+                        <span class="ks__card-price">{{ product.price | money }}</span>
+                        {%- if product.compare_at_price > product.price -%}
+                          <span class="ks__card-compare">{{ product.compare_at_price | money }}</span>
+                        {%- endif -%}
+                      </div>
+                      <a href="{{ product.url }}" class="ks__card-cta">
+                        Bekijken
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                      </a>
+                    </div>
+                  </div>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- if has_other -%}
+          <div class="ks__other">
+            <h2 class="ks__other-title">Ook gevonden</h2>
+            <ul class="ks__other-list" role="list">
+              {%- for result in search.results -%}
+                {%- unless result.object_type == 'product' -%}
+                  <li>
+                    <a href="{{ result.url }}" class="ks__other-item">
+                      <span class="ks__other-type">
+                        {%- if result.object_type == 'article' -%}{{- 'icon-heart.svg' | inline_asset_content -}}{%- else -%}{{- 'icon-shield.svg' | inline_asset_content -}}{%- endif -%}
+                      </span>
+                      <span class="ks__other-text">
+                        <span class="ks__other-name">{{ result.title }}</span>
+                        {%- if result.content != blank -%}
+                          <span class="ks__other-excerpt">{{ result.content | strip_html | truncate: 120 }}</span>
+                        {%- endif -%}
+                      </span>
+                      <span class="ks__other-arrow" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                      </span>
+                    </a>
+                  </li>
+                {%- endunless -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="ks__pagination" aria-label="Paginering">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="ks__page-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+                Vorige
+              </a>
+            {%- endif -%}
+            <div class="ks__page-numbers">
+              {%- for part in paginate.parts -%}
+                {%- if part.is_link -%}
+                  <a href="{{ part.url }}" class="ks__page-num">{{ part.title }}</a>
+                {%- elsif part.title == paginate.current_page -%}
+                  <span class="ks__page-num is-current" aria-current="page">{{ part.title }}</span>
+                {%- else -%}
+                  <span class="ks__page-num ks__page-num--gap">{{ part.title }}</span>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="ks__page-btn">
+                Volgende
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+              </a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+
+      {%- endpaginate -%}
+
+    {%- endif -%}
+  {%- endif -%}
+
+</div>
 
 {% stylesheet %}
-  .search-results {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  }
-  .search-results .prev,
-  .search-results .page,
-  .search-results .next {
-    grid-column: 1 / -1;
-  }
+.ks{max-width:1280px;margin:0 auto;padding:0 20px 64px;font-family:'Karla',sans-serif}
+.ks__sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+.ks__hero{background:#F4E7D0;border-radius:28px;margin:24px 0 36px;padding:40px 24px}
+.ks__hero-inner{max-width:680px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px}
+.ks__eyebrow{font-family:'Karla',sans-serif;font-weight:800;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;color:#F7A048;margin:0}
+.ks__title{font-family:'Lilita One',cursive;font-size:clamp(1.8rem,4.5vw,2.8rem);color:#3d2209;margin:0;line-height:1.1}
+.ks__sub{color:#A88259;font-size:1rem;margin:0}
+.ks__form{display:flex;align-items:stretch;width:100%;max-width:560px;margin-top:6px}
+.ks__form-field{display:flex;align-items:center;background:#fff;border:2px solid #DAC9A1;border-radius:999px 0 0 999px;height:52px;padding:0 18px;flex:1;min-width:0;transition:border-color 200ms,box-shadow 200ms}
+.ks__form-field:focus-within{border-color:#F7A048;box-shadow:0 0 0 3px rgba(247,160,72,.15)}
+.ks__form-ico{color:#A88259;display:flex;flex-shrink:0;margin-right:10px}
+.ks__form-ico svg{width:18px;height:18px}
+.ks__form-field input{flex:1;border:none;outline:none;background:transparent;font-family:'Karla',sans-serif;font-size:16px;color:#603A15;min-width:0}
+.ks__form-field input::placeholder{color:#A88259}
+.ks__form-field input::-webkit-search-cancel-button{display:none}
+.ks__form-submit{height:52px;padding:0 26px;background:#F7A048;color:#fff;font-family:'Lilita One',cursive;font-size:.95rem;border:none;border-radius:0 999px 999px 0;cursor:pointer;flex-shrink:0;transition:background 160ms}
+.ks__form-submit:hover{background:#d9823a}
+
+.ks__grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ks__card{background:#fff;border:1.5px solid #EDE2C9;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;transition:transform 220ms cubic-bezier(.34,1.56,.64,1),box-shadow 220ms}
+.ks__card:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(96,58,21,.12)}
+.ks__card-img-link{display:block;text-decoration:none}
+.ks__card-img-wrap{position:relative;aspect-ratio:1/1;background:#F8EFDD;overflow:hidden}
+.ks__card-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 300ms}
+.ks__card-img--hover{opacity:0}
+.ks__card:hover .ks__card-img--hover{opacity:1}
+.ks__card-img-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#DAC9A1}
+.ks__card-img-ph svg{width:48px;height:48px}
+.ks__card-badge{position:absolute;top:10px;left:10px;background:#FFE071;color:#3d2209;font-family:'Lilita One',cursive;font-size:.72rem;padding:5px 11px;border-radius:999px}
+.ks__card-badge--sale{background:#e75480;color:#fff}
+.ks__card-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.ks__card-title-link{text-decoration:none}
+.ks__card-title{font-family:'Lilita One',cursive;font-size:1.05rem;color:#3d2209;margin:0;line-height:1.2}
+.ks__card-desc{font-size:.85rem;color:#A88259;margin:0;line-height:1.4}
+.ks__card-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:6px}
+.ks__card-price-wrap{display:flex;flex-direction:column;line-height:1.1}
+.ks__card-price{font-family:'Lilita One',cursive;font-size:1.15rem;color:#3d2209}
+.ks__card-compare{font-size:.8rem;color:#A88259;text-decoration:line-through}
+.ks__card-cta{display:inline-flex;align-items:center;gap:5px;background:#66AA44;color:#fff;font-family:'Lilita One',cursive;font-size:.82rem;padding:9px 14px;border-radius:999px;text-decoration:none;flex-shrink:0;transition:background 160ms,transform 200ms cubic-bezier(.34,1.56,.64,1)}
+.ks__card-cta:hover{background:#4d8833;transform:translateY(-2px)}
+
+.ks__empty{text-align:center;max-width:460px;margin:20px auto 0;display:flex;flex-direction:column;align-items:center;gap:14px;padding:40px 20px}
+.ks__empty-icon{width:72px;height:72px;border-radius:50%;background:#F8EFDD;color:#A88259;display:flex;align-items:center;justify-content:center}
+.ks__empty-icon svg{width:32px;height:32px}
+.ks__empty-title{font-family:'Lilita One',cursive;font-size:1.6rem;color:#3d2209;margin:0}
+.ks__empty-text{color:#A88259;font-size:1rem;margin:0;line-height:1.5}
+.ks__empty-cta{display:inline-flex;align-items:center;gap:8px;background:#66AA44;color:#fff;font-family:'Lilita One',cursive;font-size:.95rem;padding:13px 24px;border-radius:999px;text-decoration:none;margin-top:4px;transition:background 160ms,transform 200ms cubic-bezier(.34,1.56,.64,1)}
+.ks__empty-cta svg{width:18px;height:18px}
+.ks__empty-cta:hover{background:#4d8833;transform:translateY(-2px)}
+
+.ks__other{margin-top:44px}
+.ks__other-title{font-family:'Lilita One',cursive;font-size:1.4rem;color:#3d2209;margin:0 0 16px}
+.ks__other-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.ks__other-item{display:flex;align-items:center;gap:14px;background:#FBF3E4;border-radius:16px;padding:16px 18px;text-decoration:none;transition:background 150ms}
+.ks__other-item:hover{background:#F4E7D0}
+.ks__other-type{width:42px;height:42px;border-radius:50%;background:#fff;color:#66AA44;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ks__other-type svg{width:20px;height:20px}
+.ks__other-text{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.ks__other-name{font-family:'Lilita One',cursive;font-size:1.05rem;color:#3d2209}
+.ks__other-excerpt{font-size:.88rem;color:#A88259;line-height:1.4}
+.ks__other-arrow{color:#A88259;display:flex;flex-shrink:0}
+
+.ks__pagination{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:40px;flex-wrap:wrap}
+.ks__page-btn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1.5px solid #DAC9A1;color:#603A15;font-family:'Karla',sans-serif;font-weight:700;font-size:.9rem;padding:10px 16px;border-radius:999px;text-decoration:none;transition:border-color 150ms,color 150ms}
+.ks__page-btn:hover{border-color:#F7A048;color:#d9823a}
+.ks__page-numbers{display:flex;align-items:center;gap:4px}
+.ks__page-num{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:38px;padding:0 6px;border-radius:50%;font-family:'Karla',sans-serif;font-weight:700;font-size:.9rem;color:#603A15;text-decoration:none;transition:background 150ms}
+.ks__page-num:hover{background:#F8EFDD}
+.ks__page-num.is-current{background:#66AA44;color:#fff}
+.ks__page-num--gap{color:#A88259}
+
+@media(min-width:768px){
+  .ks__hero{padding:56px 24px}
+  .ks__grid{grid-template-columns:repeat(3,1fr);gap:24px}
+}
+@media(min-width:1024px){
+  .ks__grid{grid-template-columns:repeat(4,1fr)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .ks__card,.ks__card-cta,.ks__empty-cta,.ks__card-img--hover{transition:none}
+  .ks__card:hover,.ks__card-cta:hover,.ks__empty-cta:hover{transform:none}
+}
 {% endstylesheet %}
 
 {% schema %}
