@@ -207,7 +207,7 @@
 .pbox {
   background: #fff;
   border-radius: 24px;
-  overflow: visible;
+  overflow: hidden;
   border: 2px solid #EDE2C9;
   display: flex;
   flex-direction: column;
@@ -238,20 +238,19 @@
 /* ── Badge ──────────────────────────────────────────────────── */
 .pbox__badge {
   position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 14px;
+  left: 14px;
   z-index: 3;
   font-family: 'Karla', sans-serif;
   font-size: 0.78rem;
   font-weight: 800;
-  padding: 6px 18px;
+  padding: 6px 14px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   gap: 5px;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(96,58,21,.12);
+  box-shadow: 0 2px 8px rgba(96,58,21,.14);
 }
 .pbox--green  .pbox__badge { background: #e8f5e2; color: #2d7a1a; }
 .pbox--orange .pbox__badge { background: #F7A048; color: #fff; }
@@ -264,7 +263,6 @@
   overflow: hidden;
   background: #F8EFDD;
   flex-shrink: 0;
-  border-radius: 22px 22px 0 0;
 }
 .pbox__img {
   width: 100%;
@@ -312,8 +310,8 @@
 
 /* ── Features ───────────────────────────────────────────────── */
 .pbox__feats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 6px;
   list-style: none;
   margin: 0;
@@ -501,6 +499,7 @@
           ]
         },
         { "type": "text", "id": "feat3", "label": "Feature 3", "default": "Veel kwispels" },
+        { "type": "text", "id": "feat4", "label": "Feature 4" },
         {
           "type": "header", "content": "Prijs en knop"
         },
