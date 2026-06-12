@@ -56,16 +56,16 @@
               {%- if block.settings.feat1 != blank or block.settings.feat2 != blank or block.settings.feat3 != blank or block.settings.feat4 != blank -%}
                 <ul class="pbox__feats" role="list">
                   {%- if block.settings.feat1 != blank -%}
-                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-paw.svg' | inline_asset_content -}}</span>{{ block.settings.feat1 }}</li>
+                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-' | append: block.settings.feat1_icon | default: 'paw' | append: '.svg' | inline_asset_content -}}</span>{{ block.settings.feat1 }}</li>
                   {%- endif -%}
                   {%- if block.settings.feat2 != blank -%}
-                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-paw.svg' | inline_asset_content -}}</span>{{ block.settings.feat2 }}</li>
+                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-' | append: block.settings.feat2_icon | default: 'paw' | append: '.svg' | inline_asset_content -}}</span>{{ block.settings.feat2 }}</li>
                   {%- endif -%}
                   {%- if block.settings.feat3 != blank -%}
-                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-paw.svg' | inline_asset_content -}}</span>{{ block.settings.feat3 }}</li>
+                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-' | append: block.settings.feat3_icon | default: 'paw' | append: '.svg' | inline_asset_content -}}</span>{{ block.settings.feat3 }}</li>
                   {%- endif -%}
                   {%- if block.settings.feat4 != blank -%}
-                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-paw.svg' | inline_asset_content -}}</span>{{ block.settings.feat4 }}</li>
+                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-' | append: block.settings.feat4_icon | default: 'paw' | append: '.svg' | inline_asset_content -}}</span>{{ block.settings.feat4 }}</li>
                   {%- endif -%}
 
                 </ul>
@@ -325,21 +325,21 @@
   font-size: 0.85rem;
   font-weight: 700;
   color: #603A15;
-  background: #F8EFDD;
+  background: #fff;
   border-radius: 999px;
-  padding: 6px 12px 6px 6px;
+  padding: 6px 14px 6px 6px;
   width: fit-content;
 }
 .pbox__feat-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   flex-shrink: 0;
 }
-.pbox__feat-icon svg { width: 12px; height: 12px; }
+.pbox__feat-icon svg { width: 14px; height: 14px; }
 .pbox--green  .pbox__feat-icon { background: #e8f5e2; color: #66AA44; }
 .pbox--orange .pbox__feat-icon { background: #fff0e4; color: #F7A048; }
 .pbox--pink   .pbox__feat-icon { background: #fff0f5; color: #e75480; }
