@@ -1,331 +1,410 @@
-<section class="ugc">
+<section class="sp">
 
-  <!-- Header ───────────────────────────────────────────── -->
-  <div class="ugc__header">
+  <!-- ── HEADER ────────────────────────────────────────── -->
+  <div class="sp__header">
     {%- if section.settings.eyebrow != blank -%}
-      <p class="ugc__eyebrow">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+      <p class="sp__eyebrow">
+        {{- 'icon-heart.svg' | inline_asset_content -}}
         {{ section.settings.eyebrow }}
       </p>
     {%- endif -%}
-    <h2 class="ugc__title">{{ section.settings.title }}</h2>
+    <h2 class="sp__title">{{ section.settings.title }}</h2>
     {%- if section.settings.subtitle != blank -%}
-      <p class="ugc__sub">
-        {{ section.settings.subtitle_plain }}
-        <span class="ugc__sub-accent">{{ section.settings.subtitle_accent }}</span>
-      </p>
+      <p class="sp__sub">{{ section.settings.subtitle }}</p>
     {%- endif -%}
   </div>
 
-  <!-- Foto grid ────────────────────────────────────────── -->
-  {%- assign photo_blocks = section.blocks | where: 'type', 'photo' -%}
-  {%- if photo_blocks.size > 0 -%}
-    <div class="ugc__grid-wrap">
-      <div class="ugc__grid">
-        {%- for block in photo_blocks -%}
-          <div class="ugc__photo ugc__photo--{{ block.settings.size }}" {{ block.shopify_attributes }}>
-            {%- if block.settings.image != blank -%}
-              <img
-                src="{{ block.settings.image | image_url: width: 600 }}"
-                srcset="{{ block.settings.image | image_url: width: 400 }} 400w,
-                        {{ block.settings.image | image_url: width: 600 }} 600w,
-                        {{ block.settings.image | image_url: width: 800 }} 800w"
-                sizes="(max-width: 767px) 45vw, 20vw"
-                alt="{{ block.settings.dog_name | default: 'Blije hond' | escape }}"
-                width="600" height="600"
-                loading="lazy"
-                class="ugc__img"
-              >
-            {%- else -%}
-              <div class="ugc__img-ph">
-                {{- 'icon-paw.svg' | inline_asset_content -}}
-              </div>
-            {%- endif -%}
-            {%- if block.settings.dog_name != blank -%}
-              <div class="ugc__name">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                {{ block.settings.dog_name }}
+  <!-- ── HOOFD CONTENT: featured review + fotogrid ───── -->
+  <div class="sp__body">
+
+    <!-- Uitgelichte review (links) -->
+    {%- assign review_blocks = section.blocks | where: 'type', 'featured_review' -%}
+    {%- if review_blocks.size > 0 -%}
+      {%- assign rev = review_blocks[0] -%}
+      <div class="sp__review" {{ rev.shopify_attributes }}>
+
+        <!-- Hondenfoto met naam-badge -->
+        {%- if rev.settings.image != blank -%}
+          <div class="sp__review-img-wrap">
+            <img
+              src="{{ rev.settings.image | image_url: width: 800 }}"
+              srcset="{{ rev.settings.image | image_url: width: 500 }} 500w,
+                      {{ rev.settings.image | image_url: width: 800 }} 800w"
+              sizes="(max-width:767px) 90vw, 38vw"
+              alt="{{ rev.settings.dog_name | default: 'Blije hond' | escape }}"
+              width="800" height="800"
+              loading="lazy"
+              class="sp__review-img"
+            >
+            {%- if rev.settings.dog_name != blank -%}
+              <div class="sp__review-badge">
+                {{- 'icon-heart.svg' | inline_asset_content -}}
+                {{ rev.settings.dog_name }}
               </div>
             {%- endif -%}
           </div>
+        {%- endif -%}
+
+        <!-- Review tekst -->
+        <div class="sp__review-text">
+          <span class="sp__quote-mark" aria-hidden="true">"</span>
+          <blockquote class="sp__quote">
+            {{ rev.settings.review_text }}
+          </blockquote>
+          <div class="sp__stars" aria-label="5 sterren">
+            {%- for i in (1..5) -%}
+              {{- 'icon-star.svg' | inline_asset_content -}}
+            {%- endfor -%}
+          </div>
+          {%- if rev.settings.author != blank -%}
+            <p class="sp__author">{{ rev.settings.author }}</p>
+          {%- endif -%}
+        </div>
+
+      </div>
+    {%- endif -%}
+
+    <!-- Fotogrid (rechts): 3 boven + 4 onder -->
+    {%- assign photo_blocks = section.blocks | where: 'type', 'photo' -%}
+    {%- if photo_blocks.size > 0 -%}
+      <div class="sp__grid">
+
+        <!-- Rij 1: eerste 3 foto's -->
+        <div class="sp__grid-row sp__grid-row--3">
+          {%- for block in photo_blocks limit: 3 -%}
+            <div class="sp__photo" {{ block.shopify_attributes }}>
+              {%- if block.settings.image != blank -%}
+                <img
+                  src="{{ block.settings.image | image_url: width: 500 }}"
+                  srcset="{{ block.settings.image | image_url: width: 300 }} 300w,
+                          {{ block.settings.image | image_url: width: 500 }} 500w"
+                  sizes="(max-width:767px) 30vw, 15vw"
+                  alt="{{ block.settings.dog_name | default: 'Blije hond' | escape }}"
+                  width="500" height="500"
+                  loading="lazy"
+                  class="sp__photo-img"
+                >
+              {%- else -%}
+                <div class="sp__photo-ph">{{- 'icon-paw.svg' | inline_asset_content -}}</div>
+              {%- endif -%}
+              {%- if block.settings.dog_name != blank -%}
+                <div class="sp__photo-name">
+                  {{- 'icon-heart.svg' | inline_asset_content -}}
+                  {{ block.settings.dog_name }}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <!-- Rij 2: foto's 4-7 -->
+        <div class="sp__grid-row sp__grid-row--4">
+          {%- for block in photo_blocks offset: 3 limit: 4 -%}
+            <div class="sp__photo" {{ block.shopify_attributes }}>
+              {%- if block.settings.image != blank -%}
+                <img
+                  src="{{ block.settings.image | image_url: width: 400 }}"
+                  srcset="{{ block.settings.image | image_url: width: 250 }} 250w,
+                          {{ block.settings.image | image_url: width: 400 }} 400w"
+                  sizes="(max-width:767px) 24vw, 12vw"
+                  alt="{{ block.settings.dog_name | default: 'Blije hond' | escape }}"
+                  width="400" height="400"
+                  loading="lazy"
+                  class="sp__photo-img"
+                >
+              {%- else -%}
+                <div class="sp__photo-ph">{{- 'icon-paw.svg' | inline_asset_content -}}</div>
+              {%- endif -%}
+              {%- if block.settings.dog_name != blank -%}
+                <div class="sp__photo-name">
+                  {{- 'icon-heart.svg' | inline_asset_content -}}
+                  {{ block.settings.dog_name }}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+
+      </div>
+    {%- endif -%}
+
+  </div>
+
+  <!-- ── TRUST STRIP ────────────────────────────────────── -->
+  {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
+  {%- if trust_blocks.size > 0 -%}
+    <div class="sp__trust">
+      <div class="sp__trust-inner">
+        {%- for block in trust_blocks -%}
+          <div class="sp__trust-item" {{ block.shopify_attributes }}>
+            <span class="sp__trust-icon sp__trust-icon--{{ block.settings.color }}" aria-hidden="true">
+              {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+            </span>
+            <div class="sp__trust-text">
+              <strong>{{ block.settings.title }}</strong>
+              {%- if block.settings.subtitle != blank -%}
+                <span>{{ block.settings.subtitle }}</span>
+              {%- endif -%}
+            </div>
+          </div>
         {%- endfor -%}
+
+        <!-- Sterren + quote als apart item -->
+        {%- if section.settings.rating_quote != blank -%}
+          <div class="sp__trust-item sp__trust-item--stars">
+            <div class="sp__trust-stars" aria-hidden="true">
+              {%- for i in (1..5) -%}{{- 'icon-star.svg' | inline_asset_content -}}{%- endfor -%}
+              <span>{{ section.settings.rating_score }}</span>
+            </div>
+            <span class="sp__trust-quote">"{{ section.settings.rating_quote }}"</span>
+          </div>
+        {%- endif -%}
       </div>
     </div>
   {%- endif -%}
 
-  <!-- Onderste CTA strip ───────────────────────────────── -->
-  <div class="ugc__strip">
-    <div class="ugc__strip-inner">
-
-      <!-- Links: uitnodiging -->
-      <div class="ugc__strip-invite">
-        <span class="ugc__strip-cam" aria-hidden="true">
-          {{- 'icon-camera.svg' | inline_asset_content -}}
-        </span>
-        <div class="ugc__strip-copy">
-          <strong>{{ section.settings.invite_title }}</strong>
-          <span>
-            Tag <span class="ugc__strip-handle">{{ section.settings.handle }}</span>
-            en gebruik <span class="ugc__strip-hash">{{ section.settings.hashtag }}</span>
-            {{ section.settings.invite_suffix }}
-          </span>
-        </div>
-      </div>
-
-      <!-- Midden: avatars + teller -->
-      <div class="ugc__strip-count">
-        {%- assign avatar_blocks = section.blocks | where: 'type', 'avatar' -%}
-        {%- if avatar_blocks.size > 0 -%}
-          <div class="ugc__avatars">
-            {%- for block in avatar_blocks limit: 5 -%}
-              <div class="ugc__avatar" {{ block.shopify_attributes }}>
-                {%- if block.settings.image != blank -%}
-                  <img src="{{ block.settings.image | image_url: width: 80 }}"
-                       alt="" width="40" height="40" loading="lazy">
-                {%- endif -%}
-              </div>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-        <span class="ugc__count-num">{{ section.settings.count_label }}</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" style="color:#e75480"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-      </div>
-
-      <!-- Rechts: CTA knop -->
-      {%- if section.settings.cta_label != blank -%}
-        <a href="{{ section.settings.cta_url }}" class="ugc__cta">
-          {{ section.settings.cta_label }}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </a>
-      {%- endif -%}
-
-    </div>
-  </div>
-
 </section>
 
 {% stylesheet %}
-/* ── Sectie ─────────────────────────────────────────────── */
-.ugc {
-  background: #F8EFDD;
+/* ════════════════════════════════════════════════════════
+   SOCIAL PROOF
+   ════════════════════════════════════════════════════════ */
+.sp {
+  background: #FBF6EC;
   padding: 80px 0 0;
   overflow: hidden;
 }
 
 /* ── Header ─────────────────────────────────────────────── */
-.ugc__header {
+.sp__header {
   text-align: center;
   padding: 0 20px;
-  margin-bottom: 48px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+  margin-bottom: 40px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 12px;
 }
-.ugc__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
+.sp__eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
   font-family: 'Karla', sans-serif;
-  font-size: .8rem;
-  font-weight: 800;
-  letter-spacing: .08em;
-  text-transform: uppercase;
+  font-size: .78rem; font-weight: 800;
+  letter-spacing: .1em; text-transform: uppercase;
   color: #e75480;
 }
-.ugc__title {
+.sp__eyebrow svg { width: 13px; height: 13px; }
+.sp__title {
   font-family: 'Lilita One', cursive;
   font-size: clamp(2.2rem, 5vw, 3.5rem);
   color: #3d2209;
-  line-height: 1;
+  line-height: 1.05;
+  max-width: 800px;
 }
-.ugc__sub {
+.sp__sub {
   font-family: 'Karla', sans-serif;
-  font-size: 1.05rem;
-  color: #A88259;
-  line-height: 1.65;
-  max-width: 60ch;
-}
-.ugc__sub-accent {
-  color: #F7A048;
-  font-weight: 800;
+  font-size: 1rem; color: #A88259;
+  max-width: 600px; line-height: 1.55;
 }
 
-/* ── Foto grid ──────────────────────────────────────────── */
-.ugc__grid-wrap {
+/* ── Hoofd body: review + grid ──────────────────────────── */
+.sp__body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0 20px;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 20px;
 }
-@media(min-width: 1200px) {
-  .ugc__grid-wrap { padding: 0 40px; }
-}
-
-.ugc__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: auto auto;
-  gap: 12px;
+@media(min-width: 900px) {
+  .sp__body {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0 60px;
+    gap: 24px;
+  }
 }
 
-/* Mobiel: 2 kolommen */
-@media(max-width: 767px) {
-  .ugc__grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-}
-
-/* Grootte varianten */
-.ugc__photo--wide { grid-column: span 2; }
-.ugc__photo--tall { grid-row: span 2; }
-.ugc__photo--normal { grid-column: span 1; }
-
-/* Foto */
-.ugc__photo {
-  position: relative;
-  border-radius: 20px;
+/* ── Uitgelichte review (links) ─────────────────────────── */
+.sp__review {
+  background: #fff;
+  border-radius: 24px;
   overflow: hidden;
-  background: #EDE2C9;
-  cursor: pointer;
-  min-height: 200px;
+  box-shadow: 0 4px 20px rgba(96,58,21,.08);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
 }
-@media(max-width: 767px) {
-  .ugc__photo--wide { grid-column: span 1; }
-  .ugc__photo--tall { grid-row: span 1; }
-  .ugc__photo { border-radius: 14px; min-height: 160px; }
+@media(min-width: 900px) {
+  .sp__review {
+    width: 42%;
+    flex-direction: row;
+  }
 }
 
-.ugc__img {
-  width: 100%;
-  height: 100%;
-  min-height: 200px;
+.sp__review-img-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+@media(min-width: 900px) {
+  .sp__review-img-wrap { width: 55%; }
+}
+.sp__review-img {
+  width: 100%; height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 400ms ease;
+  aspect-ratio: 1;
 }
-.ugc__photo:hover .ugc__img { transform: scale(1.05); }
-.ugc__img-ph {
-  width: 100%; height: 100%; min-height: 220px;
+.sp__review-badge {
+  position: absolute;
+  top: 14px; left: 14px;
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(4px);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-family: 'Karla', sans-serif;
+  font-size: .82rem; font-weight: 800;
+  color: #e75480;
+}
+.sp__review-badge svg { width: 12px; height: 12px; }
+
+.sp__review-text {
+  padding: 24px;
+  display: flex; flex-direction: column;
+  justify-content: center; gap: 14px;
+}
+.sp__quote-mark {
+  font-family: Georgia, serif;
+  font-size: 3.5rem; line-height: 1;
+  color: #e75480; font-weight: 700;
+  margin-bottom: -12px;
+}
+.sp__quote {
+  font-family: 'Karla', sans-serif;
+  font-size: .95rem; color: #3d2209;
+  line-height: 1.6;
+  margin: 0;
+}
+.sp__stars {
+  display: flex; gap: 3px;
+}
+.sp__stars svg { width: 18px; height: 18px; color: #F7A048; fill: #F7A048; }
+.sp__author {
+  font-family: 'Karla', sans-serif;
+  font-size: .9rem; font-weight: 700;
+  color: #F7A048; margin: 0;
+}
+
+/* ── Fotogrid (rechts) ──────────────────────────────────── */
+.sp__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+.sp__grid-row {
+  display: grid;
+  gap: 8px;
+}
+.sp__grid-row--3 { grid-template-columns: repeat(3, 1fr); }
+.sp__grid-row--4 { grid-template-columns: repeat(4, 1fr); }
+
+.sp__photo {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #EDE2C9;
+  aspect-ratio: 1;
+}
+.sp__photo-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 300ms ease;
+}
+.sp__photo:hover .sp__photo-img { transform: scale(1.04); }
+.sp__photo-ph {
+  width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
   color: #DAC9A1;
 }
-.ugc__img-ph svg { width: 40px; height: 40px; }
-
-/* Naam label */
-.ugc__name {
+.sp__photo-ph svg { width: 32px; height: 32px; }
+.sp__photo-name {
   position: absolute;
-  bottom: 10px; left: 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: 'Karla', sans-serif;
-  font-size: .75rem;
-  font-weight: 700;
-  color: #fff;
-  background: rgba(61,34,9,.55);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  bottom: 8px; left: 8px;
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(3px);
+  padding: 3px 9px;
   border-radius: 999px;
-  padding: 4px 12px;
-  border: 1px solid rgba(255,255,255,.2);
+  font-family: 'Karla', sans-serif;
+  font-size: .72rem; font-weight: 800;
+  color: #e75480;
 }
-.ugc__name svg { color: #e75480; flex-shrink: 0; }
+.sp__photo-name svg { width: 9px; height: 9px; }
 
-/* ── Strip ──────────────────────────────────────────────── */
-.ugc__strip {
-  background: #EDE2C9;
+/* ── Trust strip ────────────────────────────────────────── */
+.sp__trust {
+  background: #F8EFDD;
+  border-top: 1.5px solid #EDE2C9;
   margin-top: 48px;
-  border-top: 1.5px solid #DAC9A1;
 }
-.ugc__strip-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 24px 20px;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex-wrap: wrap;
+.sp__trust-inner {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 1280px; margin: 0 auto;
+  padding: 0;
 }
-@media(min-width: 1024px) { .ugc__strip-inner { padding: 24px 60px; flex-wrap: nowrap; } }
-
-/* Invite */
-.ugc__strip-invite {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  flex: 1;
-  min-width: 240px;
+@media(min-width: 768px) {
+  .sp__trust-inner { grid-template-columns: repeat(4, 1fr); }
 }
-.ugc__strip-cam {
-  width: 52px; height: 52px;
+.sp__trust-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 22px 20px;
+  border-right: 1px solid #EDE2C9;
+}
+.sp__trust-item:last-child { border-right: none; }
+@media(max-width:767px) {
+  .sp__trust-item:nth-child(2n) { border-right: none; }
+  .sp__trust-item:nth-child(n+3) { border-top: 1px solid #EDE2C9; }
+}
+.sp__trust-icon {
+  width: 44px; height: 44px;
   border-radius: 50%;
-  background: #e8f5e2;
-  color: #66AA44;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.ugc__strip-cam svg { width: 22px; height: 22px; }
-.ugc__strip-copy { display: flex; flex-direction: column; gap: 4px; }
-.ugc__strip-copy strong {
-  font-family: 'Lilita One', cursive;
-  font-size: 1rem;
-  color: #3d2209;
+.sp__trust-icon svg { width: 22px; height: 22px; }
+.sp__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
+.sp__trust-icon--pink   { background: #fff0f5; color: #e75480; }
+.sp__trust-icon--orange { background: #fff0e4; color: #F7A048; }
+.sp__trust-icon--yellow { background: #fffae0; color: #c49000; }
+.sp__trust-text {
+  display: flex; flex-direction: column; gap: 2px;
 }
-.ugc__strip-copy span {
+.sp__trust-text strong {
   font-family: 'Karla', sans-serif;
-  font-size: .85rem;
-  color: #A88259;
-  line-height: 1.5;
+  font-size: .95rem; font-weight: 800; color: #3d2209;
 }
-.ugc__strip-handle { color: #F7A048; font-weight: 700; }
-.ugc__strip-hash   { color: #F7A048; font-weight: 700; }
-
-/* Teller */
-.ugc__strip-count {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
+.sp__trust-text span {
+  font-family: 'Karla', sans-serif;
+  font-size: .8rem; color: #A88259;
+  line-height: 1.35;
 }
-.ugc__avatars { display: flex; }
-.ugc__avatar {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  border: 2.5px solid #EDE2C9;
-  overflow: hidden;
-  background: #DAC9A1;
-  margin-left: -10px;
+.sp__trust-item--stars {
+  flex-direction: column; align-items: flex-start; gap: 6px;
 }
-.ugc__avatar:first-child { margin-left: 0; }
-.ugc__avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.ugc__count-num {
+.sp__trust-stars {
+  display: flex; align-items: center; gap: 4px;
+}
+.sp__trust-stars svg { width: 16px; height: 16px; color: #F7A048; fill: #F7A048; }
+.sp__trust-stars span {
   font-family: 'Lilita One', cursive;
-  font-size: 1.1rem;
-  color: #3d2209;
-  white-space: nowrap;
+  font-size: 1rem; color: #3d2209;
 }
-
-/* CTA knop */
-.ugc__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Lilita One', cursive;
-  font-size: 1rem;
-  background: #66AA44;
-  color: #fff;
-  padding: 14px 28px;
-  border-radius: 999px;
-  text-decoration: none;
-  white-space: nowrap;
-  flex-shrink: 0;
-  box-shadow: 0 4px 16px rgba(102,170,68,.35);
-  transition: background 160ms, transform 200ms cubic-bezier(.34,1.56,.64,1);
-}
-.ugc__cta:hover { background: #4d8833; transform: translateY(-2px); }
-
-/* Mobiel strip */
-@media(max-width: 767px) {
-  .ugc__strip-count { display: none; }
-  .ugc__cta { width: 100%; justify-content: center; }
+.sp__trust-quote {
+  font-family: 'Karla', sans-serif;
+  font-size: .82rem; color: #A88259;
+  font-style: italic; line-height: 1.4;
 }
 {% endstylesheet %}
 
@@ -335,57 +414,57 @@
   "tag": "section",
   "blocks": [
     {
-      "type": "photo",
-      "name": "Hondenfoto",
+      "type": "featured_review",
+      "name": "Uitgelichte review",
+      "limit": 1,
       "settings": [
-        {"type":"image_picker","id":"image","label":"Foto"},
-        {"type":"text","id":"dog_name","label":"Naam hond","default":"Luna"},
-        {
-          "type": "select","id": "size","label": "Formaat","default": "normal",
-          "options": [
-            {"value":"normal","label":"Normaal"},
-            {"value":"wide","label":"Breed (2 kolommen)"},
-            {"value":"tall","label":"Hoog (2 rijen)"}
-          ]
-        }
+        {"type":"image_picker","id":"image",       "label":"Hondenfoto"},
+        {"type":"text",        "id":"dog_name",    "label":"Naam hond",       "default":"Luna"},
+        {"type":"textarea",    "id":"review_text", "label":"Review tekst",    "default":"Ze rent iedere keer naar de deur zodra de Kwispelbox komt. Echt haar favoriete moment van de maand!"},
+        {"type":"text",        "id":"author",      "label":"Auteur",          "default":"Sanne & Luna"}
       ]
     },
     {
-      "type": "avatar",
-      "name": "Avatar",
+      "type": "photo",
+      "name": "Hondenfoto",
       "settings": [
-        {"type":"image_picker","id":"image","label":"Profielfoto"}
+        {"type":"image_picker","id":"image",    "label":"Foto"},
+        {"type":"text",        "id":"dog_name", "label":"Naam hond"}
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "select", "id": "icon", "label": "Icoon", "default": "heart",
+          "options": [
+            {"value":"heart","label":"Hart"},{"value":"camera","label":"Camera"},
+            {"value":"paw","label":"Poot"},{"value":"shield","label":"Schild"},
+            {"value":"gift","label":"Cadeau"},{"value":"star","label":"Ster"},
+            {"value":"account","label":"Personen"}
+          ]
+        },
+        {
+          "type": "select", "id": "color", "label": "Kleur", "default": "green",
+          "options": [
+            {"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},
+            {"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"}
+          ]
+        },
+        {"type":"text","id":"title",    "label":"Titel",    "default":"1.200+"},
+        {"type":"text","id":"subtitle", "label":"Subtitel", "default":"Blije honden in onze community"}
       ]
     }
   ],
   "settings": [
-    {"type":"text","id":"eyebrow","label":"Eyebrow","default":"Een community vol kwispelende staarten"},
-    {"type":"text","id":"title","label":"Titel","default":"Meer dan 1.200 blije honden."},
-    {"type":"text","id":"subtitle_plain","label":"Subtitel (normaal deel)","default":"Elke dag maken we honden (en hun baasjes) blij met een verrassingsbox vol speelplezier. Dit is onze "},
-    {"type":"text","id":"subtitle_accent","label":"Subtitel (oranje deel)","default":"Kwispelbox community!"},
-    {"type":"text","id":"invite_title","label":"Uitnodiging titel","default":"Deel ook jouw moment!"},
-    {"type":"text","id":"handle","label":"Instagram handle","default":"@kwispelbox.nl"},
-    {"type":"text","id":"hashtag","label":"Hashtag","default":"#kwispelbox"},
-    {"type":"text","id":"invite_suffix","label":"Uitnodiging staart","default":"voor een kans om uitgelicht te worden!"},
-    {"type":"text","id":"count_label","label":"Teller label","default":"+1.200"},
-    {"type":"text","id":"cta_label","label":"CTA tekst","default":"Bekijk alle blije honden"},
-    {"type":"url","id":"cta_url","label":"CTA link"}
+    {"type":"text",    "id":"eyebrow",       "label":"Eyebrow",          "default":"Een community vol kwispelende staarten"},
+    {"type":"textarea","id":"title",         "label":"Titel",            "default":"Meer dan 1.200 blije honden."},
+    {"type":"text",    "id":"subtitle",      "label":"Subtitel",         "default":"Elke dag maken we honden (en hun baasjes) blij met onze verrassingsboxen."},
+    {"type":"header",  "content":"Beoordeling"},
+    {"type":"text",    "id":"rating_score",  "label":"Score (bijv. 4,9/5)",   "default":"4,9/5"},
+    {"type":"text",    "id":"rating_quote",  "label":"Citaat bij score",      "default":"Onze hond wordt iedere keer weer blij van zijn box!"}
   ],
-  "presets": [{
-    "name": "Social proof",
-    "blocks": [
-      {"type":"photo","settings":{"dog_name":"Luna","size":"wide"}},
-      {"type":"photo","settings":{"dog_name":"Bobby","size":"normal"}},
-      {"type":"photo","settings":{"dog_name":"Milo","size":"normal"}},
-      {"type":"photo","settings":{"dog_name":"Nala","size":"normal"}},
-      {"type":"photo","settings":{"dog_name":"Boris","size":"normal"}},
-      {"type":"photo","settings":{"dog_name":"Pip","size":"normal"}},
-      {"type":"photo","settings":{"dog_name":"Max","size":"tall"}},
-      {"type":"photo","settings":{"dog_name":"Teddy","size":"normal"}},
-      {"type":"photo","settings":{"dog_name":"Charlie","size":"normal"}},
-      {"type":"avatar"},{"type":"avatar"},{"type":"avatar"},
-      {"type":"avatar"},{"type":"avatar"}
-    ]
-  }]
+  "presets": [{"name": "Social proof"}]
 }
 {% endschema %}
