@@ -56,16 +56,16 @@
               {%- if block.settings.feat1 != blank or block.settings.feat2 != blank or block.settings.feat3 != blank or block.settings.feat4 != blank -%}
                 <ul class="pbox__feats" role="list">
                   {%- if block.settings.feat1 != blank -%}
-                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-' | append: block.settings.feat1_icon | append: '.svg' | inline_asset_content -}}</span>{{ block.settings.feat1 }}</li>
+                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-paw.svg' | inline_asset_content -}}</span>{{ block.settings.feat1 }}</li>
                   {%- endif -%}
                   {%- if block.settings.feat2 != blank -%}
-                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-' | append: block.settings.feat2_icon | append: '.svg' | inline_asset_content -}}</span>{{ block.settings.feat2 }}</li>
+                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-paw.svg' | inline_asset_content -}}</span>{{ block.settings.feat2 }}</li>
                   {%- endif -%}
                   {%- if block.settings.feat3 != blank -%}
-                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-' | append: block.settings.feat3_icon | append: '.svg' | inline_asset_content -}}</span>{{ block.settings.feat3 }}</li>
+                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-paw.svg' | inline_asset_content -}}</span>{{ block.settings.feat3 }}</li>
                   {%- endif -%}
                   {%- if block.settings.feat4 != blank -%}
-                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-' | append: block.settings.feat4_icon | append: '.svg' | inline_asset_content -}}</span>{{ block.settings.feat4 }}</li>
+                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-paw.svg' | inline_asset_content -}}</span>{{ block.settings.feat4 }}</li>
                   {%- endif -%}
 
                 </ul>
@@ -84,21 +84,7 @@
                 </a>
               </div>
 
-              <!-- Favoriet label (alleen featured) -->
-              {%- if block.settings.featured and block.settings.fav_label != blank -%}
-                <p class="pbox__fav">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
-                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-                  </svg>
-                  {{ block.settings.fav_label }}
-                  <svg width="20" height="16" viewBox="0 0 24 20" fill="none"
-                       stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                       aria-hidden="true">
-                    <path d="M3 3 C 3 14, 16 14, 20 8"/>
-                    <path d="M16 6 l4 2 l-1 -4"/>
-                  </svg>
-                </p>
-              {%- endif -%}
+
 
             </div>
           </div>
@@ -221,7 +207,7 @@
 .pbox {
   background: #fff;
   border-radius: 24px;
-  overflow: hidden;
+  overflow: visible;
   border: 2px solid #EDE2C9;
   display: flex;
   flex-direction: column;
@@ -252,17 +238,20 @@
 /* ── Badge ──────────────────────────────────────────────────── */
 .pbox__badge {
   position: absolute;
-  top: 16px;
-  left: 16px;
-  z-index: 2;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
   font-family: 'Karla', sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 800;
-  padding: 5px 14px;
+  padding: 6px 18px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(96,58,21,.12);
 }
 .pbox--green  .pbox__badge { background: #e8f5e2; color: #2d7a1a; }
 .pbox--orange .pbox__badge { background: #F7A048; color: #fff; }
@@ -275,6 +264,7 @@
   overflow: hidden;
   background: #F8EFDD;
   flex-shrink: 0;
+  border-radius: 22px 22px 0 0;
 }
 .pbox__img {
   width: 100%;
@@ -392,18 +382,6 @@
 .pbox--pink   .pbox__btn { background: #FFB8CD; color: #603A15; box-shadow: 0 4px 14px rgba(255,184,205,.4); }
 .pbox--pink   .pbox__btn:hover { background: #f09ab2; }
 
-/* ── Favoriet label ─────────────────────────────────────────── */
-.pbox__fav {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'Karla', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #F7A048;
-  margin-top: 4px;
-}
-.pbox__fav svg:first-child { flex-shrink: 0; }
 
 /* ── Onderste trust strip ───────────────────────────────────── */
 .pboxes__trust {
