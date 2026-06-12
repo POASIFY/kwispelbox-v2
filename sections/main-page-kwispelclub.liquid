@@ -61,7 +61,7 @@
       {%- endif -%}
       {%- if section.settings.welcome_bubble != blank -%}
         <div class="kc-hero__bubble">
-          {{ section.settings.welcome_bubble }}
+          {{- section.settings.welcome_bubble | newline_to_br -}}
           {{- 'icon-paw.svg' | inline_asset_content -}}
         </div>
       {%- endif -%}
@@ -280,6 +280,7 @@
 .kc-hero {
   background:var(--kc-pink-soft);
   padding:56px 0 0; overflow:hidden;
+  position:relative;
 }
 .kc-hero__inner {
   max-width:1280px; margin:0 auto; padding:0 var(--kc-gap);
@@ -319,13 +320,24 @@
 .kc-hero__av--4 { background:#FFE071; opacity:.7; }
 .kc-hero__proof-text { display:flex; flex-direction:column; gap:2px; }
 .kc-hero__proof-text span { font-family:var(--kc-text); font-size:.78rem; color:var(--kc-soft); }
-.kc-hero__media { flex-shrink:0; position:relative; display:flex; align-items:flex-end; justify-content:center; }
-@media(min-width:900px) { .kc-hero__media { width:48%; } }
-.kc-hero__img {
-  width:100%; max-width:500px; display:block;
-  border-radius:32px 32px 0 0; object-fit:cover; object-position:center top;
+.kc-hero__media {
+  flex-shrink:0; position:relative;
+  display:flex; align-items:flex-end; justify-content:center;
 }
-@media(min-width:900px) { .kc-hero__img { border-radius:40px 40px 0 0; max-width:none; } }
+@media(min-width:900px) {
+  .kc-hero__media { width:48%; align-self:stretch; align-items:flex-end; }
+}
+.kc-hero__img {
+  width:100%; max-width:520px; display:block;
+  border-radius:28px 28px 0 0; object-fit:cover; object-position:center top;
+  margin:0 auto;
+}
+@media(min-width:900px) {
+  .kc-hero__img {
+    border-radius:32px 32px 0 0; max-width:none;
+    width:100%; height:auto;
+  }
+}
 .kc-hero__img-ph {
   width:100%; height:300px; background:var(--kc-pink-light);
   border-radius:32px; display:flex; align-items:center; justify-content:center; color:var(--kc-pink);
@@ -341,7 +353,7 @@
 @media(min-width:900px) { .kc-hero__bubble { top:40px; right:0; } }
 
 /* ══ PIJLERS ═══════════════════════════════════════════════ */
-.kc-pijlers { background:#fff; padding:72px 0; }
+.kc-pijlers { background:#fff; padding:72px 0; border-top:1.5px solid var(--kc-line); }
 .kc-pijlers__grid {
   display:grid; grid-template-columns:repeat(2,1fr); gap:32px 20px;
 }

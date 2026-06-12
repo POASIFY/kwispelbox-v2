@@ -2,9 +2,173 @@
   "sections": {
     "kwispelclub": {
       "type": "main-page-kwispelclub",
-      "settings": {},
-      "blocks": {}
+      "settings": {
+        "eyebrow": "Word lid van de",
+        "title": "Kwispelclub",
+        "tagline": "De leukste club voor honden (en hun baasjes)",
+        "intro": "Bij de Kwispelclub draait alles om blije honden en verrassingen. Spaar kwispels, ontvang cadeautjes en vier samen alle bijzondere momenten.",
+        "welcome_bubble": "Welkom Luna!\nFijn dat je erbij bent!",
+        "cta_primary_label": "Word gratis lid",
+        "cta_secondary_label": "Inloggen",
+        "proof_score": "4,9/5",
+        "proof_label": "Meer dan 3.000 blije clubleden",
+        "pijlers_title": "Dit krijg je als Kwispelclub lid",
+        "motm_title": "Kwispelaar van de maand",
+        "motm_desc": "Iedere maand zetten we een geweldige hond in het zonnetje. Doe mee en misschien is jouw hond de volgende!",
+        "motm_dog_name": "Bobby",
+        "motm_cta_label": "Deel de foto van jouw hond",
+        "how_title": "Zo werkt het",
+        "nl_title": "Mis geen enkele verrassing!",
+        "nl_desc": "Blijf als eerste op de hoogte van nieuwe boxen, exclusieve acties en kwispelnieuws.",
+        "nl_placeholder": "Vul je e-mailadres in",
+        "nl_button": "Aanmelden"
+      },
+      "blocks": {
+        "14efbcf0": {
+          "type": "benefit",
+          "settings": {
+            "icon": "heart",
+            "color": "pink",
+            "title": "Vier bijzondere momenten",
+            "description": "Ontvang een verrassing en speciale korting voor de verjaardag van je hond."
+          }
+        },
+        "0ec8d0a2": {
+          "type": "benefit",
+          "settings": {
+            "icon": "paw",
+            "color": "green",
+            "title": "Spaar kwispels",
+            "description": "Verdien kwispels met bestellingen, reviews en meer. Wissel ze in voor leuke beloningen!"
+          }
+        },
+        "e04a6e43": {
+          "type": "benefit",
+          "settings": {
+            "icon": "camera",
+            "color": "orange",
+            "title": "Laat je hond stralen",
+            "description": "Deel foto's en maak kans om 'Kwispelaar van de maand' te worden!"
+          }
+        },
+        "af9edc6a": {
+          "type": "benefit",
+          "settings": {
+            "icon": "gift",
+            "color": "purple",
+            "title": "Exclusieve verrassingen",
+            "description": "Krijg als eerste toegang tot nieuwe boxen, speciale edities en exclusieve acties."
+          }
+        },
+        "e5256c87": {
+          "type": "step",
+          "settings": {
+            "icon": "account",
+            "color": "pink",
+            "number": "1",
+            "title": "Meld je aan",
+            "description": "Maak een gratis account aan en vul de gegevens van je hond in."
+          }
+        },
+        "eef42bee": {
+          "type": "step",
+          "settings": {
+            "icon": "paw",
+            "color": "green",
+            "number": "2",
+            "title": "Verdien kwispels",
+            "description": "Spaar kwispels met aankopen, reviews en foto's."
+          }
+        },
+        "d6c8a82f": {
+          "type": "step",
+          "settings": {
+            "icon": "gift",
+            "color": "orange",
+            "number": "3",
+            "title": "Ontvang beloningen",
+            "description": "Wissel kwispels in voor korting, gratis speeltjes en verrassingen."
+          }
+        },
+        "a4d1174c": {
+          "type": "step",
+          "settings": {
+            "icon": "sparkle",
+            "color": "yellow",
+            "number": "4",
+            "title": "Vier mee",
+            "description": "Ontvang extra's voor de verjaardag en speciale momenten."
+          }
+        },
+        "f4397061": {
+          "type": "step",
+          "settings": {
+            "icon": "heart",
+            "color": "pink",
+            "number": "5",
+            "title": "Geniet samen",
+            "description": "Maak herinneringen en geluksmomentjes met jouw hond."
+          }
+        },
+        "a9a6a851": {
+          "type": "trust",
+          "settings": {
+            "icon": "paw",
+            "color": "green",
+            "stars": false,
+            "title": "Meer dan 1.200+",
+            "subtitle": "Blije honden"
+          }
+        },
+        "8053e96c": {
+          "type": "trust",
+          "settings": {
+            "icon": "heart",
+            "color": "pink",
+            "stars": true,
+            "title": "4,9/5",
+            "subtitle": "Uitstekend beoordeeld"
+          }
+        },
+        "eec446e2": {
+          "type": "trust",
+          "settings": {
+            "icon": "gift",
+            "color": "orange",
+            "stars": false,
+            "title": "Met liefde",
+            "subtitle": "samengesteld"
+          }
+        },
+        "a5cbc2aa": {
+          "type": "trust",
+          "settings": {
+            "icon": "shield",
+            "color": "green",
+            "stars": false,
+            "title": "100%",
+            "subtitle": "tevredenheidsgarantie"
+          }
+        }
+      },
+      "block_order": [
+        "14efbcf0",
+        "0ec8d0a2",
+        "e04a6e43",
+        "af9edc6a",
+        "e5256c87",
+        "eef42bee",
+        "d6c8a82f",
+        "a4d1174c",
+        "f4397061",
+        "a9a6a851",
+        "8053e96c",
+        "eec446e2",
+        "a5cbc2aa"
+      ]
     }
   },
-  "order": ["kwispelclub"]
+  "order": [
+    "kwispelclub"
+  ]
 }
