@@ -184,8 +184,8 @@
 /* ── Circulaire badge op hero foto ──────────────────────── */
 .puppy__hero-badge {
   position: absolute;
-  top: 28px; left: 28px;
-  width: 120px; height: 120px;
+  bottom: 32px; left: 28px;
+  width: 110px; height: 110px;
   border-radius: 50%;
   background: rgba(255,255,255,.93);
   backdrop-filter: blur(4px);
@@ -195,6 +195,9 @@
   z-index: 4;
   padding: 12px;
   text-align: center;
+}
+@media(min-width: 900px) {
+  .puppy__hero-badge { bottom: auto; top: 28px; left: 28px; }
 }
 .puppy__hero-badge-text {
   font-family: 'Karla', sans-serif;
@@ -209,35 +212,49 @@
 
 /* ── Hoofd blok grid ────────────────────────────────────── */
 .puppy__main {
-  display: grid;
-  grid-template-columns: 1fr;
-  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 @media(min-width: 900px) {
-  .puppy__main { grid-template-columns: 48% 52%; }
+  .puppy__main {
+    display: grid;
+    grid-template-columns: 48% 52%;
+    min-height: 560px;
+  }
 }
 
 /* ══ LINKS: lifestyle foto ══════════════════════════════ */
 .puppy__hero-col {
   position: relative;
-  overflow: hidden;
-  min-height: 340px;
+  overflow: visible;
+  min-height: 300px;
+  order: 2;
 }
+@media(min-width: 900px) { .puppy__hero-col { order: 0; overflow: visible; } }
 .puppy__hero-img-wrap {
   width: 100%; height: 100%;
   position: relative;
-  padding: 20px;
+  padding: 16px 16px 24px;
 }
+/* Mobiel: brede afgeronde rechthoek */
 .puppy__hero-img {
   width: 100%; height: 100%;
   object-fit: cover; object-position: center 20%;
   display: block;
-  border-radius: 44% 56% 52% 48% / 50% 46% 54% 50%;
-  box-shadow: 0 12px 40px rgba(231,84,128,.15);
+  border-radius: 24px;
+  box-shadow: 0 8px 28px rgba(231,84,128,.14);
+  min-height: 300px;
+  max-height: 440px;
 }
+/* Desktop: organische blob */
 @media(min-width: 900px) {
-  .puppy__hero-col { border-radius: 0; overflow: visible; }
-  .puppy__hero-img { border-radius: 48% 52% 58% 42% / 54% 48% 52% 46%; }
+  .puppy__hero-img-wrap { padding: 20px; }
+  .puppy__hero-img {
+    border-radius: 48% 52% 58% 42% / 54% 48% 52% 46%;
+    max-height: none;
+    min-height: 0;
+  }
 }
 .puppy__hero-ph {
   width: 100%; height: 100%; min-height: 340px;
@@ -250,11 +267,17 @@
 
 /* ══ RECHTS: content ═══════════════════════════════════ */
 .puppy__content-col {
-  padding: 48px 28px 48px 40px;
-  display: flex; flex-direction: column; gap: 24px;
+  padding: 36px 20px 24px;
+  display: flex; flex-direction: column; gap: 20px;
   justify-content: center;
+  order: 1;
 }
-@media(max-width: 899px) { .puppy__content-col { padding: 36px 20px; } }
+@media(min-width: 900px) {
+  .puppy__content-col {
+    padding: 48px 28px 48px 40px;
+    order: 0;
+  }
+}
 
 /* Header */
 .puppy__eyebrow {
@@ -383,20 +406,33 @@
 }
 .puppy__favs-inner {
   max-width: 1280px; margin: 0 auto;
-  padding: 0 20px;
-  display: flex; align-items: center; gap: 0;
-  overflow-x: auto; -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  padding: 0;
+  display: flex; flex-wrap: wrap; gap: 0;
 }
-.puppy__favs-inner::-webkit-scrollbar { display: none; }
-@media(min-width: 1200px) { .puppy__favs-inner { padding: 0 40px; } }
+@media(min-width: 900px) {
+  .puppy__favs-inner {
+    flex-wrap: nowrap;
+    padding: 0 40px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .puppy__favs-inner::-webkit-scrollbar { display: none; }
+}
 
 /* Links blok */
 .puppy__favs-left {
   display: flex; flex-direction: column; gap: 8px;
-  padding: 24px 28px 24px 0;
-  min-width: 190px; flex-shrink: 0;
+  padding: 20px 16px;
   border-right: 1.5px solid #FFD6E3;
+  flex: 0 0 50%;
+}
+@media(min-width: 900px) {
+  .puppy__favs-left {
+    padding: 24px 28px 24px 20px;
+    min-width: 190px;
+    flex: 0 0 auto;
+  }
 }
 .puppy__favs-head {
   display: flex; flex-direction: column; gap: 4px;
@@ -433,11 +469,28 @@
 .puppy__product {
   display: flex; flex-direction: column; align-items: center;
   text-align: center; gap: 8px;
-  padding: 20px 20px;
+  padding: 20px 16px;
   border-right: 1.5px solid #FFD6E3;
-  min-width: 130px; flex-shrink: 0;
+  flex: 0 0 50%;
 }
 .puppy__product:last-child { border-right: none; }
+/* Tweede rij op mobiel: 3 kolommen */
+.puppy__product:nth-child(n+3) {
+  flex: 0 0 33.333%;
+  border-top: 1.5px solid #FFD6E3;
+}
+.puppy__product:nth-child(5):last-child { border-right: none; }
+@media(min-width: 900px) {
+  .puppy__product {
+    padding: 20px;
+    min-width: 130px;
+    flex: 0 0 auto;
+  }
+  .puppy__product:nth-child(n+3) {
+    flex: 0 0 auto;
+    border-top: none;
+  }
+}
 
 .puppy__product-icon-wrap {
   width: 80px; height: 80px;
