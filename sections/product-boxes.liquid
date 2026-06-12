@@ -53,13 +53,19 @@
               <p class="pbox__count">{{ block.settings.count }}</p>
 
               <!-- Features -->
-              {%- if block.settings.feat1 != blank or block.settings.feat2 != blank -%}
+              {%- if block.settings.feat1 != blank or block.settings.feat2 != blank or block.settings.feat3 != blank or block.settings.feat4 != blank -%}
                 <ul class="pbox__feats" role="list">
                   {%- if block.settings.feat1 != blank -%}
                     <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-' | append: block.settings.feat1_icon | append: '.svg' | inline_asset_content -}}</span>{{ block.settings.feat1 }}</li>
                   {%- endif -%}
                   {%- if block.settings.feat2 != blank -%}
                     <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-' | append: block.settings.feat2_icon | append: '.svg' | inline_asset_content -}}</span>{{ block.settings.feat2 }}</li>
+                  {%- endif -%}
+                  {%- if block.settings.feat3 != blank -%}
+                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-' | append: block.settings.feat3_icon | append: '.svg' | inline_asset_content -}}</span>{{ block.settings.feat3 }}</li>
+                  {%- endif -%}
+                  {%- if block.settings.feat4 != blank -%}
+                    <li class="pbox__feat"><span class="pbox__feat-icon">{{- 'icon-' | append: block.settings.feat4_icon | append: '.svg' | inline_asset_content -}}</span>{{ block.settings.feat4 }}</li>
                   {%- endif -%}
 
                 </ul>
