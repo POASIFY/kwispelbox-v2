@@ -1,0 +1,10 @@
+{
+  "sections": {
+    "kwispelclub": {
+      "type": "main-page-kwispelclub",
+      "settings": {},
+      "blocks": {}
+    }
+  },
+  "order": ["kwispelclub"]
+}
