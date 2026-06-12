@@ -116,10 +116,24 @@
     <div class="reviews__trust">
       <div class="reviews__trust-inner">
         {%- for block in trust_blocks -%}
-          <div class="reviews__trust-item" {{ block.shopify_attributes }}>
-            <span class="reviews__trust-icon reviews__trust-icon--{{ block.settings.color }}" aria-hidden="true">
-              {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
-            </span>
+          <div class="reviews__trust-item reviews__trust-item--{{ block.settings.type | default: 'icon' }}" {{ block.shopify_attributes }}>
+            {%- if block.settings.avatar_1 != blank or block.settings.avatar_2 != blank or block.settings.avatar_3 != blank -%}
+              <div class="reviews__trust-avatars">
+                {%- if block.settings.avatar_1 != blank -%}
+                  <img src="{{ block.settings.avatar_1 | image_url: width: 80 }}" alt="" width="40" height="40" loading="lazy" class="reviews__trust-avatar">
+                {%- endif -%}
+                {%- if block.settings.avatar_2 != blank -%}
+                  <img src="{{ block.settings.avatar_2 | image_url: width: 80 }}" alt="" width="40" height="40" loading="lazy" class="reviews__trust-avatar">
+                {%- endif -%}
+                {%- if block.settings.avatar_3 != blank -%}
+                  <img src="{{ block.settings.avatar_3 | image_url: width: 80 }}" alt="" width="40" height="40" loading="lazy" class="reviews__trust-avatar">
+                {%- endif -%}
+              </div>
+            {%- else -%}
+              <span class="reviews__trust-icon reviews__trust-icon--{{ block.settings.color }}" aria-hidden="true">
+                {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+              </span>
+            {%- endif -%}
             <div class="reviews__trust-text">
               <strong>{{ block.settings.title }}</strong>
               {%- if block.settings.subtitle != blank -%}
@@ -395,6 +409,25 @@
 }
 .reviews__trust-stars svg { width: 12px; height: 12px; color: #F7A048; }
 .reviews__trust-stars-label { font-size: .72rem; color: #A88259; margin-left: 3px; }
+
+/* ── Trust avatars (hondenfoto's) ───────────────────────── */
+.reviews__trust-avatars {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.reviews__trust-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(96,58,21,.12);
+  margin-left: -10px;
+}
+.reviews__trust-avatars .reviews__trust-avatar:first-child {
+  margin-left: 0;
+}
 {% endstylesheet %}
 
 

@@ -98,8 +98,8 @@
 
   <!-- Onderste trust strip ─────────────────────────────── -->
   {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
-  {%- if trust_blocks.size > 0 -%}
-    <div class="why-kw__trust-bar">
+  {%- if trust_blocks.size > 0 and section.settings.show_trust -%}
+  <div class="why-kw__trust-bar">
       <div class="why-kw__trust-inner">
         {%- for block in trust_blocks -%}
           <div class="why-kw__trust-item" {{ block.shopify_attributes }}>
@@ -379,6 +379,7 @@
       "type": "benefit",
       "name": "Voordeel",
       "settings": [
+    {"type":"checkbox","id":"show_trust","label":"Trust strip tonen","default":false},
         {
           "type": "select", "id": "icon", "label": "Icoon", "default": "heart",
           "options": [

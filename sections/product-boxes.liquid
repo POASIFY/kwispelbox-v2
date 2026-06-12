@@ -112,6 +112,7 @@
     </div>
 
     <!-- Onderste trust strip -->
+    {%- if section.settings.show_trust != false -%}
     <div class="pboxes__trust">
       {%- for block in section.blocks -%}
         {%- if block.type == 'trust_item' -%}
@@ -151,6 +152,7 @@
         {%- endif -%}
         {%- endfor -%}
     </div>
+    {%- endif -%}
 
   </div>
 </section>
@@ -533,8 +535,9 @@
     }
   ],
   "settings": [
-    { "type": "text", "id": "title",    "label": "Titel",    "default": "Onze verrassingsboxen" },
-    { "type": "text", "id": "subtitle", "label": "Subtitel", "default": "Elke box een feestje. Welke kies jij?" }
+    { "type": "text",     "id": "title",      "label": "Titel",              "default": "Onze verrassingsboxen" },
+    { "type": "text",     "id": "subtitle",   "label": "Subtitel",           "default": "Elke box een feestje. Welke kies jij?" },
+    { "type": "checkbox", "id": "show_trust", "label": "Trust strip tonen", "default": false }
   ],
   "presets": [{ "name": "Verrassingsboxen" }]
 }

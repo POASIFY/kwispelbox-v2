@@ -121,7 +121,7 @@
 
   <!-- Trust strip ──────────────────────────────────────── -->
   {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
-  {%- if trust_blocks.size > 0 -%}
+  {%- if trust_blocks.size > 0 and section.settings.show_trust -%}
     <div class="inside__trust">
       <div class="inside__trust-inner">
         {%- if section.settings.trust_dog_left != blank -%}
