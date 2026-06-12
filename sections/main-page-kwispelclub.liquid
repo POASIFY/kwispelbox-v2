@@ -1,4 +1,4 @@
-{% comment %} KWISPELCLUB – Landingspagina {% endcomment %}
+{% comment %} KWISPELCLUB – Landingspagina v2 – Productie-klaar {% endcomment %}
 {%- assign benefit_blocks = section.blocks | where: 'type', 'benefit' -%}
 {%- assign step_blocks    = section.blocks | where: 'type', 'step' -%}
 {%- assign trust_blocks   = section.blocks | where: 'type', 'trust' -%}
@@ -8,18 +8,22 @@
   <div class="kc-hero__inner">
     <div class="kc-hero__content">
       {%- if section.settings.eyebrow != blank -%}
-        <p class="kc-eyebrow">
+        <p class="kc-hero__eyebrow">
           {{- 'icon-heart.svg' | inline_asset_content -}}
           {{ section.settings.eyebrow }}
         </p>
       {%- endif -%}
+
       <h1 class="kc-hero__title">{{ section.settings.title }}</h1>
+
       {%- if section.settings.tagline != blank -%}
         <p class="kc-hero__tagline">{{ section.settings.tagline }}</p>
       {%- endif -%}
+
       {%- if section.settings.intro != blank -%}
         <p class="kc-hero__intro">{{ section.settings.intro }}</p>
       {%- endif -%}
+
       <div class="kc-hero__ctas">
         {%- if section.settings.cta_primary_label != blank -%}
           <a href="{{ section.settings.cta_primary_url }}" class="kc-btn kc-btn--primary">
@@ -28,40 +32,57 @@
           </a>
         {%- endif -%}
         {%- if section.settings.cta_secondary_label != blank -%}
-          <a href="{{ section.settings.cta_secondary_url }}" class="kc-btn kc-btn--outline">
+          <a href="{{ section.settings.cta_secondary_url }}" class="kc-btn kc-btn--ghost">
             {{- 'icon-account.svg' | inline_asset_content -}}
             {{ section.settings.cta_secondary_label }}
           </a>
         {%- endif -%}
       </div>
-      <div class="kc-hero__proof">
-        <div class="kc-hero__avatars" aria-hidden="true">
-          {%- for i in (1..4) -%}<span class="kc-hero__av kc-hero__av--{{ i }}"></span>{%- endfor -%}
-        </div>
-        <div class="kc-hero__proof-text">
-          <div class="kc-stars">
-            {%- for i in (1..5) -%}{{- 'icon-star.svg' | inline_asset_content -}}{%- endfor -%}
-            <strong>{{ section.settings.proof_score }}</strong>
+
+      <div class="kc-hero__trust-row">
+        {%- if section.settings.trust_count != blank -%}
+          <div class="kc-hero__trust-pill">
+            {{- 'icon-users.svg' | inline_asset_content -}}
+            {{ section.settings.trust_count }}
           </div>
-          <span>{{ section.settings.proof_label }}</span>
-        </div>
+        {%- endif -%}
+        {%- if section.settings.trust_score != blank -%}
+          <div class="kc-hero__trust-pill">
+            {{- 'icon-star.svg' | inline_asset_content -}}
+            {{ section.settings.trust_score }}
+          </div>
+        {%- endif -%}
+        {%- if section.settings.trust_free != blank -%}
+          <div class="kc-hero__trust-pill">
+            {{- 'icon-heart.svg' | inline_asset_content -}}
+            {{ section.settings.trust_free }}
+          </div>
+        {%- endif -%}
       </div>
     </div>
+
     <div class="kc-hero__media">
       {%- if section.settings.hero_image != blank -%}
-        <img src="{{ section.settings.hero_image | image_url: width: 900 }}"
-             srcset="{{ section.settings.hero_image | image_url: width: 600 }} 600w,
-                     {{ section.settings.hero_image | image_url: width: 900 }} 900w"
-             sizes="(max-width:767px) 90vw, 48vw"
-             alt="{{ section.settings.hero_image.alt | default: 'Kwispelclub' | escape }}"
-             width="900" height="900" loading="eager" fetchpriority="high"
-             class="kc-hero__img">
+        <img
+          src="{{ section.settings.hero_image | image_url: width: 900 }}"
+          srcset="{{ section.settings.hero_image | image_url: width: 600 }} 600w,
+                  {{ section.settings.hero_image | image_url: width: 900 }} 900w"
+          sizes="(max-width: 899px) 90vw, 48vw"
+          alt="{{ section.settings.hero_image.alt | default: 'Kwispelclub' | escape }}"
+          width="900" height="900"
+          loading="eager"
+          fetchpriority="high"
+          class="kc-hero__img"
+        >
       {%- else -%}
-        <div class="kc-hero__img-ph">{{- 'icon-paw.svg' | inline_asset_content -}}</div>
+        <div class="kc-hero__img-ph">
+          {{- 'icon-paw.svg' | inline_asset_content -}}
+          <span>Upload hero afbeelding</span>
+        </div>
       {%- endif -%}
-      {%- if section.settings.welcome_bubble != blank -%}
-        <div class="kc-hero__bubble">
-          {{- section.settings.welcome_bubble | newline_to_br -}}
+      {%- if section.settings.bubble_text != blank -%}
+        <div class="kc-hero__bubble" aria-hidden="true">
+          {{- section.settings.bubble_text | newline_to_br -}}
           {{- 'icon-paw.svg' | inline_asset_content -}}
         </div>
       {%- endif -%}
@@ -69,21 +90,21 @@
   </div>
 </section>
 
-<!-- ══ PIJLERS ════════════════════════════════════════════ -->
+<!-- ══ VOORDELEN / PIJLERS ════════════════════════════════ -->
 {%- if benefit_blocks.size > 0 -%}
-<section class="kc-pijlers">
+<section class="kc-benefits">
   <div class="kc-wrap">
-    {%- if section.settings.pijlers_title != blank -%}
-      <h2 class="kc-title-center">{{ section.settings.pijlers_title }}</h2>
+    {%- if section.settings.benefits_title != blank -%}
+      <h2 class="kc-section-title">{{ section.settings.benefits_title }}</h2>
     {%- endif -%}
-    <div class="kc-pijlers__grid">
+    <div class="kc-benefits__grid">
       {%- for block in benefit_blocks -%}
-        <div class="kc-pijler" {{ block.shopify_attributes }}>
-          <span class="kc-pijler__icon kc-icon--{{ block.settings.color }}">
+        <div class="kc-benefit-card" {{ block.shopify_attributes }}>
+          <span class="kc-benefit-card__icon kc-icon-wrap kc-icon-wrap--{{ block.settings.color }}">
             {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
           </span>
-          <strong class="kc-pijler__title">{{ block.settings.title }}</strong>
-          <p class="kc-pijler__desc">{{ block.settings.description }}</p>
+          <strong class="kc-benefit-card__title">{{ block.settings.title }}</strong>
+          <p class="kc-benefit-card__desc">{{ block.settings.description }}</p>
         </div>
       {%- endfor -%}
     </div>
@@ -91,32 +112,38 @@
 </section>
 {%- endif -%}
 
-<!-- ══ KWISPELAAR VAN DE MAAND ════════════════════════════ -->
+<!-- ══ HOND VAN DE MAAND ═════════════════════════════════ -->
 {%- if section.settings.motm_title != blank -%}
 <section class="kc-motm">
-  <div class="kc-wrap kc-motm__inner">
-    <div class="kc-motm__photo">
-      {%- if section.settings.motm_image != blank -%}
-        <div class="kc-polaroid">
-          <img src="{{ section.settings.motm_image | image_url: width: 500 }}"
-               alt="{{ section.settings.motm_dog_name | default: 'Kwispelaar' | escape }}"
-               width="500" height="500" loading="lazy" class="kc-polaroid__img">
-          {%- if section.settings.motm_dog_name != blank -%}
-            <div class="kc-polaroid__label">
-              <span class="kc-polaroid__name">{{ section.settings.motm_dog_name }}</span>
-              <span class="kc-polaroid__caption">Kwispelaar van de maand 🏆</span>
-            </div>
-          {%- endif -%}
-          <span class="kc-polaroid__heart">{{- 'icon-heart.svg' | inline_asset_content -}}</span>
-        </div>
-      {%- else -%}
-        <div class="kc-polaroid kc-polaroid--ph">{{- 'icon-paw.svg' | inline_asset_content -}}</div>
-      {%- endif -%}
+  <div class="kc-wrap kc-motm__layout">
+
+    <div class="kc-motm__photo" aria-hidden="true">
+      <div class="kc-polaroid">
+        {%- if section.settings.motm_image != blank -%}
+          <img
+            src="{{ section.settings.motm_image | image_url: width: 480 }}"
+            alt="{{ section.settings.motm_name | default: 'Kwispelaar van de maand' | escape }}"
+            width="480" height="480"
+            loading="lazy"
+            class="kc-polaroid__img"
+          >
+        {%- else -%}
+          <div class="kc-polaroid__ph">{{- 'icon-camera.svg' | inline_asset_content -}}</div>
+        {%- endif -%}
+        {%- if section.settings.motm_name != blank -%}
+          <div class="kc-polaroid__label">
+            <span class="kc-polaroid__name">{{ section.settings.motm_name }}</span>
+            <span class="kc-polaroid__sub">Kwispelaar van de maand 🏆</span>
+          </div>
+        {%- endif -%}
+        <span class="kc-polaroid__deco-heart">{{- 'icon-heart.svg' | inline_asset_content -}}</span>
+      </div>
     </div>
+
     <div class="kc-motm__content">
       <h2 class="kc-motm__title">
         {{ section.settings.motm_title }}
-        <span class="kc-inline-heart">{{- 'icon-heart.svg' | inline_asset_content -}}</span>
+        <span class="kc-inline-heart" aria-hidden="true">{{- 'icon-heart.svg' | inline_asset_content -}}</span>
       </h2>
       {%- if section.settings.motm_desc != blank -%}
         <p class="kc-motm__desc">{{ section.settings.motm_desc }}</p>
@@ -128,6 +155,7 @@
         </a>
       {%- endif -%}
     </div>
+
   </div>
 </section>
 {%- endif -%}
@@ -137,26 +165,28 @@
 <section class="kc-how">
   <div class="kc-wrap">
     {%- if section.settings.how_title != blank -%}
-      <h2 class="kc-title-center">
+      <h2 class="kc-section-title">
         {{ section.settings.how_title }}
-        <span class="kc-inline-heart">{{- 'icon-heart.svg' | inline_asset_content -}}</span>
+        <span class="kc-inline-heart" aria-hidden="true">{{- 'icon-heart.svg' | inline_asset_content -}}</span>
       </h2>
     {%- endif -%}
-    <div class="kc-how__steps">
+    <div class="kc-how__flow">
       {%- for block in step_blocks -%}
         <div class="kc-step" {{ block.shopify_attributes }}>
-          <div class="kc-step__icon kc-icon--{{ block.settings.color }}">
-            {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
-          </div>
-          {%- unless forloop.last -%}
-            <span class="kc-step__arrow" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                   stroke-width="2" stroke-linecap="round">
-                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-              </svg>
+          <div class="kc-step__icon-wrap">
+            <span class="kc-step__icon kc-icon-wrap kc-icon-wrap--{{ block.settings.color }}">
+              {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
             </span>
-          {%- endunless -%}
-          <strong class="kc-step__num">{{ block.settings.number }}. {{ block.settings.title }}</strong>
+            {%- unless forloop.last -%}
+              <span class="kc-step__connector" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                </svg>
+              </span>
+            {%- endunless -%}
+          </div>
+          <strong class="kc-step__label">{{ block.settings.number }}. {{ block.settings.title }}</strong>
           <p class="kc-step__desc">{{ block.settings.description }}</p>
         </div>
       {%- endfor -%}
@@ -165,27 +195,38 @@
 </section>
 {%- endif -%}
 
-<!-- ══ NEWSLETTER ════════════════════════════════════════ -->
+<!-- ══ INSCHRIJVEN ════════════════════════════════════════ -->
 {%- if section.settings.nl_title != blank -%}
-<section class="kc-nl">
-  <div class="kc-nl__inner kc-wrap">
-    <div class="kc-nl__left">
-      <span class="kc-nl__icon">{{- 'icon-gift.svg' | inline_asset_content -}}</span>
-      <div>
-        <strong class="kc-nl__title">{{ section.settings.nl_title }}</strong>
+<section class="kc-signup">
+  <div class="kc-signup__inner kc-wrap">
+    <div class="kc-signup__left">
+      <span class="kc-signup__icon" aria-hidden="true">
+        {{- 'icon-mail.svg' | inline_asset_content -}}
+      </span>
+      <div class="kc-signup__copy">
+        <strong class="kc-signup__title">{{ section.settings.nl_title }}</strong>
         {%- if section.settings.nl_desc != blank -%}
-          <p class="kc-nl__desc">{{ section.settings.nl_desc }}</p>
+          <p class="kc-signup__desc">{{ section.settings.nl_desc }}</p>
         {%- endif -%}
       </div>
     </div>
-    <form class="kc-nl__form" action="{{ routes.root_url }}contact#contact_form"
-          method="post" accept-charset="UTF-8">
+    <form class="kc-signup__form"
+          action="{{ routes.root_url }}contact#contact_form"
+          method="post"
+          accept-charset="UTF-8">
       <input type="hidden" name="form_type" value="customer">
       <input type="hidden" name="utf8" value="✓">
       <input type="hidden" name="contact[tags]" value="kwispelclub">
-      <label for="kc-email" class="kc-sr-only">E-mailadres</label>
-      <input type="email" id="kc-email" name="contact[email]" required
-             class="kc-nl__input" placeholder="{{ section.settings.nl_placeholder }}">
+      <label for="kc-nl-email" class="kc-sr-only">{{ section.settings.nl_placeholder }}</label>
+      <input
+        type="email"
+        id="kc-nl-email"
+        name="contact[email]"
+        required
+        autocomplete="email"
+        class="kc-signup__input"
+        placeholder="{{ section.settings.nl_placeholder }}"
+      >
       <button type="submit" class="kc-btn kc-btn--orange">
         {{ section.settings.nl_button }}
         {{- 'icon-paw.svg' | inline_asset_content -}}
@@ -195,20 +236,22 @@
 </section>
 {%- endif -%}
 
-<!-- ══ TRUST ══════════════════════════════════════════════ -->
+<!-- ══ TRUST BAR ══════════════════════════════════════════ -->
 {%- if trust_blocks.size > 0 -%}
 <section class="kc-trust">
   <div class="kc-trust__inner">
     {%- for block in trust_blocks -%}
       <div class="kc-trust__item" {{ block.shopify_attributes }}>
-        <span class="kc-trust__icon kc-icon--{{ block.settings.color }}">
+        <span class="kc-trust__icon kc-icon-wrap kc-icon-wrap--{{ block.settings.color }}">
           {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
         </span>
         <div class="kc-trust__text">
           <strong>{{ block.settings.title }}</strong>
-          {%- if block.settings.subtitle != blank -%}<span>{{ block.settings.subtitle }}</span>{%- endif -%}
-          {%- if block.settings.stars -%}
-            <span class="kc-trust__stars">
+          {%- if block.settings.subtitle != blank -%}
+            <span>{{ block.settings.subtitle }}</span>
+          {%- endif -%}
+          {%- if block.settings.show_stars -%}
+            <span class="kc-trust__stars" aria-hidden="true">
               {%- for i in (1..5) -%}{{- 'icon-star.svg' | inline_asset_content -}}{%- endfor -%}
             </span>
           {%- endif -%}
@@ -220,251 +263,596 @@
 {%- endif -%}
 
 {% stylesheet %}
-/* ── Tokens ──────────────────────────────────────────────── */
-:root {
-  --kc-pink: #e75480; --kc-pink-soft: #FFF0F5; --kc-pink-light: #FFD6E3;
-  --kc-green: #66AA44; --kc-green-dark: #4d7a30; --kc-green-soft: #e8f5e2;
-  --kc-orange: #F7A048; --kc-yellow: #c49000;
-  --kc-ink: #3d2209; --kc-body: #603A15; --kc-soft: #A88259;
-  --kc-cream: #F8EFDD; --kc-line: #EDE2C9;
-  --kc-head: 'Lilita One', cursive; --kc-text: 'Karla', sans-serif;
-  --kc-gap: 20px; --kc-r: 24px;
-}
-@media(min-width:1024px){ :root { --kc-gap: 60px; } }
-.kc-sr-only { position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0); }
-.kc-wrap { max-width:1280px; margin:0 auto; padding:0 var(--kc-gap); }
+/* ════════════════════════════════════════════════════════
+   KWISPELCLUB — Production-ready, v2
+   Design tokens: zelfde als theme-brede secties
+   ════════════════════════════════════════════════════════ */
 
-/* ── Gedeeld ─────────────────────────────────────────────── */
-.kc-title-center {
-  font-family:var(--kc-head); font-size:clamp(1.7rem,4vw,2.4rem);
-  color:var(--kc-ink); text-align:center; margin-bottom:40px;
-  display:flex; align-items:center; justify-content:center; gap:10px;
+.kc-sr-only {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap;
 }
-.kc-inline-heart { display:inline-flex; align-items:center; color:var(--kc-pink); }
-.kc-inline-heart svg { width:20px; height:20px; }
-.kc-eyebrow {
-  display:inline-flex; align-items:center; gap:6px;
-  font-family:var(--kc-text); font-size:.75rem; font-weight:800;
-  letter-spacing:.1em; text-transform:uppercase; color:var(--kc-pink);
+.kc-wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
-.kc-eyebrow svg { width:12px; height:12px; }
+@media(min-width: 1024px) {
+  .kc-wrap { padding: 0 60px; }
+}
+
+/* ── Gedeelde componenten ────────────────────────────────── */
+
+/* Sectietitel */
+.kc-section-title {
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  color: #3d2209;
+  text-align: center;
+  margin-bottom: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Inline hart naast titel */
+.kc-inline-heart {
+  display: inline-flex;
+  align-items: center;
+  color: #e75480;
+}
+.kc-inline-heart svg { width: 22px; height: 22px; }
+
+/* Icoon-cirkel (zoals andere secties) */
+.kc-icon-wrap {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.kc-icon-wrap svg { width: 28px; height: 28px; }
+.kc-icon-wrap--pink   { background: #ffe0ee; color: #e75480; }
+.kc-icon-wrap--green  { background: #e8f5e2; color: #66AA44; }
+.kc-icon-wrap--orange { background: #fff0e4; color: #F7A048; }
+.kc-icon-wrap--purple { background: #f0ecff; color: #7c3aed; }
+.kc-icon-wrap--yellow { background: #fffae0; color: #c49000; }
+.kc-icon-wrap--brown  { background: #F8EFDD; color: #603A15; }
+
+/* Knoppen */
 .kc-btn {
-  display:inline-flex; align-items:center; gap:8px;
-  font-family:var(--kc-head); font-size:.95rem;
-  padding:13px 24px; border-radius:999px; text-decoration:none;
-  transition:transform 200ms cubic-bezier(.34,1.56,.64,1), box-shadow 160ms;
-  cursor:pointer; border:none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Lilita One', cursive;
+  font-size: .95rem;
+  padding: 13px 24px;
+  border-radius: 999px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition:
+    transform 200ms cubic-bezier(.34, 1.56, .64, 1),
+    box-shadow 160ms ease;
 }
-.kc-btn:hover { transform:translateY(-2px); }
-.kc-btn svg { width:16px; height:16px; flex-shrink:0; }
-.kc-btn--primary { background:var(--kc-pink); color:#fff; box-shadow:0 4px 16px rgba(231,84,128,.28); }
-.kc-btn--primary:hover { background:#c4396a; }
-.kc-btn--outline { background:#fff; color:var(--kc-ink); border:2px solid var(--kc-line); }
-.kc-btn--outline:hover { border-color:var(--kc-soft); }
-.kc-btn--outline-pink { background:transparent; color:var(--kc-pink); border:1.5px solid var(--kc-pink-light); }
-.kc-btn--outline-pink:hover { background:var(--kc-pink-soft); }
-.kc-btn--orange { background:var(--kc-orange); color:#fff; box-shadow:0 4px 14px rgba(247,160,72,.3); }
-.kc-btn--orange:hover { background:#d9823a; }
-.kc-stars { display:flex; align-items:center; gap:3px; }
-.kc-stars svg { width:14px; height:14px; color:var(--kc-orange); fill:var(--kc-orange); }
-.kc-stars strong { font-family:var(--kc-text); font-size:.85rem; font-weight:800; color:var(--kc-ink); margin-left:4px; }
-
-/* Icoon cirkels */
-.kc-icon--pink   { background:#ffe5ef; color:var(--kc-pink); }
-.kc-icon--green  { background:var(--kc-green-soft); color:var(--kc-green); }
-.kc-icon--orange { background:#fff0e4; color:var(--kc-orange); }
-.kc-icon--purple { background:#f0ecff; color:#7c3aed; }
-.kc-icon--yellow { background:#fffae0; color:var(--kc-yellow); }
+.kc-btn:hover { transform: translateY(-2px); }
+.kc-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+.kc-btn--primary {
+  background: #e75480;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(231, 84, 128, .28);
+}
+.kc-btn--primary:hover { background: #c4396a; box-shadow: 0 6px 20px rgba(231,84,128,.36); }
+.kc-btn--ghost {
+  background: #fff;
+  color: #3d2209;
+  border: 2px solid #EDE2C9;
+}
+.kc-btn--ghost:hover { border-color: #A88259; background: #F8EFDD; }
+.kc-btn--outline-pink {
+  background: transparent;
+  color: #e75480;
+  border: 1.5px solid #FFB8CD;
+}
+.kc-btn--outline-pink:hover { background: #FFF0F5; }
+.kc-btn--orange {
+  background: #F7A048;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(247, 160, 72, .28);
+}
+.kc-btn--orange:hover { background: #d9823a; }
 
 /* ══ HERO ══════════════════════════════════════════════════ */
+
 .kc-hero {
-  background:var(--kc-pink-soft);
-  padding:56px 0 0; overflow:hidden;
-  position:relative;
+  background: #FFF0F5;
+  padding: 56px 0 0;
+  overflow: hidden;
 }
+
 .kc-hero__inner {
-  max-width:1280px; margin:0 auto; padding:0 var(--kc-gap);
-  display:flex; flex-direction:column; gap:32px; align-items:center;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  align-items: center;
 }
-@media(min-width:900px) {
-  .kc-hero__inner { flex-direction:row; align-items:flex-end; gap:0; }
-}
-.kc-hero__content {
-  display:flex; flex-direction:column; gap:16px;
-  flex:1; max-width:520px;
-}
-.kc-hero__title {
-  font-family:var(--kc-head);
-  font-size:clamp(3.2rem,8vw,6rem);
-  color:var(--kc-ink); line-height:.92; margin:4px 0;
-}
-.kc-hero__tagline {
-  font-family:var(--kc-head); font-size:clamp(1rem,2.5vw,1.3rem);
-  color:var(--kc-body); margin:0;
-}
-.kc-hero__intro {
-  font-family:var(--kc-text); font-size:.95rem;
-  color:var(--kc-soft); line-height:1.7; margin:0;
-}
-.kc-hero__ctas { display:flex; flex-wrap:wrap; gap:12px; margin-top:4px; }
-.kc-hero__proof { display:flex; align-items:center; gap:12px; margin-top:8px; }
-.kc-hero__avatars { display:flex; align-items:center; }
-.kc-hero__av {
-  width:34px; height:34px; border-radius:50%; border:2.5px solid #fff;
-  display:inline-block; margin-left:-8px;
-}
-.kc-hero__av:first-child { margin-left:0; }
-.kc-hero__av--1 { background:var(--kc-pink-light); }
-.kc-hero__av--2 { background:var(--kc-orange); opacity:.8; }
-.kc-hero__av--3 { background:var(--kc-green); opacity:.7; }
-.kc-hero__av--4 { background:#FFE071; opacity:.7; }
-.kc-hero__proof-text { display:flex; flex-direction:column; gap:2px; }
-.kc-hero__proof-text span { font-family:var(--kc-text); font-size:.78rem; color:var(--kc-soft); }
-.kc-hero__media {
-  flex-shrink:0; position:relative;
-  display:flex; align-items:flex-end; justify-content:center;
-}
-@media(min-width:900px) {
-  .kc-hero__media { width:48%; align-self:stretch; align-items:flex-end; }
-}
-.kc-hero__img {
-  width:100%; max-width:520px; display:block;
-  border-radius:28px 28px 0 0; object-fit:cover; object-position:center top;
-  margin:0 auto;
-}
-@media(min-width:900px) {
-  .kc-hero__img {
-    border-radius:32px 32px 0 0; max-width:none;
-    width:100%; height:auto;
+@media(min-width: 900px) {
+  .kc-hero__inner {
+    flex-direction: row;
+    align-items: flex-end;
+    padding: 0 60px;
+    gap: 0;
   }
 }
+
+/* Links: content */
+.kc-hero__content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
+  max-width: 540px;
+}
+
+.kc-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Karla', sans-serif;
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #e75480;
+}
+.kc-hero__eyebrow svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+.kc-hero__title {
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(3rem, 8vw, 6rem);
+  color: #3d2209;
+  line-height: .92;
+  margin: 0;
+}
+
+.kc-hero__tagline {
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(1.05rem, 2.5vw, 1.3rem);
+  color: #603A15;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.kc-hero__intro {
+  font-family: 'Karla', sans-serif;
+  font-size: .95rem;
+  color: #A88259;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.kc-hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+/* Trust row onder CTA's */
+.kc-hero__trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.kc-hero__trust-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Karla', sans-serif;
+  font-size: .78rem;
+  font-weight: 700;
+  color: #603A15;
+  background: rgba(255,255,255,.7);
+  border: 1.5px solid #FFB8CD;
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+.kc-hero__trust-pill svg { width: 13px; height: 13px; color: #e75480; flex-shrink: 0; }
+
+/* Rechts: media */
+.kc-hero__media {
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+@media(min-width: 900px) {
+  .kc-hero__media { width: 48%; align-self: flex-end; }
+}
+
+.kc-hero__img {
+  width: 100%;
+  max-width: 520px;
+  display: block;
+  border-radius: 28px 28px 0 0;
+  object-fit: cover;
+  object-position: center top;
+}
+@media(min-width: 900px) {
+  .kc-hero__img { max-width: none; border-radius: 32px 32px 0 0; }
+}
+
 .kc-hero__img-ph {
-  width:100%; height:300px; background:var(--kc-pink-light);
-  border-radius:32px; display:flex; align-items:center; justify-content:center; color:var(--kc-pink);
+  width: 100%;
+  min-height: 320px;
+  background: #FFD6E3;
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #e75480;
+  font-family: 'Karla', sans-serif;
+  font-size: .85rem;
 }
+.kc-hero__img-ph svg { width: 40px; height: 40px; }
+
+/* Welcome-bubble */
 .kc-hero__bubble {
-  position:absolute; top:24px; right:12px;
-  background:#fff; border-radius:20px; padding:14px 18px;
-  box-shadow:0 4px 20px rgba(231,84,128,.18);
-  font-family:var(--kc-head); font-size:1rem;
-  color:var(--kc-ink); max-width:170px; text-align:center; line-height:1.35;
+  position: absolute;
+  top: 20px; right: 0;
+  background: #fff;
+  border-radius: 20px;
+  padding: 14px 18px;
+  box-shadow: 0 4px 20px rgba(231, 84, 128, .18);
+  font-family: 'Lilita One', cursive;
+  font-size: .95rem;
+  color: #3d2209;
+  max-width: 165px;
+  text-align: center;
+  line-height: 1.35;
+  z-index: 2;
 }
-.kc-hero__bubble svg { width:18px; height:18px; color:var(--kc-pink); display:block; margin:4px auto 0; }
-@media(min-width:900px) { .kc-hero__bubble { top:40px; right:0; } }
+.kc-hero__bubble svg { width: 18px; height: 18px; color: #e75480; display: block; margin: 4px auto 0; }
+@media(min-width: 900px) {
+  .kc-hero__bubble { top: 36px; right: 0; }
+}
 
-/* ══ PIJLERS ═══════════════════════════════════════════════ */
-.kc-pijlers { background:#fff; padding:72px 0; border-top:1.5px solid var(--kc-line); }
-.kc-pijlers__grid {
-  display:grid; grid-template-columns:repeat(2,1fr); gap:32px 20px;
-}
-@media(min-width:768px) { .kc-pijlers__grid { grid-template-columns:repeat(4,1fr); } }
-.kc-pijler { display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; }
-.kc-pijler__icon {
-  width:68px; height:68px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center; flex-shrink:0;
-}
-.kc-pijler__icon svg { width:30px; height:30px; }
-.kc-pijler__title { font-family:var(--kc-head); font-size:1rem; color:var(--kc-ink); line-height:1.2; }
-.kc-pijler__desc { font-family:var(--kc-text); font-size:.82rem; color:var(--kc-soft); line-height:1.6; max-width:180px; }
+/* ══ VOORDELEN ══════════════════════════════════════════════ */
 
-/* ══ KWISPELAAR VAN DE MAAND ════════════════════════════════ */
-.kc-motm { background:var(--kc-pink-soft); padding:64px 0; }
-.kc-motm__inner {
-  display:flex; flex-direction:column; gap:40px; align-items:center;
+.kc-benefits {
+  background: #fff;
+  padding: 72px 0;
+  border-top: 1.5px solid #EDE2C9;
 }
-@media(min-width:768px) { .kc-motm__inner { flex-direction:row; align-items:center; gap:60px; } }
-.kc-motm__photo { flex-shrink:0; display:flex; justify-content:center; }
+
+.kc-benefits__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px 20px;
+}
+@media(min-width: 768px) {
+  .kc-benefits__grid { grid-template-columns: repeat(4, 1fr); gap: 32px 24px; }
+}
+
+.kc-benefit-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+}
+.kc-benefit-card__title {
+  font-family: 'Lilita One', cursive;
+  font-size: 1rem;
+  color: #3d2209;
+  line-height: 1.25;
+}
+.kc-benefit-card__desc {
+  font-family: 'Karla', sans-serif;
+  font-size: .82rem;
+  color: #A88259;
+  line-height: 1.6;
+  max-width: 180px;
+  margin: 0;
+}
+
+/* ══ HOND VAN DE MAAND ══════════════════════════════════════ */
+
+.kc-motm {
+  background: #FFF0F5;
+  padding: 64px 0;
+}
+.kc-motm__layout {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+}
+@media(min-width: 768px) {
+  .kc-motm__layout { flex-direction: row; align-items: center; gap: 64px; }
+}
+
+/* Polaroid */
+.kc-motm__photo { flex-shrink: 0; display: flex; justify-content: center; }
 .kc-polaroid {
-  background:#fff; padding:12px 12px 52px;
-  border-radius:4px; box-shadow:0 8px 32px rgba(231,84,128,.18);
-  transform:rotate(-3deg); max-width:220px; position:relative;
+  position: relative;
+  background: #fff;
+  padding: 12px 12px 52px;
+  border-radius: 4px;
+  box-shadow: 0 8px 32px rgba(231, 84, 128, .16);
+  transform: rotate(-3deg);
+  max-width: 220px;
+  transition: transform 300ms ease;
 }
-.kc-polaroid__img { width:100%; border-radius:2px; display:block; aspect-ratio:1; object-fit:cover; }
-.kc-polaroid__label { position:absolute; bottom:10px; left:0; right:0; text-align:center; padding:0 8px; }
-.kc-polaroid__name { font-family:var(--kc-head); font-size:.95rem; color:var(--kc-ink); display:block; }
-.kc-polaroid__caption { font-family:var(--kc-text); font-size:.68rem; color:var(--kc-soft); margin-top:2px; display:block; }
-.kc-polaroid__heart { position:absolute; bottom:-14px; left:12px; display:flex; color:var(--kc-pink); }
-.kc-polaroid__heart svg { width:26px; height:26px; }
-.kc-polaroid--ph {
-  width:200px; height:260px; display:flex; align-items:center; justify-content:center; color:var(--kc-pink-light);
+.kc-polaroid:hover { transform: rotate(-1deg) scale(1.02); }
+.kc-polaroid__img {
+  width: 100%;
+  display: block;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 2px;
 }
-.kc-motm__content { display:flex; flex-direction:column; gap:16px; max-width:480px; }
+.kc-polaroid__ph {
+  width: 196px; height: 196px;
+  background: #FFD6E3;
+  display: flex; align-items: center; justify-content: center;
+  color: #e75480; border-radius: 2px;
+}
+.kc-polaroid__ph svg { width: 40px; height: 40px; }
+.kc-polaroid__label {
+  position: absolute;
+  bottom: 10px; left: 0; right: 0;
+  text-align: center; padding: 0 10px;
+}
+.kc-polaroid__name {
+  display: block;
+  font-family: 'Lilita One', cursive;
+  font-size: 1rem; color: #3d2209;
+}
+.kc-polaroid__sub {
+  display: block;
+  font-family: 'Karla', sans-serif;
+  font-size: .68rem; color: #A88259; margin-top: 2px;
+}
+.kc-polaroid__deco-heart {
+  position: absolute;
+  bottom: -14px; left: 14px;
+  display: flex; color: #e75480;
+}
+.kc-polaroid__deco-heart svg { width: 26px; height: 26px; }
+
+/* Motm rechts */
+.kc-motm__content {
+  display: flex; flex-direction: column;
+  gap: 18px; max-width: 480px;
+}
 .kc-motm__title {
-  font-family:var(--kc-head); font-size:clamp(1.7rem,4vw,2.4rem);
-  color:var(--kc-ink); display:flex; align-items:center; gap:10px; margin:0;
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  color: #3d2209;
+  display: flex; align-items: center; gap: 10px;
+  margin: 0;
 }
-.kc-motm__desc { font-family:var(--kc-text); font-size:.95rem; color:var(--kc-soft); line-height:1.7; margin:0; }
+.kc-motm__desc {
+  font-family: 'Karla', sans-serif;
+  font-size: .95rem; color: #A88259;
+  line-height: 1.7; margin: 0;
+}
 
-/* ══ ZO WERKT HET ═══════════════════════════════════════════ */
-.kc-how { background:var(--kc-cream); padding:72px 0; }
-.kc-how__steps {
-  display:flex; flex-wrap:wrap; justify-content:center; gap:24px 0;
+/* ══ ZO WERKT HET ════════════════════════════════════════════ */
+
+.kc-how {
+  background: #F8EFDD;
+  padding: 72px 0;
 }
-@media(min-width:768px) { .kc-how__steps { flex-wrap:nowrap; } }
+
+.kc-how__flow {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: flex-start;
+}
+@media(min-width: 768px) {
+  .kc-how__flow {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+  }
+}
+
 .kc-step {
-  display:flex; flex-direction:column; align-items:center; text-align:center;
-  gap:12px; flex:1; min-width:120px; position:relative; padding:0 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 110px;
+  position: relative;
+  padding: 0 8px;
 }
+
+/* Desktop: mobiel anders (links uitgelijnd, icoon links) */
+@media(max-width: 767px) {
+  .kc-step {
+    flex-direction: row;
+    text-align: left;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 0;
+  }
+  .kc-step__icon-wrap { flex-shrink: 0; }
+  .kc-step__label,
+  .kc-step__desc { margin: 0; }
+}
+
+.kc-step__icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .kc-step__icon {
-  width:64px; height:64px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
 }
-.kc-step__icon svg { width:28px; height:28px; }
-.kc-step__arrow {
-  position:absolute; top:20px; right:-10px;
-  color:var(--kc-line); display:none; z-index:1;
-}
-@media(min-width:768px) { .kc-step__arrow { display:flex; } }
-.kc-step__num { font-family:var(--kc-head); font-size:.9rem; color:var(--kc-ink); }
-.kc-step__desc { font-family:var(--kc-text); font-size:.78rem; color:var(--kc-soft); line-height:1.55; max-width:130px; }
+.kc-step__icon svg { width: 26px; height: 26px; }
 
-/* ══ NEWSLETTER ══════════════════════════════════════════════ */
-.kc-nl { background:#4d7a30; }
-.kc-nl__inner {
-  display:flex; flex-direction:column; gap:24px; padding:40px var(--kc-gap);
+/* Verbindingspijl tussen stappen (desktop) */
+.kc-step__connector {
+  display: none;
+  position: absolute;
+  top: 50%; right: -20px;
+  transform: translateY(-50%);
+  color: #EDE2C9;
+  z-index: 1;
 }
-@media(min-width:768px) { .kc-nl__inner { flex-direction:row; align-items:center; gap:40px; } }
-.kc-nl__left { display:flex; align-items:flex-start; gap:16px; flex:1; }
-.kc-nl__icon {
-  width:56px; height:56px; border-radius:50%;
-  background:rgba(255,255,255,.15); display:flex; align-items:center; justify-content:center; flex-shrink:0;
-}
-.kc-nl__icon svg { width:26px; height:26px; color:#fff; }
-.kc-nl__title { font-family:var(--kc-head); font-size:1.3rem; color:#fff; display:block; margin-bottom:4px; }
-.kc-nl__desc { font-family:var(--kc-text); font-size:.82rem; color:rgba(255,255,255,.72); line-height:1.55; margin:0; }
-.kc-nl__form { display:flex; gap:8px; flex:1; max-width:480px; }
-.kc-nl__input {
-  flex:1; height:52px; padding:0 20px; border:none; border-radius:999px;
-  font-family:var(--kc-text); font-size:.95rem; color:var(--kc-ink); outline:none;
-}
-.kc-nl__input::placeholder { color:var(--kc-soft); }
+@media(min-width: 768px) { .kc-step__connector { display: flex; } }
+.kc-step__connector svg { width: 22px; height: 22px; }
 
-/* ══ TRUST ═══════════════════════════════════════════════════ */
-.kc-trust { background:var(--kc-cream); border-top:1.5px solid var(--kc-line); }
+.kc-step__label {
+  font-family: 'Lilita One', cursive;
+  font-size: .9rem; color: #3d2209;
+  line-height: 1.25;
+}
+.kc-step__desc {
+  font-family: 'Karla', sans-serif;
+  font-size: .78rem; color: #A88259;
+  line-height: 1.55; max-width: 130px; margin: 0;
+}
+@media(max-width: 767px) { .kc-step__desc { max-width: none; } }
+
+/* ══ INSCHRIJVEN ════════════════════════════════════════════ */
+
+.kc-signup {
+  background: #4d7a30;
+}
+.kc-signup__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+@media(min-width: 768px) {
+  .kc-signup__inner { flex-direction: row; align-items: center; gap: 40px; }
+}
+
+.kc-signup__left {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1;
+}
+.kc-signup__icon {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
+}
+.kc-signup__icon svg { width: 24px; height: 24px; }
+.kc-signup__copy { display: flex; flex-direction: column; gap: 4px; }
+.kc-signup__title {
+  font-family: 'Lilita One', cursive;
+  font-size: 1.3rem; color: #fff; display: block;
+}
+.kc-signup__desc {
+  font-family: 'Karla', sans-serif;
+  font-size: .82rem; color: rgba(255,255,255,.72);
+  line-height: 1.55; margin: 0;
+}
+
+.kc-signup__form {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  max-width: 480px;
+  flex-wrap: wrap;
+}
+@media(min-width: 480px) { .kc-signup__form { flex-wrap: nowrap; } }
+.kc-signup__input {
+  flex: 1;
+  min-width: 0;
+  height: 52px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 999px;
+  font-family: 'Karla', sans-serif;
+  font-size: .95rem;
+  color: #3d2209;
+  outline: none;
+  min-width: 200px;
+}
+.kc-signup__input::placeholder { color: #A88259; }
+.kc-signup__input:focus {
+  box-shadow: 0 0 0 2px rgba(247,160,72,.4);
+}
+
+/* ══ TRUST BAR ════════════════════════════════════════════ */
+
+.kc-trust {
+  background: #F8EFDD;
+  border-top: 1.5px solid #EDE2C9;
+}
 .kc-trust__inner {
-  display:grid; grid-template-columns:repeat(2,1fr);
-  max-width:1280px; margin:0 auto; padding:0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0;
 }
-@media(min-width:768px) { .kc-trust__inner { grid-template-columns:repeat(4,1fr); } }
+@media(min-width: 768px) {
+  .kc-trust__inner { grid-template-columns: repeat(4, 1fr); }
+}
+
 .kc-trust__item {
-  display:flex; align-items:center; gap:14px;
-  padding:22px 20px; border-right:1px solid var(--kc-line);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 20px;
+  border-right: 1px solid #EDE2C9;
 }
-.kc-trust__item:last-child { border-right:none; }
-@media(max-width:767px) {
-  .kc-trust__item:nth-child(2n) { border-right:none; }
-  .kc-trust__item:nth-child(n+3) { border-top:1px solid var(--kc-line); }
+.kc-trust__item:last-child { border-right: none; }
+@media(max-width: 767px) {
+  .kc-trust__item:nth-child(2n) { border-right: none; }
+  .kc-trust__item:nth-child(n+3) { border-top: 1px solid #EDE2C9; }
 }
+
 .kc-trust__icon {
-  width:46px; height:46px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  width: 46px; height: 46px;
 }
-.kc-trust__icon svg { width:20px; height:20px; }
-.kc-trust__text { display:flex; flex-direction:column; gap:2px; }
-.kc-trust__text strong { font-family:var(--kc-head); font-size:.95rem; color:var(--kc-ink); line-height:1.1; }
-.kc-trust__text span { font-family:var(--kc-text); font-size:.78rem; color:var(--kc-soft); line-height:1.3; }
-.kc-trust__stars { display:flex; gap:2px; margin-top:3px; }
-.kc-trust__stars svg { width:12px; height:12px; color:var(--kc-orange); fill:var(--kc-orange); }
+.kc-trust__icon svg { width: 20px; height: 20px; }
+.kc-trust__icon.kc-icon-wrap--green  { background: #e8f5e2; color: #66AA44; }
+.kc-trust__icon.kc-icon-wrap--pink   { background: #fff0f5; color: #e75480; }
+.kc-trust__icon.kc-icon-wrap--orange { background: #fff0e4; color: #F7A048; }
+.kc-trust__icon.kc-icon-wrap--yellow { background: #fffae0; color: #c49000; }
+
+.kc-trust__text {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.kc-trust__text strong {
+  font-family: 'Lilita One', cursive;
+  font-size: .95rem; color: #3d2209; line-height: 1.15;
+}
+.kc-trust__text span {
+  font-family: 'Karla', sans-serif;
+  font-size: .78rem; color: #A88259; line-height: 1.35;
+}
+.kc-trust__stars {
+  display: flex; gap: 2px; margin-top: 3px;
+}
+.kc-trust__stars svg { width: 12px; height: 12px; color: #F7A048; fill: #F7A048; }
 {% endstylesheet %}
 
 {% schema %}
@@ -473,95 +861,229 @@
   "tag": "section",
   "blocks": [
     {
-      "type": "benefit", "name": "Pijler",
+      "type": "benefit",
+      "name": "Voordeel",
       "settings": [
-        { "type":"select","id":"icon","label":"Icoon","default":"heart",
-          "options":[{"value":"heart","label":"Hart"},{"value":"paw","label":"Poot"},
-            {"value":"camera","label":"Camera"},{"value":"gift","label":"Cadeau"},
-            {"value":"star","label":"Ster"},{"value":"shield","label":"Schild"}] },
-        { "type":"select","id":"color","label":"Kleur","default":"pink",
-          "options":[{"value":"pink","label":"Roze"},{"value":"green","label":"Groen"},
-            {"value":"orange","label":"Oranje"},{"value":"purple","label":"Paars"}] },
-        {"type":"text","id":"title","label":"Titel","default":"Vier bijzondere momenten"},
-        {"type":"textarea","id":"description","label":"Beschrijving","default":"Ontvang een verrassing en speciale korting voor de verjaardag van je hond."}
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icoon",
+          "default": "cake",
+          "options": [
+            {"value":"cake","label":"Taart (verjaardag)"},
+            {"value":"paw","label":"Poot (kwispels)"},
+            {"value":"camera","label":"Camera (foto)"},
+            {"value":"gift","label":"Cadeau (verrassing)"},
+            {"value":"sparkles","label":"Sparkles (beloningen)"},
+            {"value":"heart","label":"Hart"},
+            {"value":"star","label":"Ster"},
+            {"value":"shield-check","label":"Schild (veilig)"},
+            {"value":"users","label":"Community"},
+            {"value":"party","label":"Feest"}
+          ]
+        },
+        {
+          "type": "select",
+          "id": "color",
+          "label": "Icoon kleur",
+          "default": "pink",
+          "options": [
+            {"value":"pink","label":"Roze"},
+            {"value":"green","label":"Groen"},
+            {"value":"orange","label":"Oranje"},
+            {"value":"purple","label":"Paars"},
+            {"value":"yellow","label":"Geel"},
+            {"value":"brown","label":"Bruin"}
+          ]
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titel",
+          "default": "Vier bijzondere momenten"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Beschrijving",
+          "default": "Verjaardagsvoordelen voor je hond."
+        }
       ]
     },
     {
-      "type": "step", "name": "Stap",
+      "type": "step",
+      "name": "Stap",
       "settings": [
-        { "type":"select","id":"icon","label":"Icoon","default":"account",
-          "options":[{"value":"account","label":"Account"},{"value":"paw","label":"Poot"},
-            {"value":"gift","label":"Cadeau"},{"value":"heart","label":"Hart"},
-            {"value":"star","label":"Ster"},{"value":"sparkle","label":"Confetti"}] },
-        { "type":"select","id":"color","label":"Kleur","default":"pink",
-          "options":[{"value":"pink","label":"Roze"},{"value":"green","label":"Groen"},
-            {"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"},
-            {"value":"purple","label":"Paars"}] },
-        {"type":"text","id":"number","label":"Stap nummer","default":"1"},
-        {"type":"text","id":"title","label":"Titel","default":"Meld je aan"},
-        {"type":"textarea","id":"description","label":"Beschrijving","default":"Maak een gratis account aan en vul de gegevens van je hond in."}
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icoon",
+          "default": "user-plus",
+          "options": [
+            {"value":"user-plus","label":"Account aanmaken"},
+            {"value":"paw","label":"Poot (kwispels)"},
+            {"value":"gift","label":"Cadeau (beloningen)"},
+            {"value":"party","label":"Feest (vier mee)"},
+            {"value":"heart","label":"Hart (geniet samen)"},
+            {"value":"sparkles","label":"Sparkles"},
+            {"value":"star","label":"Ster"}
+          ]
+        },
+        {
+          "type": "select",
+          "id": "color",
+          "label": "Icoon kleur",
+          "default": "pink",
+          "options": [
+            {"value":"pink","label":"Roze"},
+            {"value":"green","label":"Groen"},
+            {"value":"orange","label":"Oranje"},
+            {"value":"yellow","label":"Geel"},
+            {"value":"purple","label":"Paars"}
+          ]
+        },
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Stap nummer",
+          "default": "1"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Stap titel",
+          "default": "Meld je aan"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Stap beschrijving",
+          "default": "Maak een gratis account aan en vul de gegevens van je hond in."
+        }
       ]
     },
     {
-      "type": "trust", "name": "Trust item",
+      "type": "trust",
+      "name": "Trust item",
       "settings": [
-        { "type":"select","id":"icon","label":"Icoon","default":"paw",
-          "options":[{"value":"paw","label":"Poot"},{"value":"heart","label":"Hart"},
-            {"value":"shield","label":"Schild"},{"value":"gift","label":"Cadeau"},{"value":"star","label":"Ster"}] },
-        { "type":"select","id":"color","label":"Kleur","default":"green",
-          "options":[{"value":"green","label":"Groen"},{"value":"pink","label":"Roze"},
-            {"value":"orange","label":"Oranje"},{"value":"yellow","label":"Geel"}] },
-        {"type":"checkbox","id":"stars","label":"Sterren tonen","default":false},
-        {"type":"text","id":"title","label":"Titel","default":"1.200+"},
-        {"type":"text","id":"subtitle","label":"Subtitel","default":"Blije honden"}
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icoon",
+          "default": "paw",
+          "options": [
+            {"value":"paw","label":"Poot"},
+            {"value":"heart","label":"Hart"},
+            {"value":"shield-check","label":"Schild (veilig)"},
+            {"value":"gift","label":"Cadeau"},
+            {"value":"star","label":"Ster"},
+            {"value":"users","label":"Community"},
+            {"value":"sparkles","label":"Sparkles"}
+          ]
+        },
+        {
+          "type": "select",
+          "id": "color",
+          "label": "Kleur",
+          "default": "green",
+          "options": [
+            {"value":"green","label":"Groen"},
+            {"value":"pink","label":"Roze"},
+            {"value":"orange","label":"Oranje"},
+            {"value":"yellow","label":"Geel"}
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "show_stars",
+          "label": "Sterren tonen",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titel",
+          "default": "1.200+"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitel",
+          "default": "Blije honden"
+        }
       ]
     }
   ],
   "settings": [
-    {"type":"header","content":"Hero"},
-    {"type":"text","id":"eyebrow","label":"Eyebrow","default":"Word lid van de"},
-    {"type":"text","id":"title","label":"Titel","default":"Kwispelclub"},
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    {"type":"text","id":"eyebrow","label":"Eyebrow tekst","default":"Word lid van de"},
+    {"type":"text","id":"title","label":"Paginatitel","default":"Kwispelclub"},
     {"type":"text","id":"tagline","label":"Tagline","default":"De leukste club voor honden (en hun baasjes)"},
-    {"type":"textarea","id":"intro","label":"Intro","default":"Bij de Kwispelclub draait alles om blije honden en verrassingen. Spaar kwispels, ontvang cadeautjes en vier samen alle bijzondere momenten."},
-    {"type":"image_picker","id":"hero_image","label":"Hero afbeelding"},
-    {"type":"text","id":"welcome_bubble","label":"Welcome bubble","default":"Welkom Luna!\nFijn dat je erbij bent!"},
+    {"type":"textarea","id":"intro","label":"Intro tekst","default":"Bij de Kwispelclub draait alles om blije honden en verrassingen. Spaar kwispels, ontvang cadeautjes en vier samen alle bijzondere momenten."},
+    {"type":"image_picker","id":"hero_image","label":"Hero afbeelding (hond met box)"},
+    {"type":"text","id":"bubble_text","label":"Welcome bubble tekst","default":"Welkom Luna!\nFijn dat je erbij bent!"},
     {"type":"text","id":"cta_primary_label","label":"Primaire knop","default":"Word gratis lid"},
     {"type":"url","id":"cta_primary_url","label":"Primaire knop link"},
     {"type":"text","id":"cta_secondary_label","label":"Secundaire knop","default":"Inloggen"},
     {"type":"url","id":"cta_secondary_url","label":"Secundaire knop link"},
-    {"type":"text","id":"proof_score","label":"Score","default":"4,9/5"},
-    {"type":"text","id":"proof_label","label":"Proof label","default":"Meer dan 3.000 blije clubleden"},
-    {"type":"header","content":"Pijlers"},
-    {"type":"text","id":"pijlers_title","label":"Pijlers titel","default":"Dit krijg je als Kwispelclub lid"},
-    {"type":"header","content":"Kwispelaar van de maand"},
+    {
+      "type": "header",
+      "content": "Trust badges onder CTA"
+    },
+    {"type":"text","id":"trust_count","label":"Leden teller","default":"1200+ blije honden"},
+    {"type":"text","id":"trust_score","label":"Beoordeling","default":"4,9/5 beoordeling"},
+    {"type":"text","id":"trust_free","label":"Gratis badge","default":"Gratis lidmaatschap"},
+    {
+      "type": "header",
+      "content": "Voordelen sectie"
+    },
+    {"type":"text","id":"benefits_title","label":"Voordelen titel","default":"Dit krijg je als Kwispelclub lid"},
+    {
+      "type": "header",
+      "content": "Hond van de maand"
+    },
     {"type":"text","id":"motm_title","label":"Titel","default":"Kwispelaar van de maand"},
     {"type":"textarea","id":"motm_desc","label":"Beschrijving","default":"Iedere maand zetten we een geweldige hond in het zonnetje. Doe mee en misschien is jouw hond de volgende!"},
-    {"type":"image_picker","id":"motm_image","label":"Foto van de maand"},
-    {"type":"text","id":"motm_dog_name","label":"Naam hond","default":"Bobby"},
+    {"type":"image_picker","id":"motm_image","label":"Foto van de maand hond"},
+    {"type":"text","id":"motm_name","label":"Naam van de hond","default":"Bobby"},
     {"type":"text","id":"motm_cta_label","label":"CTA tekst","default":"Deel de foto van jouw hond"},
     {"type":"url","id":"motm_cta_url","label":"CTA link"},
-    {"type":"header","content":"Zo werkt het"},
+    {
+      "type": "header",
+      "content": "Zo werkt het"
+    },
     {"type":"text","id":"how_title","label":"Titel","default":"Zo werkt het"},
-    {"type":"header","content":"Newsletter"},
+    {
+      "type": "header",
+      "content": "Inschrijven"
+    },
     {"type":"text","id":"nl_title","label":"Titel","default":"Mis geen enkele verrassing!"},
     {"type":"textarea","id":"nl_desc","label":"Beschrijving","default":"Blijf als eerste op de hoogte van nieuwe boxen, exclusieve acties en kwispelnieuws."},
-    {"type":"text","id":"nl_placeholder","label":"Placeholder","default":"Vul je e-mailadres in"},
+    {"type":"text","id":"nl_placeholder","label":"E-mail placeholder","default":"Vul je e-mailadres in"},
     {"type":"text","id":"nl_button","label":"Knoptekst","default":"Aanmelden"}
   ],
-  "presets": [{"name":"Kwispelclub pagina","blocks":[
-    {"type":"benefit","settings":{"icon":"heart","color":"pink","title":"Vier bijzondere momenten","description":"Ontvang een verrassing en speciale korting voor de verjaardag van je hond."}},
-    {"type":"benefit","settings":{"icon":"paw","color":"green","title":"Spaar kwispels","description":"Verdien kwispels met bestellingen, reviews en meer. Wissel ze in voor leuke beloningen!"}},
-    {"type":"benefit","settings":{"icon":"camera","color":"orange","title":"Laat je hond stralen","description":"Deel foto's en maak kans om 'Kwispelaar van de maand' te worden!"}},
-    {"type":"benefit","settings":{"icon":"gift","color":"purple","title":"Exclusieve verrassingen","description":"Krijg als eerste toegang tot nieuwe boxen, speciale edities en exclusieve acties."}},
-    {"type":"step","settings":{"icon":"account","color":"pink","number":"1","title":"Meld je aan","description":"Maak een gratis account aan en vul de gegevens van je hond in."}},
-    {"type":"step","settings":{"icon":"paw","color":"green","number":"2","title":"Verdien kwispels","description":"Spaar kwispels met aankopen, reviews en foto's."}},
-    {"type":"step","settings":{"icon":"gift","color":"orange","number":"3","title":"Ontvang beloningen","description":"Wissel kwispels in voor korting, gratis speeltjes en verrassingen."}},
-    {"type":"step","settings":{"icon":"sparkle","color":"yellow","number":"4","title":"Vier mee","description":"Ontvang extra's voor de verjaardag en speciale momenten."}},
-    {"type":"step","settings":{"icon":"heart","color":"pink","number":"5","title":"Geniet samen","description":"Maak herinneringen en geluksmomentjes met jouw hond."}},
-    {"type":"trust","settings":{"icon":"paw","color":"green","title":"Meer dan 1.200+","subtitle":"Blije honden"}},
-    {"type":"trust","settings":{"icon":"heart","color":"pink","stars":true,"title":"4,9/5","subtitle":"Uitstekend beoordeeld"}},
-    {"type":"trust","settings":{"icon":"gift","color":"orange","title":"Met liefde","subtitle":"samengesteld"}},
-    {"type":"trust","settings":{"icon":"shield","color":"green","title":"100%","subtitle":"tevredenheidsgarantie"}}
-  ]}]
+  "presets": [
+    {
+      "name": "Kwispelclub pagina",
+      "blocks": [
+        {"type":"benefit","settings":{"icon":"cake","color":"pink","title":"Vier bijzondere momenten","description":"Ontvang een verrassing en speciale korting voor de verjaardag van je hond."}},
+        {"type":"benefit","settings":{"icon":"paw","color":"green","title":"Spaar kwispels","description":"Verdien kwispels met bestellingen, reviews en meer. Wissel ze in voor leuke beloningen!"}},
+        {"type":"benefit","settings":{"icon":"camera","color":"orange","title":"Laat je hond stralen","description":"Deel foto's en maak kans om Kwispelaar van de maand te worden!"}},
+        {"type":"benefit","settings":{"icon":"gift","color":"purple","title":"Exclusieve verrassingen","description":"Krijg als eerste toegang tot nieuwe boxen, speciale edities en exclusieve acties."}},
+        {"type":"step","settings":{"icon":"user-plus","color":"pink","number":"1","title":"Meld je aan","description":"Maak een gratis account aan en vul de gegevens van je hond in."}},
+        {"type":"step","settings":{"icon":"paw","color":"green","number":"2","title":"Verdien kwispels","description":"Spaar kwispels met aankopen, reviews en foto's."}},
+        {"type":"step","settings":{"icon":"gift","color":"orange","number":"3","title":"Ontvang beloningen","description":"Wissel kwispels in voor korting, gratis speeltjes en verrassingen."}},
+        {"type":"step","settings":{"icon":"party","color":"yellow","number":"4","title":"Vier mee","description":"Ontvang extra's voor de verjaardag en speciale momenten."}},
+        {"type":"step","settings":{"icon":"heart","color":"pink","number":"5","title":"Geniet samen","description":"Maak herinneringen en geluksmomentjes met jouw hond."}},
+        {"type":"trust","settings":{"icon":"users","color":"green","show_stars":false,"title":"Meer dan 1.200+","subtitle":"Blije honden"}},
+        {"type":"trust","settings":{"icon":"star","color":"orange","show_stars":true,"title":"4,9/5","subtitle":"Uitstekend beoordeeld"}},
+        {"type":"trust","settings":{"icon":"heart","color":"pink","show_stars":false,"title":"Met liefde","subtitle":"samengesteld"}},
+        {"type":"trust","settings":{"icon":"shield-check","color":"green","show_stars":false,"title":"Veilig &","subtitle":"vertrouwd"}}
+      ]
+    }
+  ]
 }
 {% endschema %}
