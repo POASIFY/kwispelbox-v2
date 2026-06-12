@@ -8,7 +8,7 @@
 {%- assign progress_pct = cart_total | times: 100 | divided_by: free_threshold -%}
 {%- if progress_pct > 100 -%}{%- assign progress_pct = 100 -%}{%- endif -%}
 
-<div class="cart-page" data-cart-section>
+<div class="cart-page" data-cart-section data-free-threshold="{{ section.settings.free_shipping_threshold | times: 100 }}">
 
   <!-- ══ KOPTEKST ════════════════════════════════════════ -->
   <div class="cart-page__header">
@@ -375,10 +375,17 @@
           <div class="cart-payment-icons">
             <p class="cart-payment-icons__label">{{ section.settings.payment_label }}</p>
             <div class="cart-payment-icons__list">
-              {%- assign methods = shop.enabled_payment_types -%}
-              {%- for method in methods -%}
+              {%- assign nl_methods = 'ideal,klarna,paypal,visa,master,apple_pay,bancontact' | split: ',' -%}
+              {%- assign shown = false -%}
+              {%- for method in shop.enabled_payment_types -%}
+                {%- assign shown = true -%}
                 {{ method | payment_type_img_url | image_tag: method, class: 'cart-payment-icons__icon' }}
               {%- endfor -%}
+              {%- unless shown -%}
+                {%- for method in nl_methods -%}
+                  {{ method | payment_type_img_url | image_tag: method, class: 'cart-payment-icons__icon' }}
+                {%- endfor -%}
+              {%- endunless -%}
             </div>
           </div>
         {%- endif -%}
@@ -497,12 +504,12 @@
 
 .cart-item__img-link { flex-shrink: 0; }
 .cart-item__img {
-  width: 100px; height: 100px;
-  border-radius: 14px;
+  width: 110px; height: 110px;
+  border-radius: 16px;
   object-fit: cover; display: block;
 }
 .cart-item__img-ph {
-  width: 100px; height: 100px;
+  width: 110px; height: 110px;
   border-radius: 14px; background: #F8EFDD;
   display: flex; align-items: center; justify-content: center; color: #EDE2C9;
 }
@@ -597,9 +604,9 @@
 }
 @media(min-width: 600px) { .cart-trust-bar { grid-template-columns: repeat(4, 1fr); } }
 .cart-trust-bar__item {
-  display: flex; align-items: center; gap: 10px;
-  background: #fff; border-radius: 14px;
-  padding: 14px; border: 1.5px solid #EDE2C9;
+  display: flex; align-items: center; gap: 12px;
+  background: #fff; border-radius: 16px;
+  padding: 16px; border: 1.5px solid #EDE2C9;
 }
 .cart-trust-bar__icon {
   width: 40px; height: 40px; border-radius: 50%;
