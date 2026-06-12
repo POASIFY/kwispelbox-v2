@@ -1,42 +1,45 @@
-<section class="reviews">
+<section class="rv">
 
-  <!-- Header ───────────────────────────────────────────── -->
-  <div class="reviews__header">
+  <!-- ── HEADER ──────────────────────────────────────────── -->
+  <div class="rv__header">
     {%- if section.settings.eyebrow != blank -%}
-      <p class="reviews__eyebrow">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+      <p class="rv__eyebrow">
+        {{- 'icon-heart.svg' | inline_asset_content -}}
         {{ section.settings.eyebrow }}
       </p>
     {%- endif -%}
-    <h2 class="reviews__title">{{ section.settings.title }}</h2>
+    <h2 class="rv__title">{{ section.settings.title }}</h2>
     {%- if section.settings.subtitle_plain != blank -%}
-      <p class="reviews__sub">
+      <p class="rv__sub">
         {{ section.settings.subtitle_plain }}
         {%- if section.settings.subtitle_accent != blank -%}
-          <span class="reviews__sub-accent">{{ section.settings.subtitle_accent }}</span>
+          <span class="rv__sub-accent">{{ section.settings.subtitle_accent }}</span>
         {%- endif -%}
         {{ section.settings.subtitle_tail }}
       </p>
     {%- endif -%}
   </div>
 
-  <!-- Review kaarten ───────────────────────────────────── -->
+  <!-- ── REVIEW KAARTEN ──────────────────────────────────── -->
   {%- assign review_blocks = section.blocks | where: 'type', 'review' -%}
   {%- if review_blocks.size > 0 -%}
-    <div class="reviews__grid">
+    <div class="rv__grid">
       {%- for block in review_blocks -%}
         <article class="rcard" {{ block.shopify_attributes }}>
 
-          <!-- Kaart top: auteur -->
+          <!-- Kaart top: avatar + info + sterren -->
           <div class="rcard__top">
 
-            <!-- Avatar -->
+            <!-- Circulaire avatar -->
             <div class="rcard__avatar-wrap">
               {%- if block.settings.avatar != blank -%}
                 <img
-                  src="{{ block.settings.avatar | image_url: width: 120 }}"
-                  alt="{{ block.settings.dog_name | escape }}"
-                  width="68" height="68"
+                  src="{{ block.settings.avatar | image_url: width: 220 }}"
+                  srcset="{{ block.settings.avatar | image_url: width: 110 }} 110w,
+                          {{ block.settings.avatar | image_url: width: 220 }} 220w"
+                  sizes="110px"
+                  alt="{{ block.settings.dog_name | default: 'Blije hond' | escape }}"
+                  width="110" height="110"
                   loading="lazy"
                   class="rcard__avatar"
                 >
@@ -45,14 +48,10 @@
                   {{- 'icon-paw.svg' | inline_asset_content -}}
                 </div>
               {%- endif -%}
-              <!-- Verified icoon op avatar -->
-              <span class="rcard__verified-badge" aria-label="Geverifieerde aankoop">
-                {{- 'icon-check-circle.svg' | inline_asset_content -}}
-              </span>
             </div>
 
-            <!-- Naam + ras + box -->
-            <div class="rcard__author">
+            <!-- Naam · ras · box · sterren -->
+            <div class="rcard__info">
               <strong class="rcard__dog-name">{{ block.settings.dog_name }}</strong>
               {%- if block.settings.breed != blank -%}
                 <span class="rcard__breed">{{ block.settings.breed }}</span>
@@ -62,85 +61,58 @@
                   {{ block.settings.box_type }}
                 </span>
               {%- endif -%}
+              <div class="rcard__stars" aria-label="{{ block.settings.stars }} sterren">
+                {%- for i in (1..block.settings.stars) -%}
+                  {{- 'icon-star.svg' | inline_asset_content -}}
+                {%- endfor -%}
+                <span class="rcard__score">{{ block.settings.stars }}/5</span>
+              </div>
             </div>
 
           </div>
 
-          <!-- Sterren -->
-          <div class="rcard__stars" aria-label="{{ block.settings.stars }} sterren">
-            {%- for i in (1..block.settings.stars) -%}
-              {{- 'icon-star.svg' | inline_asset_content -}}
-            {%- endfor -%}
-          </div>
-
-          <!-- Review tekst -->
+          <!-- Quote + review body -->
           <div class="rcard__body">
+            <span class="rcard__open-quote" aria-hidden="true">&ldquo;</span>
             {%- if block.settings.review_title != blank -%}
               <h3 class="rcard__review-title">{{ block.settings.review_title }}</h3>
             {%- endif -%}
-            <p class="rcard__review-text">{{ block.settings.review_text }}</p>
-          </div>
+            <p class="rcard__text">{{ block.settings.review_text }}</p>
 
-          <!-- Foto onderaan -->
-          {%- if block.settings.photo != blank -%}
-            <div class="rcard__photo-wrap">
-              <img
-                src="{{ block.settings.photo | image_url: width: 600 }}"
-                srcset="{{ block.settings.photo | image_url: width: 400 }} 400w,
-                        {{ block.settings.photo | image_url: width: 600 }} 600w"
-                sizes="(max-width: 767px) 90vw, 32vw"
-                alt="{{ block.settings.dog_name | escape }} met Kwispelbox"
-                width="600" height="400"
-                loading="lazy"
-                class="rcard__photo"
-              >
-              <!-- Geverifieerd label over foto -->
-              <div class="rcard__photo-badge">
+            <!-- Geverifieerde aankoop -->
+            {%- if block.settings.verified -%}
+              <div class="rcard__verified">
                 {{- 'icon-check-circle.svg' | inline_asset_content -}}
                 Geverifieerde aankoop
               </div>
-              <!-- Hart rechtsonder -->
-              <button class="rcard__heart" type="button" aria-label="Vind ik leuk">
-                {{- 'icon-heart.svg' | inline_asset_content -}}
-              </button>
-            </div>
-          {%- endif -%}
+            {%- endif -%}
+
+            <!-- Decoratief sluitend aanhalingsteken -->
+            <span class="rcard__close-quote" aria-hidden="true">&rdquo;</span>
+          </div>
 
         </article>
       {%- endfor -%}
     </div>
   {%- endif -%}
 
-  <!-- Trust strip ──────────────────────────────────────── -->  {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
+  <!-- ── TRUST STRIP ────────────────────────────────────── -->
+  {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
   {%- if trust_blocks.size > 0 -%}
-    <div class="reviews__trust">
-      <div class="reviews__trust-inner">
+    <div class="rv__trust">
+      <div class="rv__trust-inner">
         {%- for block in trust_blocks -%}
-          <div class="reviews__trust-item reviews__trust-item--{{ block.settings.type | default: 'icon' }}" {{ block.shopify_attributes }}>
-            {%- if block.settings.avatar_1 != blank or block.settings.avatar_2 != blank or block.settings.avatar_3 != blank -%}
-              <div class="reviews__trust-avatars">
-                {%- if block.settings.avatar_1 != blank -%}
-                  <img src="{{ block.settings.avatar_1 | image_url: width: 80 }}" alt="" width="40" height="40" loading="lazy" class="reviews__trust-avatar">
-                {%- endif -%}
-                {%- if block.settings.avatar_2 != blank -%}
-                  <img src="{{ block.settings.avatar_2 | image_url: width: 80 }}" alt="" width="40" height="40" loading="lazy" class="reviews__trust-avatar">
-                {%- endif -%}
-                {%- if block.settings.avatar_3 != blank -%}
-                  <img src="{{ block.settings.avatar_3 | image_url: width: 80 }}" alt="" width="40" height="40" loading="lazy" class="reviews__trust-avatar">
-                {%- endif -%}
-              </div>
-            {%- else -%}
-              <span class="reviews__trust-icon reviews__trust-icon--{{ block.settings.color }}" aria-hidden="true">
-                {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
-              </span>
-            {%- endif -%}
-            <div class="reviews__trust-text">
+          <div class="rv__trust-item" {{ block.shopify_attributes }}>
+            <span class="rv__trust-icon rv__trust-icon--{{ block.settings.color }}" aria-hidden="true">
+              {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+            </span>
+            <div class="rv__trust-text">
               <strong>{{ block.settings.title }}</strong>
               {%- if block.settings.subtitle != blank -%}
                 <span>{{ block.settings.subtitle }}</span>
               {%- endif -%}
               {%- if block.settings.stars_line != blank -%}
-                <span class="reviews__trust-stars" aria-hidden="true">
+                <span class="rv__trust-stars" aria-hidden="true">
                   {%- for i in (1..5) -%}{{- 'icon-star.svg' | inline_asset_content -}}{%- endfor -%}
                   {{ block.settings.stars_line }}
                 </span>
@@ -155,281 +127,247 @@
 </section>
 
 {% stylesheet %}
-/* ── Sectie ─────────────────────────────────────────────── */
-.reviews {
-  background: #F8EFDD;
+/* ════════════════════════════════════════════════════════
+   REVIEWS SECTIE
+   ════════════════════════════════════════════════════════ */
+.rv {
+  background: #FBF6EC;
   padding: 80px 0 0;
   overflow: hidden;
 }
 
 /* ── Header ─────────────────────────────────────────────── */
-.reviews__header {
+.rv__header {
   text-align: center;
   padding: 0 20px;
   margin-bottom: 52px;
   display: flex; flex-direction: column;
   align-items: center; gap: 12px;
 }
-.reviews__eyebrow {
-  display: inline-flex; align-items: center; gap: 7px;
+.rv__eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
   font-family: 'Karla', sans-serif;
-  font-size: .8rem; font-weight: 800;
-  letter-spacing: .08em; text-transform: uppercase;
+  font-size: .78rem; font-weight: 800;
+  letter-spacing: .1em; text-transform: uppercase;
   color: #e75480;
 }
-.reviews__title {
+.rv__eyebrow svg { width: 13px; height: 13px; }
+.rv__title {
   font-family: 'Lilita One', cursive;
   font-size: clamp(2.2rem, 5vw, 3.5rem);
-  color: #3d2209; line-height: 1;
+  color: #3d2209;
+  line-height: 1.05;
 }
-.reviews__sub {
+.rv__sub {
   font-family: 'Karla', sans-serif;
-  font-size: 1.05rem; color: #A88259;
-  line-height: 1.65; max-width: 56ch;
+  font-size: 1rem; color: #A88259;
+  max-width: 560px; line-height: 1.55;
+  text-align: center;
 }
-.reviews__sub-accent { color: #F7A048; font-weight: 800; }
+.rv__sub-accent {
+  color: #F7A048; font-weight: 800;
+}
 
-/* ── Grid ───────────────────────────────────────────────── */
-.reviews__grid {
-  max-width: 1280px; margin: 0 auto;
-  padding: 0 20px 0;
-  display: grid;
-  grid-template-columns: 1fr;
+/* ── Grid ────────────────────────────────────────────────── */
+.rv__grid {
+  display: flex;
+  flex-direction: column;
   gap: 20px;
+  padding: 0 20px;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 @media(min-width: 768px) {
-  .reviews__grid {
+  .rv__grid {
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
-    padding: 0 40px 0;
+    padding: 0 60px;
+    align-items: stretch;
   }
 }
 
-/* ── Review kaart ───────────────────────────────────────── */
+/* ── Kaart ────────────────────────────────────────────────── */
 .rcard {
   background: #fff;
   border-radius: 24px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 4px 20px rgba(96,58,21,.07);
+  position: relative;
   overflow: hidden;
-  border: 1.5px solid #EDE2C9;
-  display: flex; flex-direction: column;
-  transition: transform 250ms cubic-bezier(.34,1.56,.64,1),
-              box-shadow 250ms ease;
-}
-.rcard:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 48px rgba(96,58,21,.12);
 }
 
-/* ── Auteur blok ────────────────────────────────────────── */
+/* ── Kaart top: avatar + info ──────────────────────────── */
 .rcard__top {
-  display: flex; align-items: flex-start;
-  gap: 14px; padding: 20px 20px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
 }
 
-/* Avatar: groot en prominent */
-.rcard__avatar-wrap { position: relative; flex-shrink: 0; }
+/* Circulaire avatar */
+.rcard__avatar-wrap { flex-shrink: 0; }
 .rcard__avatar {
-  width: 80px; height: 80px;
-  border-radius: 50%; object-fit: cover;
-  border: 3px solid #F8EFDD;
+  width: 110px; height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
   display: block;
+  border: 3px solid #F8EFDD;
+  box-shadow: 0 4px 12px rgba(96,58,21,.12);
 }
 .rcard__avatar-ph {
-  width: 80px; height: 80px;
-  border-radius: 50%; background: #EDE2C9;
+  width: 110px; height: 110px;
+  border-radius: 50%;
+  background: #F8EFDD;
   display: flex; align-items: center; justify-content: center;
-  color: #A88259;
+  color: #DAC9A1;
 }
-.rcard__avatar-ph svg { width: 32px; height: 32px; }
+.rcard__avatar-ph svg { width: 40px; height: 40px; }
 
-/* Verified badge op avatar */
-.rcard__verified-badge {
-  position: absolute; bottom: 0; right: 0;
-  width: 24px; height: 24px;
-  background: #66AA44; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  border: 2.5px solid #fff; color: #fff;
-}
-.rcard__verified-badge svg { width: 12px; height: 12px; }
-
-/* Naam + ras + box badge */
-.rcard__author {
+/* Info rechts van avatar */
+.rcard__info {
   display: flex; flex-direction: column;
-  gap: 4px; padding-top: 4px; flex: 1;
+  gap: 5px; min-width: 0;
+  padding-top: 4px;
 }
 .rcard__dog-name {
   font-family: 'Lilita One', cursive;
-  font-size: 1.2rem; color: #3d2209; line-height: 1;
+  font-size: 1.35rem; color: #3d2209;
+  line-height: 1;
 }
 .rcard__breed {
   font-family: 'Karla', sans-serif;
-  font-size: .82rem; color: #A88259;
+  font-size: .85rem; color: #A88259;
 }
 .rcard__box {
   display: inline-flex; align-items: center;
   font-family: 'Karla', sans-serif;
-  font-size: .75rem; font-weight: 800;
-  padding: 4px 12px; border-radius: 999px;
-  align-self: flex-start; margin-top: 2px;
+  font-size: .78rem; font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 999px;
+  width: fit-content;
 }
-.rcard__box--pink   { background: #ffe0ec; color: #c0394b; }
-.rcard__box--orange { background: #ffe5cc; color: #b86a1e; }
-.rcard__box--green  { background: #d4f0c8; color: #2d7a1a; }
+.rcard__box--orange { background: #FFF0E4; color: #d9823a; }
+.rcard__box--green  { background: #E8F5E2; color: #2d7a1a; }
+.rcard__box--pink   { background: #FFF0F5; color: #c0394b; }
 
-/* ── Sterren ─────────────────────────────────────────────── */
 .rcard__stars {
-  display: flex; gap: 3px;
-  padding: 16px 20px 0;
-  color: #F7A048;
+  display: flex; align-items: center; gap: 3px;
+  margin-top: 2px;
 }
-.rcard__stars svg { width: 22px; height: 22px; }
+.rcard__stars svg {
+  width: 16px; height: 16px;
+  color: #F7A048; fill: #F7A048;
+}
+.rcard__score {
+  font-family: 'Karla', sans-serif;
+  font-size: .82rem; font-weight: 800;
+  color: #A88259; margin-left: 4px;
+}
 
-/* ── Review tekst ────────────────────────────────────────── */
+/* ── Review body ──────────────────────────────────────── */
 .rcard__body {
-  padding: 10px 20px 20px;
-  flex: 1;
-}
-.rcard__review-title {
-  font-family: 'Lilita One', cursive;
-  font-size: 1.05rem; color: #3d2209;
-  line-height: 1.25; margin-bottom: 8px;
-}
-.rcard__review-text {
-  font-family: 'Karla', sans-serif;
-  font-size: .875rem; color: #A88259; line-height: 1.7;
-}
-
-/* ── Grote foto onderaan ─────────────────────────────────── */
-.rcard__photo-wrap {
-  position: relative; flex-shrink: 0;
-  overflow: hidden; margin-top: auto;
-}
-.rcard__photo {
-  width: 100%; aspect-ratio: 3/2;
-  object-fit: cover; display: block;
-  transition: transform 400ms ease;
-}
-.rcard:hover .rcard__photo { transform: scale(1.04); }
-
-/* Geverifieerde aankoop badge */
-.rcard__photo-badge {
-  position: absolute; bottom: 12px; left: 12px;
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: 'Karla', sans-serif;
-  font-size: .72rem; font-weight: 700; color: #fff;
-  background: rgba(40,120,40,.75);
-  backdrop-filter: blur(6px);
-  border-radius: 999px; padding: 6px 14px;
-  border: 1px solid rgba(255,255,255,.25);
-}
-.rcard__photo-badge svg { width: 13px; height: 13px; color: #8aff8a; flex-shrink: 0; }
-
-/* Hart knop */
-.rcard__heart {
-  position: absolute; bottom: 12px; right: 12px;
-  width: 38px; height: 38px;
-  background: rgba(255,255,255,.88);
-  border: none; border-radius: 50%; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  color: #e75480;
-  transition: transform 200ms cubic-bezier(.34,1.56,.64,1);
-  box-shadow: 0 2px 8px rgba(0,0,0,.1);
-}
-.rcard__heart:hover { transform: scale(1.2); }
-.rcard__heart svg { width: 16px; height: 16px; }
-
-/* ── Trust strip ─────────────────────────────────────────── */
-.reviews__trust {
-  background: #fff;
-  border-top: 1.5px solid #EDE2C9;
-  margin-top: 60px;
+  display: flex; flex-direction: column;
+  gap: 10px; flex: 1;
   position: relative;
 }
 
-/* Decoratief hartje rechts */
-.reviews__trust::after {
-  content: '';
-  position: absolute;
-  top: 50%; right: 24px;
-  transform: translateY(-50%);
-  width: 20px; height: 20px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFB8CD'%3E%3Cpath d='M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z'/%3E%3C/svg%3E") center/contain no-repeat;
-  pointer-events: none;
+/* Opening aanhalingsteken */
+.rcard__open-quote {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 3.8rem; line-height: .8;
+  color: #e75480; font-weight: 700;
+  display: block;
+  margin-bottom: -4px;
 }
 
-.reviews__trust-inner {
-  max-width: 1280px; margin: 0 auto;
-  padding: 0 20px;
+.rcard__review-title {
+  font-family: 'Lilita One', cursive;
+  font-size: 1.05rem;
+  color: #e75480;
+  line-height: 1.25;
+  margin: 0;
+}
+.rcard__text {
+  font-family: 'Karla', sans-serif;
+  font-size: .9rem; color: #603A15;
+  line-height: 1.6; margin: 0;
+}
+
+/* Geverifieerde aankoop */
+.rcard__verified {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Karla', sans-serif;
+  font-size: .8rem; font-weight: 700;
+  color: #66AA44; margin-top: 4px;
+}
+.rcard__verified svg { width: 15px; height: 15px; color: #66AA44; }
+
+/* Decoratief sluitend aanhalingsteken (rechtsonder) */
+.rcard__close-quote {
+  position: absolute;
+  bottom: -12px; right: 4px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 7rem; line-height: 1;
+  color: rgba(231,84,128,.08);
+  font-weight: 700;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Trust strip ─────────────────────────────────────── */
+.rv__trust {
+  background: #F8EFDD;
+  border-top: 1.5px solid #EDE2C9;
+  margin-top: 60px;
+}
+.rv__trust-inner {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  max-width: 1280px; margin: 0 auto;
+  padding: 0;
 }
 @media(min-width: 768px) {
-  .reviews__trust-inner {
-    grid-template-columns: repeat(4, 1fr);
-    padding: 0 60px;
-  }
+  .rv__trust-inner { grid-template-columns: repeat(4, 1fr); }
 }
-
-/* Trust item: grote teller + icon */
-.reviews__trust-item {
+.rv__trust-item {
   display: flex; align-items: center; gap: 14px;
-  padding: 24px 16px;
+  padding: 22px 20px;
   border-right: 1px solid #EDE2C9;
 }
-.reviews__trust-item:nth-child(2n) { border-right: none; }
-.reviews__trust-item:last-child    { border-right: none; }
-@media(min-width: 768px) {
-  .reviews__trust-item:nth-child(2n) { border-right: 1px solid #EDE2C9; }
-  .reviews__trust-item:last-child    { border-right: none; }
+.rv__trust-item:last-child { border-right: none; }
+@media(max-width:767px) {
+  .rv__trust-item:nth-child(2n) { border-right: none; }
+  .rv__trust-item:nth-child(n+3) { border-top: 1px solid #EDE2C9; }
 }
-
-.reviews__trust-icon {
-  width: 52px; height: 52px; border-radius: 50%;
+.rv__trust-icon {
+  width: 48px; height: 48px;
+  border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.reviews__trust-icon svg { width: 24px; height: 24px; }
-.reviews__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
-.reviews__trust-icon--pink   { background: #fff0f5; color: #e75480; }
-.reviews__trust-icon--orange { background: #fff0e4; color: #F7A048; }
-.reviews__trust-icon--yellow { background: #fffae0; color: #c49000; }
-
-.reviews__trust-text {
+.rv__trust-icon svg { width: 22px; height: 22px; }
+.rv__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
+.rv__trust-icon--pink   { background: #fff0f5; color: #e75480; }
+.rv__trust-icon--orange { background: #fff0e4; color: #F7A048; }
+.rv__trust-icon--yellow { background: #fffae0; color: #c49000; }
+.rv__trust-text {
   display: flex; flex-direction: column; gap: 2px;
 }
-.reviews__trust-text strong {
+.rv__trust-text strong {
   font-family: 'Lilita One', cursive;
-  font-size: 1.4rem; color: #3d2209; line-height: 1;
+  font-size: 1rem; color: #3d2209; line-height: 1.1;
 }
-.reviews__trust-text span {
+.rv__trust-text span {
   font-family: 'Karla', sans-serif;
-  font-size: .78rem; color: #A88259; line-height: 1.4;
+  font-size: .8rem; color: #A88259; line-height: 1.35;
 }
-.reviews__trust-stars {
-  display: flex; align-items: center; gap: 2px; margin-top: 3px;
+.rv__trust-stars {
+  display: flex; align-items: center; gap: 3px; margin-top: 3px;
 }
-.reviews__trust-stars svg { width: 12px; height: 12px; color: #F7A048; }
-.reviews__trust-stars-label { font-size: .72rem; color: #A88259; margin-left: 3px; }
-
-/* ── Trust avatars (hondenfoto's) ───────────────────────── */
-.reviews__trust-avatars {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-.reviews__trust-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #fff;
-  box-shadow: 0 2px 8px rgba(96,58,21,.12);
-  margin-left: -10px;
-}
-.reviews__trust-avatars .reviews__trust-avatar:first-child {
-  margin-left: 0;
-}
+.rv__trust-stars svg { width: 13px; height: 13px; color: #F7A048; fill: #F7A048; }
 {% endstylesheet %}
-
 
 {% schema %}
 {
@@ -440,25 +378,24 @@
       "type": "review",
       "name": "Review",
       "settings": [
-        {"type":"image_picker","id":"avatar",       "label":"Hondenfoto (avatar)"},
-        {"type":"text",        "id":"dog_name",     "label":"Naam hond",  "default":"Luna"},
-        {"type":"text",        "id":"breed",        "label":"Ras",        "default":"Golden Retriever"},
-        {"type":"text",        "id":"box_type",     "label":"Box type",   "default":"Happy Box"},
+        {"type":"image_picker","id":"avatar",        "label":"Hondenfoto (rond)"},
+        {"type":"text",        "id":"dog_name",      "label":"Naam hond",          "default":"Luna"},
+        {"type":"text",        "id":"breed",         "label":"Ras",                "default":"Golden Retriever"},
+        {"type":"text",        "id":"box_type",      "label":"Box type",           "default":"Happy Box"},
         {
-          "type":"select","id":"box_color","label":"Box kleur","default":"pink",
+          "type":"select","id":"box_color","label":"Box kleur","default":"orange",
           "options":[
-            {"value":"pink","label":"Roze"},
             {"value":"orange","label":"Oranje"},
-            {"value":"green","label":"Groen"}
+            {"value":"green","label":"Groen"},
+            {"value":"pink","label":"Roze"}
           ]
         },
         {
-          "type":"range","id":"stars","label":"Sterren",
-          "min":1,"max":5,"step":1,"default":5
+          "type":"range","id":"stars","label":"Sterren","min":1,"max":5,"step":1,"default":5
         },
-        {"type":"text",        "id":"review_title", "label":"Review titel","default":"Elke maand weer een feestje!"},
-        {"type":"textarea",    "id":"review_text",  "label":"Review tekst","default":"Luna wordt altijd z\u00f3 enthousiast als de Kwispelbox binnenkomt. De speeltjes zijn stevig en superleuk, en ze is dol op de knuffels. Echt een aanrader!"},
-        {"type":"image_picker","id":"photo",        "label":"Grote hondenfoto"}
+        {"type":"text",    "id":"review_title","label":"Review titel",   "default":"Elke maand weer een feestje!"},
+        {"type":"textarea","id":"review_text", "label":"Review tekst",   "default":"Luna wordt altijd zó enthousiast als de Kwispelbox binnenkomt. De speeltjes zijn stevig en superleuk!"},
+        {"type":"checkbox","id":"verified",    "label":"Geverifieerde aankoop","default":true}
       ]
     },
     {
@@ -469,8 +406,9 @@
           "type":"select","id":"icon","label":"Icoon","default":"paw",
           "options":[
             {"value":"paw","label":"Poot"},{"value":"heart","label":"Hart"},
-            {"value":"gift","label":"Cadeau"},{"value":"shield","label":"Schild"},
-            {"value":"star","label":"Ster"},{"value":"truck","label":"Vrachtwagen"}
+            {"value":"shield","label":"Schild"},{"value":"gift","label":"Cadeau"},
+            {"value":"star","label":"Ster"},{"value":"truck","label":"Vrachtwagen"},
+            {"value":"account","label":"Personen"}
           ]
         },
         {
@@ -481,29 +419,18 @@
           ]
         },
         {"type":"text","id":"title",      "label":"Titel",      "default":"1.200+"},
-        {"type":"text","id":"subtitle",   "label":"Subtitel",   "default":"Blije honden"},
-        {"type":"text","id":"stars_line", "label":"Sterren lijn"}
+        {"type":"text","id":"subtitle",   "label":"Subtitel",   "default":"Blije honden in onze community"},
+        {"type":"text","id":"stars_line", "label":"Sterren label (bijv. op basis van 500+ reviews)"}
       ]
     }
   ],
   "settings": [
-    {"type":"text","id":"eyebrow",          "label":"Eyebrow",           "default":"Geliefd door honden \u00e9n hun baasjes"},
-    {"type":"text","id":"title",            "label":"Titel",             "default":"Wat onze klanten zeggen"},
-    {"type":"text","id":"subtitle_plain",   "label":"Subtitel (begin)",  "default":"Duizenden honden genieten al elke maand van hun "},
-    {"type":"text","id":"subtitle_accent",  "label":"Subtitel (accent)", "default":"Kwispelbox"},
-    {"type":"text","id":"subtitle_tail",    "label":"Subtitel (einde)",  "default":". Lees wat hun baasjes hiervan vinden."}
+    {"type":"text",    "id":"eyebrow",          "label":"Eyebrow",           "default":"Geliefd door honden én hun baasjes"},
+    {"type":"textarea","id":"title",            "label":"Titel",             "default":"Wat onze klanten zeggen"},
+    {"type":"text",    "id":"subtitle_plain",   "label":"Subtitel begin",    "default":"Duizenden honden genieten al elke maand van hun "},
+    {"type":"text",    "id":"subtitle_accent",  "label":"Subtitel accent",   "default":"Kwispelbox."},
+    {"type":"text",    "id":"subtitle_tail",    "label":"Subtitel vervolg",  "default":" Lees wat hun baasjes hiervan vinden."}
   ],
-  "presets": [{
-    "name": "Reviews",
-    "blocks": [
-      {"type":"review","settings":{"dog_name":"Luna","breed":"Golden Retriever","box_type":"Happy Box","box_color":"pink","stars":5,"review_title":"Elke maand weer een feestje!","review_text":"Luna wordt altijd z\u00f3 enthousiast als de Kwispelbox binnenkomt. De speeltjes zijn stevig en superleuk, en ze is dol op de knuffels. Echt een aanrader!"}},
-      {"type":"review","settings":{"dog_name":"Milo","breed":"Border Collie","box_type":"Mega Box","box_color":"orange","stars":5,"review_title":"Kwaliteit waar je blij van wordt","review_text":"Je merkt dat er echt aandacht is besteed aan de selectie van de producten. Milo speelt overal mee en de box voelt als een cadeau, elke keer weer."}},
-      {"type":"review","settings":{"dog_name":"Bobby","breed":"Cockapoo","box_type":"Mini Box","box_color":"green","stars":5,"review_title":"Perfect voor onze kleine avonturier","review_text":"Bobby is kieskeurig, maar alles in de Kwispelbox is een hit! Zelfs de snacks zijn favoriet. Super service en snelle levering ook!"}},
-      {"type":"trust","settings":{"icon":"paw","color":"green","title":"1.200+","subtitle":"Blije honden"}},
-      {"type":"trust","settings":{"icon":"heart","color":"pink","title":"4.9/5","subtitle":"Uitstekend beoordeeld","stars_line":"(128 reviews)"}},
-      {"type":"trust","settings":{"icon":"gift","color":"yellow","title":"100%","subtitle":"Tevredenheidsgarantie - Niet tevreden? Geld terug."}},
-      {"type":"trust","settings":{"icon":"shield","color":"green","title":"Veilig & vertrouwd","subtitle":"Betaal veilig en snel via iDEAL, Klarna of Bancontact."}}
-    ]
-  }]
+  "presets": [{"name":"Reviews"}]
 }
 {% endschema %}
