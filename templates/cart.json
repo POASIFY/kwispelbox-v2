@@ -1,17 +1,56 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
-      "type": "cart",
-      "settings": {}
+      "type": "main-cart",
+      "settings": {
+        "free_shipping_threshold": 75,
+        "show_kwispels": true,
+        "show_payment_icons": true
+      },
+      "blocks": {
+        "trust1": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "truck",
+            "color": "green",
+            "title": "Vandaag besteld",
+            "subtitle": "morgen in huis"
+          }
+        },
+        "trust2": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "heart",
+            "color": "pink",
+            "title": "100% blije honden",
+            "subtitle": "garantie"
+          }
+        },
+        "trust3": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "gift",
+            "color": "orange",
+            "title": "Met liefde",
+            "subtitle": "samengesteld"
+          }
+        },
+        "trust4": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shield-check",
+            "color": "green",
+            "title": "Veilig & vertrouwd",
+            "subtitle": "winkelen"
+          }
+        }
+      },
+      "block_order": [
+        "trust1",
+        "trust2",
+        "trust3",
+        "trust4"
+      ]
     }
   },
   "order": [
