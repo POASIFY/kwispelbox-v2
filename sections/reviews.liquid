@@ -25,34 +25,41 @@
   {%- if review_blocks.size > 0 -%}
     <div class="rv__grid">
       {%- for block in review_blocks -%}
-        <article class="rcard" {{ block.shopify_attributes }}>
+        <article class="rcard{% if block.settings.featured %} rcard--featured{% endif %}"
+                 {{ block.shopify_attributes }}>
+
+          <!-- Featured badge (alleen op uitgelichte kaart) -->
+          {%- if block.settings.featured -%}
+            <div class="rcard__featured-badge">
+              {{- 'icon-star.svg' | inline_asset_content -}}
+              Favoriete review
+            </div>
+          {%- endif -%}
 
           <!-- Kaart top: avatar + info + sterren -->
           <div class="rcard__top">
-
-            <!-- Circulaire avatar -->
             <div class="rcard__avatar-wrap">
               {%- if block.settings.avatar != blank -%}
                 <img
                   src="{{ block.settings.avatar | image_url: width: 220 }}"
                   srcset="{{ block.settings.avatar | image_url: width: 110 }} 110w,
                           {{ block.settings.avatar | image_url: width: 220 }} 220w"
-                  sizes="110px"
+                  sizes="(max-width:767px) {% if block.settings.featured %}40vw{% else %}22vw{% endif %}, 110px"
                   alt="{{ block.settings.dog_name | default: 'Blije hond' | escape }}"
                   width="110" height="110"
                   loading="lazy"
                   class="rcard__avatar"
                 >
               {%- else -%}
-                <div class="rcard__avatar-ph">
-                  {{- 'icon-paw.svg' | inline_asset_content -}}
-                </div>
+                <div class="rcard__avatar-ph">{{- 'icon-paw.svg' | inline_asset_content -}}</div>
               {%- endif -%}
             </div>
 
-            <!-- Naam · ras · box · sterren -->
             <div class="rcard__info">
-              <strong class="rcard__dog-name">{{ block.settings.dog_name }}</strong>
+              <strong class="rcard__dog-name">
+                {{ block.settings.dog_name }}
+                <span class="rcard__name-heart" aria-hidden="true">{{- 'icon-heart.svg' | inline_asset_content -}}</span>
+              </strong>
               {%- if block.settings.breed != blank -%}
                 <span class="rcard__breed">{{ block.settings.breed }}</span>
               {%- endif -%}
@@ -68,7 +75,6 @@
                 <span class="rcard__score">{{ block.settings.stars }}/5</span>
               </div>
             </div>
-
           </div>
 
           <!-- Quote + review body -->
@@ -77,23 +83,32 @@
             {%- if block.settings.review_title != blank -%}
               <h3 class="rcard__review-title">{{ block.settings.review_title }}</h3>
             {%- endif -%}
-            <p class="rcard__text">{{ block.settings.review_text }}</p>
-
-            <!-- Geverifieerde aankoop -->
+            {%- if block.settings.review_text != blank -%}
+              <p class="rcard__text">{{ block.settings.review_text }}</p>
+            {%- endif -%}
             {%- if block.settings.verified -%}
               <div class="rcard__verified">
                 {{- 'icon-check-circle.svg' | inline_asset_content -}}
                 Geverifieerde aankoop
               </div>
             {%- endif -%}
-
-            <!-- Decoratief sluitend aanhalingsteken -->
             <span class="rcard__close-quote" aria-hidden="true">&rdquo;</span>
           </div>
 
         </article>
       {%- endfor -%}
     </div>
+
+    <!-- CTA: bekijk meer reviews -->
+    {%- if section.settings.cta_label != blank -%}
+      <div class="rv__cta-wrap">
+        <a href="{{ section.settings.cta_url }}" class="rv__cta">
+          {{- 'icon-account.svg' | inline_asset_content -}}
+          {{ section.settings.cta_label }}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+    {%- endif -%}
   {%- endif -%}
 
   <!-- ── TRUST STRIP ────────────────────────────────────── -->
@@ -108,9 +123,7 @@
             </span>
             <div class="rv__trust-text">
               <strong>{{ block.settings.title }}</strong>
-              {%- if block.settings.subtitle != blank -%}
-                <span>{{ block.settings.subtitle }}</span>
-              {%- endif -%}
+              {%- if block.settings.subtitle != blank -%}<span>{{ block.settings.subtitle }}</span>{%- endif -%}
               {%- if block.settings.stars_line != blank -%}
                 <span class="rv__trust-stars" aria-hidden="true">
                   {%- for i in (1..5) -%}{{- 'icon-star.svg' | inline_asset_content -}}{%- endfor -%}
@@ -128,213 +141,228 @@
 
 {% stylesheet %}
 /* ════════════════════════════════════════════════════════
-   REVIEWS SECTIE
+   REVIEWS
    ════════════════════════════════════════════════════════ */
-.rv {
-  background: #FBF6EC;
-  padding: 80px 0 0;
-  overflow: hidden;
-}
+.rv { background: #FBF6EC; padding: 80px 0 0; overflow: hidden; }
 
 /* ── Header ─────────────────────────────────────────────── */
 .rv__header {
-  text-align: center;
-  padding: 0 20px;
-  margin-bottom: 52px;
-  display: flex; flex-direction: column;
-  align-items: center; gap: 12px;
+  text-align: center; padding: 0 20px; margin-bottom: 52px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
 }
 .rv__eyebrow {
   display: inline-flex; align-items: center; gap: 6px;
-  font-family: 'Karla', sans-serif;
-  font-size: .78rem; font-weight: 800;
-  letter-spacing: .1em; text-transform: uppercase;
-  color: #e75480;
+  font-family: 'Karla', sans-serif; font-size: .78rem;
+  font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #e75480;
 }
 .rv__eyebrow svg { width: 13px; height: 13px; }
 .rv__title {
-  font-family: 'Lilita One', cursive;
-  font-size: clamp(2.2rem, 5vw, 3.5rem);
-  color: #3d2209;
-  line-height: 1.05;
+  font-family: 'Lilita One', cursive; font-size: clamp(2.2rem, 5vw, 3.5rem);
+  color: #3d2209; line-height: 1.05;
 }
 .rv__sub {
-  font-family: 'Karla', sans-serif;
-  font-size: 1rem; color: #A88259;
-  max-width: 560px; line-height: 1.55;
-  text-align: center;
+  font-family: 'Karla', sans-serif; font-size: 1rem; color: #A88259;
+  max-width: 540px; line-height: 1.55; text-align: center;
 }
-.rv__sub-accent {
-  color: #F7A048; font-weight: 800;
+.rv__sub-accent { color: #F7A048; font-weight: 800; }
+
+/* ════════════════════════════════════════════════════════
+   MOBIEL: featured bovenaan (full-width), rest 3-koloms grid
+   ════════════════════════════════════════════════════════ */
+.rv__grid {
+  display: flex; flex-direction: column;
+  gap: 16px; padding: 0 16px;
+  max-width: 1280px; margin: 0 auto;
 }
 
-/* ── Grid ────────────────────────────────────────────────── */
-.rv__grid {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 0 20px;
-  max-width: 1280px;
-  margin: 0 auto;
+/* Niet-featured cards: compact 3-koloms raster op mobiel */
+@media(max-width: 767px) {
+  .rv__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .rv__grid::after {
+    content: '';
+    display: none;
+  }
+  /* Featured: span full width */
+  .rcard--featured {
+    grid-column: 1 / -1;
+  }
+  /* Niet-featured: 3 per rij */
+  .rcard:not(.rcard--featured) {
+    /* Worden door JS/CSS samen in sub-grid gezet */
+  }
 }
+
+/* Niet-featured kaarten op mobiel: klein raster */
+@media(max-width: 767px) {
+  .rv__grid {
+    grid-template-columns: 1fr;
+  }
+  /* Wrap alle niet-featured in een aparte rij via grid-subgrid trick:
+     Featured = rij 1 (full), overige = rij 2+ in 3 kolommen */
+  .rcard--featured { order: -1; }
+  .rcard:not(.rcard--featured) { order: 0; }
+}
+
+/* Sub-wrapper voor compact kaarten op mobiel */
+@media(max-width: 767px) {
+  .rv__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .rv__compact-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+}
+
+/* Desktop: 3-koloms grid, alle kaarten gelijk */
 @media(min-width: 768px) {
   .rv__grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
     padding: 0 60px;
     align-items: stretch;
   }
 }
 
-/* ── Kaart ────────────────────────────────────────────────── */
+/* ── Kaart basis ────────────────────────────────────────── */
 .rcard {
-  background: #fff;
-  border-radius: 24px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  box-shadow: 0 4px 20px rgba(96,58,21,.07);
-  position: relative;
-  overflow: hidden;
+  background: #fff; border-radius: 20px;
+  padding: 20px; display: flex; flex-direction: column;
+  gap: 16px; box-shadow: 0 4px 20px rgba(96,58,21,.07);
+  position: relative; overflow: hidden;
 }
 
-/* ── Kaart top: avatar + info ──────────────────────────── */
-.rcard__top {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
+/* Featured badge */
+.rcard__featured-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Karla', sans-serif; font-size: .78rem; font-weight: 800;
+  background: #fff0e4; color: #d9823a;
+  padding: 5px 12px; border-radius: 999px;
+  width: fit-content;
 }
+.rcard__featured-badge svg { width: 12px; height: 12px; color: #F7A048; fill: #F7A048; }
 
-/* Circulaire avatar */
+/* Kaart top */
+.rcard__top { display: flex; align-items: flex-start; gap: 14px; }
+
+/* Avatar */
 .rcard__avatar-wrap { flex-shrink: 0; }
 .rcard__avatar {
-  width: 110px; height: 110px;
-  border-radius: 50%;
-  object-fit: cover;
-  display: block;
+  width: 100px; height: 100px; border-radius: 50%;
+  object-fit: cover; display: block;
   border: 3px solid #F8EFDD;
   box-shadow: 0 4px 12px rgba(96,58,21,.12);
 }
 .rcard__avatar-ph {
-  width: 110px; height: 110px;
-  border-radius: 50%;
-  background: #F8EFDD;
-  display: flex; align-items: center; justify-content: center;
-  color: #DAC9A1;
+  width: 100px; height: 100px; border-radius: 50%;
+  background: #F8EFDD; display: flex; align-items: center; justify-content: center; color: #DAC9A1;
 }
-.rcard__avatar-ph svg { width: 40px; height: 40px; }
+.rcard__avatar-ph svg { width: 36px; height: 36px; }
 
-/* Info rechts van avatar */
-.rcard__info {
-  display: flex; flex-direction: column;
-  gap: 5px; min-width: 0;
-  padding-top: 4px;
-}
+/* Info */
+.rcard__info { display: flex; flex-direction: column; gap: 5px; min-width: 0; padding-top: 4px; }
 .rcard__dog-name {
-  font-family: 'Lilita One', cursive;
-  font-size: 1.35rem; color: #3d2209;
-  line-height: 1;
+  font-family: 'Lilita One', cursive; font-size: 1.3rem; color: #3d2209; line-height: 1;
+  display: flex; align-items: center; gap: 6px;
 }
-.rcard__breed {
-  font-family: 'Karla', sans-serif;
-  font-size: .85rem; color: #A88259;
-}
+.rcard__name-heart { display: flex; align-items: center; }
+.rcard__name-heart svg { width: 14px; height: 14px; color: #e75480; }
+.rcard__breed { font-family: 'Karla', sans-serif; font-size: .83rem; color: #A88259; }
 .rcard__box {
   display: inline-flex; align-items: center;
-  font-family: 'Karla', sans-serif;
-  font-size: .78rem; font-weight: 800;
-  padding: 4px 12px;
-  border-radius: 999px;
-  width: fit-content;
+  font-family: 'Karla', sans-serif; font-size: .75rem; font-weight: 800;
+  padding: 4px 12px; border-radius: 999px; width: fit-content;
 }
 .rcard__box--orange { background: #FFF0E4; color: #d9823a; }
 .rcard__box--green  { background: #E8F5E2; color: #2d7a1a; }
 .rcard__box--pink   { background: #FFF0F5; color: #c0394b; }
+.rcard__stars { display: flex; align-items: center; gap: 3px; margin-top: 2px; }
+.rcard__stars svg { width: 15px; height: 15px; color: #F7A048; fill: #F7A048; }
+.rcard__score { font-family: 'Karla', sans-serif; font-size: .8rem; font-weight: 800; color: #A88259; margin-left: 4px; }
 
-.rcard__stars {
-  display: flex; align-items: center; gap: 3px;
-  margin-top: 2px;
-}
-.rcard__stars svg {
-  width: 16px; height: 16px;
-  color: #F7A048; fill: #F7A048;
-}
-.rcard__score {
-  font-family: 'Karla', sans-serif;
-  font-size: .82rem; font-weight: 800;
-  color: #A88259; margin-left: 4px;
-}
-
-/* ── Review body ──────────────────────────────────────── */
-.rcard__body {
-  display: flex; flex-direction: column;
-  gap: 10px; flex: 1;
-  position: relative;
-}
-
-/* Opening aanhalingsteken */
+/* Body */
+.rcard__body { display: flex; flex-direction: column; gap: 8px; flex: 1; position: relative; }
 .rcard__open-quote {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 3.8rem; line-height: .8;
-  color: #e75480; font-weight: 700;
-  display: block;
-  margin-bottom: -4px;
+  font-family: Georgia, serif; font-size: 3.5rem; line-height: .8;
+  color: #e75480; font-weight: 700; display: block; margin-bottom: -4px;
 }
-
 .rcard__review-title {
-  font-family: 'Lilita One', cursive;
-  font-size: 1.05rem;
-  color: #e75480;
-  line-height: 1.25;
-  margin: 0;
+  font-family: 'Lilita One', cursive; font-size: 1rem;
+  color: #e75480; line-height: 1.25; margin: 0;
 }
 .rcard__text {
-  font-family: 'Karla', sans-serif;
-  font-size: .9rem; color: #603A15;
-  line-height: 1.6; margin: 0;
+  font-family: 'Karla', sans-serif; font-size: .88rem;
+  color: #603A15; line-height: 1.6; margin: 0;
 }
-
-/* Geverifieerde aankoop */
 .rcard__verified {
   display: inline-flex; align-items: center; gap: 6px;
-  font-family: 'Karla', sans-serif;
-  font-size: .8rem; font-weight: 700;
-  color: #66AA44; margin-top: 4px;
+  font-family: 'Karla', sans-serif; font-size: .78rem; font-weight: 700; color: #66AA44;
+  margin-top: 4px;
 }
-.rcard__verified svg { width: 15px; height: 15px; color: #66AA44; }
-
-/* Decoratief sluitend aanhalingsteken (rechtsonder) */
+.rcard__verified svg { width: 14px; height: 14px; color: #66AA44; }
 .rcard__close-quote {
-  position: absolute;
-  bottom: -12px; right: 4px;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 7rem; line-height: 1;
-  color: rgba(231,84,128,.08);
-  font-weight: 700;
-  pointer-events: none;
-  user-select: none;
+  position: absolute; bottom: -16px; right: 4px;
+  font-family: Georgia, serif; font-size: 7rem; line-height: 1;
+  color: rgba(231,84,128,.07); font-weight: 700;
+  pointer-events: none; user-select: none;
 }
+
+/* ── Mobiel: compact kaarten (niet-featured) ──────────── */
+@media(max-width: 767px) {
+  .rcard:not(.rcard--featured) {
+    padding: 14px;
+    gap: 10px;
+  }
+  .rcard:not(.rcard--featured) .rcard__avatar {
+    width: 72px; height: 72px;
+  }
+  .rcard:not(.rcard--featured) .rcard__avatar-ph {
+    width: 72px; height: 72px;
+  }
+  .rcard:not(.rcard--featured) .rcard__dog-name { font-size: 1rem; }
+  .rcard:not(.rcard--featured) .rcard__text { display: none; }
+  .rcard:not(.rcard--featured) .rcard__verified { display: none; }
+  .rcard:not(.rcard--featured) .rcard__close-quote { display: none; }
+  .rcard:not(.rcard--featured) .rcard__open-quote { font-size: 2.5rem; }
+  .rcard:not(.rcard--featured) .rcard__review-title { font-size: .88rem; }
+  .rcard:not(.rcard--featured) .rcard__score { display: none; }
+}
+
+/* ── CTA bekijk meer ─────────────────────────────────── */
+.rv__cta-wrap {
+  display: flex; justify-content: center;
+  padding: 28px 20px 0;
+}
+.rv__cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Karla', sans-serif; font-size: 1rem; font-weight: 800;
+  color: #e75480; text-decoration: none;
+  transition: gap 160ms ease;
+}
+.rv__cta:hover { gap: 12px; }
+.rv__cta svg:first-child { width: 18px; height: 18px; color: #e75480; }
+.rv__cta svg:last-child { width: 14px; height: 14px; }
 
 /* ── Trust strip ─────────────────────────────────────── */
 .rv__trust {
-  background: #F8EFDD;
-  border-top: 1.5px solid #EDE2C9;
-  margin-top: 60px;
+  background: #F8EFDD; border-top: 1.5px solid #EDE2C9; margin-top: 56px;
 }
 .rv__trust-inner {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  max-width: 1280px; margin: 0 auto;
-  padding: 0;
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  max-width: 1280px; margin: 0 auto; padding: 0;
 }
-@media(min-width: 768px) {
-  .rv__trust-inner { grid-template-columns: repeat(4, 1fr); }
-}
+@media(min-width: 768px) { .rv__trust-inner { grid-template-columns: repeat(4, 1fr); } }
 .rv__trust-item {
   display: flex; align-items: center; gap: 14px;
-  padding: 22px 20px;
-  border-right: 1px solid #EDE2C9;
+  padding: 22px 20px; border-right: 1px solid #EDE2C9;
 }
 .rv__trust-item:last-child { border-right: none; }
 @media(max-width:767px) {
@@ -342,32 +370,45 @@
   .rv__trust-item:nth-child(n+3) { border-top: 1px solid #EDE2C9; }
 }
 .rv__trust-icon {
-  width: 48px; height: 48px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  width: 48px; height: 48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .rv__trust-icon svg { width: 22px; height: 22px; }
 .rv__trust-icon--green  { background: #e8f5e2; color: #66AA44; }
 .rv__trust-icon--pink   { background: #fff0f5; color: #e75480; }
 .rv__trust-icon--orange { background: #fff0e4; color: #F7A048; }
 .rv__trust-icon--yellow { background: #fffae0; color: #c49000; }
-.rv__trust-text {
-  display: flex; flex-direction: column; gap: 2px;
-}
-.rv__trust-text strong {
-  font-family: 'Lilita One', cursive;
-  font-size: 1rem; color: #3d2209; line-height: 1.1;
-}
-.rv__trust-text span {
-  font-family: 'Karla', sans-serif;
-  font-size: .8rem; color: #A88259; line-height: 1.35;
-}
-.rv__trust-stars {
-  display: flex; align-items: center; gap: 3px; margin-top: 3px;
-}
+.rv__trust-text { display: flex; flex-direction: column; gap: 2px; }
+.rv__trust-text strong { font-family: 'Lilita One', cursive; font-size: 1rem; color: #3d2209; line-height: 1.1; }
+.rv__trust-text span { font-family: 'Karla', sans-serif; font-size: .8rem; color: #A88259; line-height: 1.35; }
+.rv__trust-stars { display: flex; align-items: center; gap: 3px; margin-top: 3px; }
 .rv__trust-stars svg { width: 13px; height: 13px; color: #F7A048; fill: #F7A048; }
 {% endstylesheet %}
+
+{% javascript %}
+(function(){
+  // Op mobiel: groepeer niet-featured kaarten in een 3-koloms sub-raster
+  function groupCompactCards(){
+    if(window.innerWidth >= 768) return;
+    var grid = document.querySelector('.rv__grid');
+    if(!grid) return;
+    var featured = grid.querySelector('.rcard--featured');
+    var others = Array.from(grid.querySelectorAll('.rcard:not(.rcard--featured)'));
+    if(!others.length) return;
+    // Verwijder bestaande compact-rows
+    grid.querySelectorAll('.rv__compact-row').forEach(function(r){ r.remove(); });
+    // Groepeer per 3
+    for(var i=0; i<others.length; i+=3){
+      var row = document.createElement('div');
+      row.className = 'rv__compact-row';
+      others.slice(i, i+3).forEach(function(c){ row.appendChild(c); });
+      grid.appendChild(row);
+    }
+  }
+  document.addEventListener('DOMContentLoaded', groupCompactCards);
+  window.addEventListener('resize', groupCompactCards);
+})();
+{% endjavascript %}
 
 {% schema %}
 {
@@ -378,6 +419,7 @@
       "type": "review",
       "name": "Review",
       "settings": [
+        {"type":"checkbox",    "id":"featured",     "label":"Uitgelichte review (featured)", "default":false},
         {"type":"image_picker","id":"avatar",        "label":"Hondenfoto (rond)"},
         {"type":"text",        "id":"dog_name",      "label":"Naam hond",          "default":"Luna"},
         {"type":"text",        "id":"breed",         "label":"Ras",                "default":"Golden Retriever"},
@@ -390,11 +432,9 @@
             {"value":"pink","label":"Roze"}
           ]
         },
-        {
-          "type":"range","id":"stars","label":"Sterren","min":1,"max":5,"step":1,"default":5
-        },
+        {"type":"range","id":"stars","label":"Sterren","min":1,"max":5,"step":1,"default":5},
         {"type":"text",    "id":"review_title","label":"Review titel",   "default":"Elke maand weer een feestje!"},
-        {"type":"textarea","id":"review_text", "label":"Review tekst",   "default":"Luna wordt altijd zó enthousiast als de Kwispelbox binnenkomt. De speeltjes zijn stevig en superleuk!"},
+        {"type":"textarea","id":"review_text", "label":"Review tekst",   "default":"Luna wordt altijd zo enthousiast als de Kwispelbox binnenkomt!"},
         {"type":"checkbox","id":"verified",    "label":"Geverifieerde aankoop","default":true}
       ]
     },
@@ -420,16 +460,19 @@
         },
         {"type":"text","id":"title",      "label":"Titel",      "default":"1.200+"},
         {"type":"text","id":"subtitle",   "label":"Subtitel",   "default":"Blije honden in onze community"},
-        {"type":"text","id":"stars_line", "label":"Sterren label (bijv. op basis van 500+ reviews)"}
+        {"type":"text","id":"stars_line", "label":"Sterren label"}
       ]
     }
   ],
   "settings": [
-    {"type":"text",    "id":"eyebrow",          "label":"Eyebrow",           "default":"Geliefd door honden én hun baasjes"},
-    {"type":"textarea","id":"title",            "label":"Titel",             "default":"Wat onze klanten zeggen"},
-    {"type":"text",    "id":"subtitle_plain",   "label":"Subtitel begin",    "default":"Duizenden honden genieten al elke maand van hun "},
-    {"type":"text",    "id":"subtitle_accent",  "label":"Subtitel accent",   "default":"Kwispelbox."},
-    {"type":"text",    "id":"subtitle_tail",    "label":"Subtitel vervolg",  "default":" Lees wat hun baasjes hiervan vinden."}
+    {"type":"text",    "id":"eyebrow",         "label":"Eyebrow",          "default":"Geliefd door honden én hun baasjes"},
+    {"type":"textarea","id":"title",           "label":"Titel",            "default":"Wat onze klanten zeggen"},
+    {"type":"text",    "id":"subtitle_plain",  "label":"Subtitel begin",   "default":"Duizenden honden genieten al elke maand van hun "},
+    {"type":"text",    "id":"subtitle_accent", "label":"Subtitel accent",  "default":"Kwispelbox."},
+    {"type":"text",    "id":"subtitle_tail",   "label":"Subtitel vervolg", "default":" Lees wat hun baasjes hiervan vinden."},
+    {"type":"header",  "content":"CTA"},
+    {"type":"text",    "id":"cta_label",       "label":"CTA tekst",        "default":"Bekijk nog meer reviews"},
+    {"type":"url",     "id":"cta_url",         "label":"CTA link"}
   ],
   "presets": [{"name":"Reviews"}]
 }
