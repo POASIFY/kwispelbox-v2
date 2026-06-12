@@ -21,12 +21,13 @@
             <span>Voeg puppy foto toe</span>
           </div>
         {%- endif -%}
-        <!-- Decoratief hartje zweeft over foto -->
-        <div class="puppy__hero-deco puppy__hero-deco--heart" aria-hidden="true">
-          <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M30 52 C30 52 8 38 8 22 C8 14 14 8 22 8 C26 8 29 10 30 12 C31 10 34 8 38 8 C46 8 52 14 52 22 C52 38 30 52 30 52Z" stroke="#e75480" stroke-width="3" fill="none"/>
-          </svg>
-        </div>
+        <!-- Circulaire badge op de foto -->
+        {%- if section.settings.hero_badge != blank -%}
+          <div class="puppy__hero-badge" aria-hidden="true">
+            <span class="puppy__hero-badge-text">{{ section.settings.hero_badge }}</span>
+            <span class="puppy__hero-badge-heart">{{- 'icon-heart.svg' | inline_asset_content -}}</span>
+          </div>
+        {%- endif -%}
       </div>
     </div>
 
@@ -43,7 +44,13 @@
         {%- endif -%}
         <h2 class="puppy__title">{{ section.settings.title }}</h2>
         {%- if section.settings.intro != blank -%}
-          <p class="puppy__intro">{{ section.settings.intro }}</p>
+          <p class="puppy__intro">
+            {{ section.settings.intro_plain }}
+            {%- if section.settings.intro_accent != blank -%}
+              <span class="puppy__intro-accent">{{ section.settings.intro_accent }}</span>
+            {%- endif -%}
+            {{ section.settings.intro_tail }}
+          </p>
         {%- endif -%}
       </div>
 
@@ -124,18 +131,18 @@
       {%- assign product_blocks = section.blocks | where: 'type', 'product_item' -%}
       {%- for block in product_blocks -%}
         <div class="puppy__product" {{ block.shopify_attributes }}>
-          <div class="puppy__product-img-wrap">
+          <div class="puppy__product-icon-wrap">
             {%- if block.settings.image != blank -%}
               <img
                 src="{{ block.settings.image | image_url: width: 240 }}"
                 alt="{{ block.settings.title | escape }}"
-                width="240" height="240" loading="lazy"
+                width="120" height="120" loading="lazy"
                 class="puppy__product-img"
               >
             {%- else -%}
-              <div class="puppy__product-ph">
-                {{- 'icon-toy.svg' | inline_asset_content -}}
-              </div>
+              <span class="puppy__product-icon">
+                {{- 'icon-' | append: block.settings.icon | append: '.svg' | inline_asset_content -}}
+              </span>
             {%- endif -%}
           </div>
           <strong class="puppy__product-title">{{ block.settings.title }}</strong>
@@ -174,22 +181,31 @@
 /* ── Sectie ─────────────────────────────────────────────── */
 .puppy { background: #FFF5F8; overflow: hidden; }
 
-/* ── Decoratief hartje over grote foto ─────────────────── */
-.puppy__hero-deco {
+/* ── Circulaire badge op hero foto ──────────────────────── */
+.puppy__hero-badge {
   position: absolute;
-  pointer-events: none; z-index: 3;
+  top: 28px; left: 28px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.93);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 16px rgba(231,84,128,.18);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px;
+  z-index: 4;
+  padding: 12px;
+  text-align: center;
 }
-.puppy__hero-deco--heart {
-  top: 18%; right: -20px;
-  width: 64px; height: 64px;
-  animation: puppy-float 3s ease-in-out infinite;
+.puppy__hero-badge-text {
+  font-family: 'Karla', sans-serif;
+  font-size: .68rem; font-weight: 800;
+  color: #e75480; line-height: 1.35;
 }
-.puppy__hero-deco--heart svg { width: 100%; height: 100%; }
-@keyframes puppy-float {
-  0%, 100% { transform: translateY(0) rotate(-8deg); }
-  50%       { transform: translateY(-8px) rotate(-8deg); }
+.puppy__hero-badge-heart {
+  display: flex; align-items: center; justify-content: center;
+  color: #e75480;
 }
-@media(prefers-reduced-motion: reduce) { .puppy__hero-deco { animation: none; } }
+.puppy__hero-badge-heart svg { width: 14px; height: 14px; }
 
 /* ── Hoofd blok grid ────────────────────────────────────── */
 .puppy__main {
@@ -210,17 +226,18 @@
 .puppy__hero-img-wrap {
   width: 100%; height: 100%;
   position: relative;
+  padding: 20px;
 }
 .puppy__hero-img {
   width: 100%; height: 100%;
   object-fit: cover; object-position: center 20%;
   display: block;
+  border-radius: 44% 56% 52% 48% / 50% 46% 54% 50%;
+  box-shadow: 0 12px 40px rgba(231,84,128,.15);
 }
-/* Organische afgeronde rechterkant op desktop */
 @media(min-width: 900px) {
-  .puppy__hero-col {
-    border-radius: 0 48% 48% 0 / 0 40% 40% 0;
-  }
+  .puppy__hero-col { border-radius: 0; overflow: visible; }
+  .puppy__hero-img { border-radius: 48% 52% 58% 42% / 54% 48% 52% 46%; }
 }
 .puppy__hero-ph {
   width: 100%; height: 100%; min-height: 340px;
@@ -259,6 +276,7 @@
   font-family: 'Karla', sans-serif;
   font-size: .9rem; color: #A88259; line-height: 1.75;
 }
+.puppy__intro-accent { color: #F7A048; font-weight: 800; }
 
 /* ── Midden: benefits + side image ─────────────────────── */
 .puppy__mid {
@@ -421,24 +439,23 @@
 }
 .puppy__product:last-child { border-right: none; }
 
-.puppy__product-img-wrap {
-  width: 100px; height: 100px;
+.puppy__product-icon-wrap {
+  width: 80px; height: 80px;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
   transition: transform 300ms cubic-bezier(.34,1.56,.64,1);
 }
-.puppy__product:hover .puppy__product-img-wrap { transform: scale(1.1) rotate(-3deg); }
+.puppy__product:hover .puppy__product-icon-wrap { transform: scale(1.12) rotate(-4deg); }
+.puppy__product-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 70px; height: 70px; color: #FFB8CD;
+}
+.puppy__product-icon svg { width: 56px; height: 56px; }
 .puppy__product-img {
-  width: 100%; height: 100%;
+  width: 80px; height: 80px;
   object-fit: contain; display: block;
-  /* PNG met transparantie werkt hier perfect */
   filter: drop-shadow(0 4px 8px rgba(96,58,21,.15));
 }
-.puppy__product-ph {
-  width: 100%; height: 100%;
-  display: flex; align-items: center; justify-content: center; color: #FFB8CD;
-}
-.puppy__product-ph svg { width: 40px; height: 40px; }
 
 .puppy__product-title {
   font-family: 'Lilita One', cursive;
@@ -500,7 +517,9 @@
     {
       "type": "product_item", "name": "Product item",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Foto" },
+        { "type": "image_picker", "id": "image", "label": "Foto (optioneel, anders icoon)" },
+        { "type": "select", "id": "icon", "label": "Icoon (als geen foto)", "default": "puppy",
+          "options": [{"value":"puppy","label":"Hond"},{"value":"bear","label":"Beer"},{"value":"toy","label":"Speelgoed"},{"value":"paw","label":"Poot"},{"value":"bone","label":"Bot"},{"value":"heart","label":"Hart"},{"value":"gift","label":"Cadeau"},{"value":"sparkle","label":"Sparkle"},{"value":"star","label":"Ster"}] },
         { "type": "text", "id": "title", "label": "Titel", "default": "Knuffelvriendjes" },
         { "type": "text", "id": "description", "label": "Beschrijving", "default": "Zacht, lief en perfect om mee te knuffelen." }
       ]
@@ -519,11 +538,14 @@
   ],
   "settings": [
     { "type": "image_picker", "id": "hero_image",  "label": "Grote puppy foto (links)" },
+    { "type": "text", "id": "hero_badge", "label": "Circulaire badge tekst op foto", "default": "Speciaal voor nieuwsgierige puppy's" },
     { "type": "image_picker", "id": "side_image",  "label": "Kleine zijfoto (rechts)" },
     { "type": "text", "id": "side_badge",   "label": "Zijfoto badge",  "default": "Perfect voor puppy's van 8 weken tot 1 jaar" },
     { "type": "text", "id": "eyebrow",      "label": "Eyebrow",        "default": "Speciaal voor nieuwsgierige puppy's" },
     { "type": "text", "id": "title",        "label": "Titel",          "default": "Nieuw in de wereld van kwispels?" },
-    { "type": "textarea", "id": "intro",    "label": "Intro",          "default": "Onze puppycollectie zit boordevol zachte speeltjes, veilige kauwsnacks en knuffels die perfect passen bij hun eerste avonturen. Zorgvuldig geselecteerd voor een goede start vol speelplezier." },
+    { "type": "text",     "id": "intro_plain",   "label": "Intro tekst",        "default": "Onze puppycollectie zit boordevol zachte speeltjes, veilige kauwsnacks en knuffels die perfect passen bij hun eerste avonturen. Zorgvuldig geselecteerd voor een goede start vol " },
+    { "type": "text",     "id": "intro_accent",  "label": "Intro accentwoord",  "default": "speelplezier." },
+    { "type": "text",     "id": "intro_tail",    "label": "Intro vervolg" },
     { "type": "text", "id": "favs_title",   "label": "Favorieten titel",    "default": "Puppy favorieten" },
     { "type": "text", "id": "favs_subtitle","label": "Favorieten subtitel",  "default": "Onze meest gekozen items door baasjes van puppy's." },
     { "type": "text", "id": "cta_label",    "label": "CTA tekst",            "default": "Bekijk puppy favorieten" },
