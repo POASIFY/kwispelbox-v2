@@ -213,8 +213,13 @@
   max-width: 1280px;
   margin: 0 auto;
 }
-@media(min-width: 768px) {
-  .sp__body { padding: 0 60px; gap: 28px; }
+@media(min-width: 900px) {
+  .sp__body {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0 60px;
+    gap: 24px;
+  }
 }
 
 /* ── Uitgelichte review (links) ─────────────────────────── */
@@ -228,10 +233,11 @@
   flex-shrink: 0;
 }
 @media(min-width: 768px) {
-  .sp__review {
-    flex-direction: row;
-  }
-  .sp__review-img-wrap { width: 44%; }
+  .sp__review { flex-direction: row; }
+  .sp__review-img-wrap { width: 50%; }
+}
+@media(min-width: 900px) {
+  .sp__review { width: 42%; }
 }
 
 .sp__review-img-wrap {
