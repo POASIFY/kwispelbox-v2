@@ -8,7 +8,7 @@
     </div>
 
     <!-- Drie kaarten -->
-    <div class="pboxes__grid">
+    <div class="pboxes__grid" data-pboxes-grid>
       {%- for block in section.blocks -%}
         {%- if block.type == 'box' -%}
           <div class="pbox pbox--{{ block.settings.color }}{% if block.settings.featured %} pbox--featured{% endif %}"
@@ -445,7 +445,81 @@
   .pboxes__trust { padding: 20px; justify-content: center; }
   .pbox--featured { transform: none; }
 }
+
+/* ── Slider dots (mobiel) ──────────────────────────────── */
+.pboxes__dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+@media(min-width: 768px) { .pboxes__dots { display: none; } }
+
+.pboxes__dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #EDE2C9;
+  border: none; padding: 0; cursor: pointer;
+  transition: background 250ms ease, width 250ms ease;
+  flex-shrink: 0;
+}
+.pboxes__dot--active {
+  background: #F7A048;
+  width: 24px;
+  border-radius: 999px;
+}
 {% endstylesheet %}
+
+
+{% javascript %}
+(function () {
+  const grid = document.querySelector('[data-pboxes-grid]');
+  if (!grid) return;
+
+  const dots = document.querySelectorAll('.pboxes__dot');
+  if (!dots.length) return;
+
+  function getActiveIndex() {
+    const cards = grid.querySelectorAll(':scope > *');
+    if (!cards.length) return 0;
+    const gridLeft = grid.getBoundingClientRect().left;
+    const gridWidth = grid.offsetWidth;
+    let closest = 0, minDist = Infinity;
+    cards.forEach((card, i) => {
+      const cardCenter = card.getBoundingClientRect().left - gridLeft + card.offsetWidth / 2;
+      const dist = Math.abs(cardCenter - gridWidth / 2);
+      if (dist < minDist) { minDist = dist; closest = i; }
+    });
+    return closest;
+  }
+
+  function updateDots(index) {
+    dots.forEach((dot, i) => {
+      const active = i === index;
+      dot.classList.toggle('pboxes__dot--active', active);
+      dot.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+  }
+
+  // Scroll → dots bijwerken
+  let scrollTimer;
+  grid.addEventListener('scroll', () => {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => updateDots(getActiveIndex()), 60);
+  }, { passive: true });
+
+  // Dot klik → scroll naar kaart
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      const cards = grid.querySelectorAll(':scope > *');
+      if (cards[i]) {
+        cards[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    });
+  });
+})();
+{% endjavascript %}
 
 {% schema %}
 {
